@@ -54,7 +54,7 @@ public class OrgServer extends CoapServer {
 	static TreeNode orgspecnodetemp = new TreeNode("org-spec-segmented");
 	static TreeNode orgentitynode = new TreeNode("org-entities");	
 	static TreeNode agents = new TreeNode("oe-agents");
-	static TreeNode oegroups = new TreeNode("oe-groups");
+	static PubSubResource oegroups = new PubSubResource("oe-groups", "groups");
 	static TreeNode oeschemes = new TreeNode("oe-schemes");
 	static TreeNode oegoals = new TreeNode("oe-goals");
 	
@@ -81,6 +81,7 @@ public class OrgServer extends CoapServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		oegroups.setObservable(true);
 		orgentitynode.add(agents);
 		orgentitynode.add(oegroups);
 		orgentitynode.add(oeschemes);
@@ -183,11 +184,17 @@ public class OrgServer extends CoapServer {
 	static class TreeNode extends CoapResource {
 		public TreeNode(String id) {
 			super(id);
+			if(id.equals("org-entities")) {
+				setObservable(true);
+			}
 		}
 		
 		@Override
 		public void handlePUT(CoapExchange exchange) {
-
+			if(!(this.getName().equals("org-spec") || this.getName().equals("org-spec-segmented"))) {
+				exchange.respond(ResponseCode.METHOD_NOT_ALLOWED);
+				return;
+			}
 			// respond to the request
 			try {
 				String content = Files.readString(Path.of(Launcher.fileName));
@@ -235,6 +242,15 @@ public class OrgServer extends CoapServer {
 		@Override
 		public void handleGET(CoapExchange exchange) {
 
+			if(this.getName().equals("org-entities")) {
+				exchange.respond(ResponseCode.CONTENT, "org-entities");
+				return;
+			}
+			
+			if(!(this.getName().equals("org-spec") || this.getName().equals("org-spec-segmented"))) {
+				exchange.respond(ResponseCode.METHOD_NOT_ALLOWED);
+				return;
+			}
 			// respond to the request
 			try {
 				String content = Files.readString(Path.of(Launcher.fileName));
@@ -305,6 +321,7 @@ public class OrgServer extends CoapServer {
 		public OEResource(GroupInstance groupInstance, Role role) {
 			super(groupInstance.getId() + "_" + role.getId());
 			setObservable(true);
+			resource = String.format("reward:%s;id:%s", 5 - this.getChildren().size(), role.getId());
 			this.groupInstance = groupInstance;
 			this.role = role;
 		}
@@ -364,6 +381,8 @@ public class OrgServer extends CoapServer {
 			
 		}		
 		
+		
+		
 		@Override
 		public void handleGET(CoapExchange exchange) {
 			if(rolePlayer != null) {
@@ -403,7 +422,8 @@ public class OrgServer extends CoapServer {
 					return;
 				}
 				Object roleprop = role.getProperties();
-				String response = String.format("reward:%s", 5 - this.getChildren().size());
+				//reward:5;id:role_comfort_sensor
+				String response = String.format("reward:%s;id:%s", 5 - this.getChildren().size(), role.getId());
 				exchange.respond(response);
 			}
 			exchange.respond(this.getName());
@@ -415,6 +435,8 @@ public class OrgServer extends CoapServer {
 			// respond to the request
 			exchange.respond(ResponseCode.CHANGED);
 			changed();
+			oegroups.updateResource(this.getPath());
+			oegroups.changed();
 		}
 		
 		@Override
@@ -432,6 +454,7 @@ public class OrgServer extends CoapServer {
 						}
 					}
 					rolePlayer.getPlayer().removeRole(rolePlayer.getRole().getId(), rolePlayer.getGroup());
+					exchange.respond(ResponseCode.DELETED);
 				} catch (MoiseConsistencyException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -502,6 +525,16 @@ public class OrgServer extends CoapServer {
 			setObservable(true);
 			// set display name
 			getAttributes().setTitle("pub-sub Resource");
+		}
+		
+		public PubSubResource(String name, String resource) {
+			this(name);
+			this.resource = resource;
+		}
+		
+		public void updateResource(String resource) {
+			this.resource = resource;
+			changed();
 		}
 
 		@Override
