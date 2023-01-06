@@ -275,6 +275,7 @@ public class OrgServer extends CoapServer {
 		private GoalInstance goalInstance;
 		private GoalCommitment goalCommitment;
 		private String resource = null;
+		private int currentReward = 5;
 		
 		private static class GoalCommitment{
 			public GoalInstance goal;
@@ -321,15 +322,16 @@ public class OrgServer extends CoapServer {
 		public OEResource(GroupInstance groupInstance, Role role) {
 			super(groupInstance.getId() + "_" + role.getId());
 			setObservable(true);
-			resource = String.format("reward:%s;id:%s", 5 - this.getChildren().size(), role.getId());
+			//resource = String.format("reward:%s;id:%s", 5 - this.getChildren().size(), role.getId());
 			this.groupInstance = groupInstance;
 			this.role = role;
 		}
 		
-		public OEResource(RolePlayer rolePlayer) {
+		public OEResource(RolePlayer rolePlayer, int reward) {
 			super("rp" + "_" + rolePlayer.getPlayer().getId() + "_" + rolePlayer.getGroup().getId() + "_" + rolePlayer.getRole().getId());
 			setObservable(true);
 			this.rolePlayer = rolePlayer;
+			currentReward = reward;
 			
 			for(Permission p : rolePlayer.getPermissions()) {
 				try {
@@ -361,7 +363,8 @@ public class OrgServer extends CoapServer {
 						agents.add(new OEResource(agent));
 					}
 					RolePlayer rp = agent.adoptRole(role.getId(), groupInstance);
-					this.add(new OEResource(rp));					
+					currentReward = 5 - this.getChildren().size();
+					this.add(new OEResource(rp, currentReward));
 					exchange.respond(ResponseCode.CREATED);
 					return;
 					
@@ -399,7 +402,11 @@ public class OrgServer extends CoapServer {
 					response += gi.getId() + " ";
 				}
 				//response  = gson.toJson(rolePlayer.getPlayer().getPossibleGoals());
-				response = String.format("reward:%s", 5);
+				if(resource != null) {
+					response = String.format("%s;id:%s", resource, rolePlayer.getRole().getId());
+				}else {
+					response = String.format("reward:%s;id:%s", currentReward, rolePlayer.getRole().getId());
+				}
 				exchange.respond(ResponseCode.CONTENT, response);
 				return;
 			}
@@ -418,7 +425,8 @@ public class OrgServer extends CoapServer {
 			}
 			else if(groupInstance != null && role != null) {
 				if(resource != null) {
-					exchange.respond(resource);
+					String response = String.format("%s;id:%s", resource, role.getId());
+					exchange.respond(response);
 					return;
 				}
 				Object roleprop = role.getProperties();
@@ -432,6 +440,11 @@ public class OrgServer extends CoapServer {
 		@Override
 		public void handlePUT(CoapExchange exchange) {
 			resource = exchange.getRequestText();
+			if(resource.length() == 0) {
+				resource = null;
+			}else {
+				currentReward = Integer.parseInt(resource.split(":")[1]);
+			}
 			// respond to the request
 			exchange.respond(ResponseCode.CHANGED);
 			changed();
