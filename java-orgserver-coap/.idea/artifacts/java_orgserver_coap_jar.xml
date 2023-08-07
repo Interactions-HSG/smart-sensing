@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="java-orgserver-coap:jar">
+    <output-path>$PROJECT_DIR$/orgserver/dist</output-path>
+    <root id="archive" name="java-orgserver-coap.jar">
+      <element id="module-output" name="java-orgserver-coap" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/orgserver/dist/orgserver.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

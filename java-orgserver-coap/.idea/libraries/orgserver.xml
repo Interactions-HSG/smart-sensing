@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="orgserver">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/orgserver/dist/orgserver.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

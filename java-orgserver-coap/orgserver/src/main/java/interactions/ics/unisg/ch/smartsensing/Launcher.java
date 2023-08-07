@@ -1,16 +1,11 @@
 package interactions.ics.unisg.ch.smartsensing;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.SocketException;
 
 import org.eclipse.californium.core.config.CoapConfig;
-import org.eclipse.californium.core.network.CoapEndpoint;
 import org.eclipse.californium.elements.config.Configuration;
 import org.eclipse.californium.elements.config.TcpConfig;
 import org.eclipse.californium.elements.config.UdpConfig;
-import org.eclipse.californium.elements.tcp.netty.TcpServerConnector;
-import org.eclipse.californium.elements.util.NetworkInterfacesUtil;
 
 public class Launcher {
 	
@@ -41,9 +36,11 @@ public class Launcher {
 			}
 			
 			System.out.printf("Intializing OrgServer from %s\n", fileName);
-			OrgServer server = new OrgServer(udp, tcp, port);
+			//MoiseOrgServer server = new MoiseOrgServer(udp, tcp, port);
+			AGRServer server = new AGRServer(udp, tcp, port);
 			//server.addEndpoints(udp, tcp, port);
 			server.start();
+			TestClient.testConnection(null);
 
 		} catch (SocketException e) {
 			System.err.println("Failed to initialize server: " + e.getMessage());

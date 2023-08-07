@@ -1,11 +1,6 @@
 package interactions.ics.unisg.ch.smartsensing;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FilterReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
@@ -16,14 +11,9 @@ import java.util.ArrayList;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.coap.CoAP.ResponseCode;
-import org.eclipse.californium.core.config.CoapConfig;
 import org.eclipse.californium.core.network.CoapEndpoint;
 import org.eclipse.californium.core.server.resources.CoapExchange;
-import org.eclipse.californium.core.server.resources.MyIpResource;
-import org.eclipse.californium.core.server.resources.Resource;
 import org.eclipse.californium.elements.config.Configuration;
-import org.eclipse.californium.elements.config.TcpConfig;
-import org.eclipse.californium.elements.config.UdpConfig;
 import org.eclipse.californium.elements.tcp.netty.TcpServerConnector;
 import org.eclipse.californium.elements.util.NetworkInterfacesUtil;
 
@@ -46,9 +36,8 @@ import moise.os.fs.Goal;
 import moise.os.fs.Scheme;
 import moise.os.ss.Group;
 import moise.os.ss.Role;
-import ora4mas.nopl.oe.Pair;
 
-public class OrgServer extends CoapServer {
+public class MoiseOrgServer extends CoapServer {
 	
 	static TreeNode orgspecnode = new TreeNode("org-spec");
 	static TreeNode orgspecnodetemp = new TreeNode("org-spec-segmented");
@@ -72,7 +61,7 @@ public class OrgServer extends CoapServer {
 	
 	static Gson gson = new Gson();
 	
-	public OrgServer(boolean udp, boolean tcp, int port) throws SocketException {
+	public MoiseOrgServer(boolean udp, boolean tcp, int port) throws SocketException {
 		addEndpoints(udp, tcp, port);
 		try {
 			orgSpec = OS.loadOSFromURI(Launcher.fileName);
@@ -99,6 +88,8 @@ public class OrgServer extends CoapServer {
 		
 		
 		PubSubResource data = new PubSubResource("data");
+
+
 		measurements.add(data);
 		add(measurements);
 		//add(new MyIpResource(MyIpResource.RESOURCE_NAME, true));
@@ -189,8 +180,7 @@ public class OrgServer extends CoapServer {
 			}
 		}
 		
-		@Override
-		public void handlePUT(CoapExchange exchange) {
+		private void handleOrgSpecResource(CoapExchange exchange) {
 			if(!(this.getName().equals("org-spec") || this.getName().equals("org-spec-segmented"))) {
 				exchange.respond(ResponseCode.METHOD_NOT_ALLOWED);
 				return;
@@ -209,6 +199,8 @@ public class OrgServer extends CoapServer {
 						sequence  = exchange.getRequestPayload()[0];
 					}else if(exchange.getRequestPayload().length > 1) {
 						sequence = Integer.parseInt(exchange.getRequestText().replace("S", ""));
+					}else if(exchange.getQueryParameter("segment") != null) {
+						sequence = Integer.parseInt(exchange.getQueryParameter("segment"));
 					}
 				
 					/*try{
@@ -235,13 +227,21 @@ public class OrgServer extends CoapServer {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				exchange.respond(ResponseCode.INTERNAL_SERVER_ERROR);
-			}
-			
+			}			
+		}
+		
+		@Override
+		public void handlePUT(CoapExchange exchange) {
+			this.changed();
+			handleOrgSpecResource(exchange);
 		}		
 		
 		@Override
 		public void handleGET(CoapExchange exchange) {
-
+			if((this.getName().equals("org-spec") || this.getName().equals("org-spec-segmented"))) {
+				handleOrgSpecResource(exchange);
+			}
+			
 			if(this.getName().equals("org-entities")) {
 				exchange.respond(ResponseCode.CONTENT, "org-entities");
 				return;
@@ -362,14 +362,17 @@ public class OrgServer extends CoapServer {
 						agent = orgEntity.addAgent(data);
 						agents.add(new OEResource(agent));
 					}
+					System.out.printf("Agent %s wants to adopt role %s in %s\n", agent.getId(), role.getId(), groupInstance.getId());
 					RolePlayer rp = agent.adoptRole(role.getId(), groupInstance);
 					currentReward = 5 - this.getChildren().size();
 					this.add(new OEResource(rp, currentReward));
 					exchange.respond(ResponseCode.CREATED);
+					System.out.println("Added agent to group");
 					return;
 					
 				} catch (MoiseException e) {
-					e.printStackTrace();
+					//e.printStackTrace();
+					System.out.println(e.getMessage());
 					exchange.respond(ResponseCode.BAD_REQUEST, e.getMessage());
 				}
 				
@@ -403,10 +406,11 @@ public class OrgServer extends CoapServer {
 				}
 				//response  = gson.toJson(rolePlayer.getPlayer().getPossibleGoals());
 				if(resource != null) {
-					response = String.format("%s;id:%s", resource, rolePlayer.getRole().getId());
+					response = String.format("%s;rid:%s;aid:%s", resource, rolePlayer.getRole().getId(), rolePlayer.getPlayer().getId());
 				}else {
-					response = String.format("reward:%s;id:%s", currentReward, rolePlayer.getRole().getId());
+					response = String.format("reward:%s;rid:%s;aid:%s", currentReward, rolePlayer.getRole().getId(), rolePlayer.getPlayer().getId());
 				}
+				System.out.printf("Roleplayer %s requested status of %s\n", rolePlayer.getPlayer().getId(), rolePlayer.getRole().getId());
 				exchange.respond(ResponseCode.CONTENT, response);
 				return;
 			}
@@ -419,22 +423,23 @@ public class OrgServer extends CoapServer {
 				}
 				response += gson.toJson(commitedAgents);
 				response += gson.toJson(goalInstance.getState());
-				exchange.respond(response);
+				exchange.respond(ResponseCode.CONTENT, response);
 				return;
-
 			}
 			else if(groupInstance != null && role != null) {
 				if(resource != null) {
-					String response = String.format("%s;id:%s", resource, role.getId());
+					String response = String.format("%s;rid:%s", resource, role.getId());
 					exchange.respond(response);
 					return;
 				}
 				Object roleprop = role.getProperties();
 				//reward:5;id:role_comfort_sensor
-				String response = String.format("reward:%s;id:%s", 5 - this.getChildren().size(), role.getId());
-				exchange.respond(response);
+				String response = String.format("reward:%s;rid:%s", 5 - this.getChildren().size(), role.getId());
+				exchange.respond(ResponseCode.CONTENT, response);
+				System.out.printf("Agent wants to know status of %s : %s\n", groupInstance.getId(), role.getId());
+				return;
 			}
-			exchange.respond(this.getName());
+			exchange.respond(ResponseCode.CONTENT,this.getName());
 		}
 		
 		@Override
@@ -466,11 +471,15 @@ public class OrgServer extends CoapServer {
 							e.printStackTrace();
 						}
 					}
+					System.out.printf("Agent %s wants to exit role %s\n", agent.getId(), role.getId());
+					currentReward = 5;
 					rolePlayer.getPlayer().removeRole(rolePlayer.getRole().getId(), rolePlayer.getGroup());
 					exchange.respond(ResponseCode.DELETED);
 				} catch (MoiseConsistencyException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e.getMessage());
+					//e.printStackTrace();
+					exchange.respond(ResponseCode.INTERNAL_SERVER_ERROR);
 				}
 			}
 			else if(goalCommitment != null) {
@@ -529,7 +538,7 @@ public class OrgServer extends CoapServer {
 
 	static class PubSubResource extends CoapResource {
 
-		private volatile String resource = "";
+		private volatile String resource = "test measurement";
 
 		public PubSubResource(String name) {
 
@@ -546,6 +555,7 @@ public class OrgServer extends CoapServer {
 		}
 		
 		public void updateResource(String resource) {
+			System.out.println("Received PUT request for measurements");
 			this.resource = resource;
 			changed();
 		}
@@ -554,12 +564,15 @@ public class OrgServer extends CoapServer {
 		public void handleGET(CoapExchange exchange) {
 
 			// respond to the request
+			System.out.println("Received GET request for measurements");
 			exchange.respond(resource);
 		}
 
 		@Override
 		public void handlePUT(CoapExchange exchange) {
+
 			resource = exchange.getRequestText();
+			System.out.println("Received update:" + resource);
 			// respond to the request
 			exchange.respond(ResponseCode.CHANGED);
 			changed();
