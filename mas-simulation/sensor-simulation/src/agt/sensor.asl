@@ -1,6 +1,8 @@
 //bat_level(100).
 input_power(0).
 output_power(0).
+offset(10).
+state(0).
 
 !start.
 //!manage_power.
@@ -23,17 +25,29 @@ output_power(0).
 +!monitor_battery: true
     <- update_battery_state.
 
-+!manage_power:bat_level(L) & L > 90
-    <-  discharge(10);
-        .broadcast(tell, sensor_data(10));
-        .print("Sense").
++!manage_power:bat_level(L) & L > 30
+    <- !sense.
 
-+!manage_power: bat_level(L) & L <80
-    <- discharge(0);
++!manage_power: bat_level(L) & state(S) & L >=20 & S==1
+    <- !sense.
+
++!manage_power: bat_level(L) & state(S) & S==1 & L < 20
+    <- !sleep;
         .print("Sleep").
 
-+!manage_power: bat_level(L)
-    <- .print("idle").
++!manage_power: bat_level(L) & state(S) & L >=20 & S==0
+    <- !sleep.
+
+
++!sense:state(S) & bat_level(L) & temperature(T)
+    <-  discharge(30); //Each sensing cycle takes 30mJ
+    -+state(1);
+    .broadcast(tell, sensor_data(T));
+    .print("Sense T=", T).
+
++!sleep:state(S)
+    <- discharge(0);
+    -+state(0).
 
 +bat_level[source(A)] <- .print("Battery update from ",A).
 
