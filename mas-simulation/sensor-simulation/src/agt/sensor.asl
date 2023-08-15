@@ -25,34 +25,50 @@ state(0).
 +!monitor_battery: true
     <- update_battery_state.
 
-+!manage_power:bat_level(L) & L > 30
++!manage_power:bat_level(L) & L > 510
     <- !sense.
 
-+!manage_power: bat_level(L) & state(S) & L >=20 & S==1
++!manage_power: bat_level(L) & state(S) & L >=500 & S==1
     <- !sense.
 
-+!manage_power: bat_level(L) & state(S) & S==1 & L < 20
++!manage_power: bat_level(L) & state(S) & S==1 & L < 500
     <- !sleep;
         .print("Sleep").
 
-+!manage_power: bat_level(L) & state(S) & L >=20 & S==0
++!manage_power: bat_level(L) & state(S) & L <=510 & S==0
     <- !sleep.
 
++!evaluate:true
+<- .print("Evaluating");
+    evaluate;
+    !decide.
+
++!decide:currentBenefit(CB) & highestPossible(HB) & CB == 0 & HB == 0
+<- !sleep.
+
++!decide:currentBenefit(CB) & highestPossible(HB) & CB >= HB
+<- !sense.
+
++!decide:currentBenefit(CB) & highestPossible(HB) & CB < HB
+<- !switchRole;
+   !sense.
 
 +!sense:state(S) & bat_level(L) & temperature(T)
-    <-  discharge(30); //Each sensing cycle takes 30mJ
+    <-
+    discharge(0.015); //Each sensing cycle takes 30mJ
     -+state(1);
     .broadcast(tell, sensor_data(T));
     .print("Sense T=", T).
 
 +!sleep:state(S)
-    <- discharge(0);
+    <-
+    discharge(0);
     -+state(0).
 
 +bat_level[source(A)] <- .print("Battery update from ",A).
 
-+tick: bat_level(L) & input_power(I)
-    <-  .print("Battery update ",L, I);
++tick: bat_level(L) & input_energy(I) & state(S)
+    <-  .print("Battery charge:",L, " Input:", I, " State:", S);
         !manage_power.
 
 { include("$jacamo/templates/common-cartago.asl") }

@@ -2,35 +2,86 @@
 package sensor_hardware;
 
 import cartago.*;
+import organization_interface.GroupRole;
+import organization_interface.Organization;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Battery extends Artifact {
-	int inputEnergy = 0;
-	int energyConsumed = 0;
-	int currentLevel = 100;
+	double inputEnergy = 0.0f;
+	double energyConsumed = 0.0f;
+	double batteryCharge = 600.0f;
 
-	void init(int initialValue) {
+	String wd =  System.getProperty("user.dir");
+	String fileName = wd + "/log/runtime_sen_";
+
+	void init(double initialValue) {
+		batteryCharge = initialValue;
 		defineObsProperty("bat_level", initialValue);
         defineObsProperty("input_energy", 0);
         defineObsProperty("energy_consumed", 0);
-		defineObsProperty("temperature", initialValue);
-		defineObsProperty("humidity", initialValue);
-		defineObsProperty("light_level", initialValue);
+		defineObsProperty("temperature", 22.0f);
+		defineObsProperty("humidity", 50.0f);
+		defineObsProperty("light_level", 100.0f);
+		defineObsProperty("current_benefit", 0);
+		defineObsProperty("highest_benefit", 0);
 		String wd =  System.getProperty("user.dir");
-		currentLevel = initialValue * 825*3600/100;
+
 		loadPowerLogFile();
 		loadSensorLogFile();
+		//GroupRole.GroupRoleInfo[] roles = Organization.getGroupRoles();
+		//System.out.println(roles);
+	}
+
+	double computeCost(GroupRole.GroupRoleInfo role){
+		int interval = role.functionalSpecification.measurementInterval;
+		double cost = ((double) 1 /interval) * 60000;
+		return  cost;
+	}
+	double computeBenefit(GroupRole.GroupRoleInfo role){
+		return role.reward - computeCost(role);
+	}
+
+	GroupRole.GroupRoleInfo getRole(String id, GroupRole.GroupRoleInfo[] roles){
+		for(GroupRole.GroupRoleInfo role : roles){
+			if(role.id.equals(id)){
+				return role;
+			}
+		}
+		return null;
+	}
+	String currentRoleID = null;
+	double currentRoleBenefit = 0;
+	@OPERATION
+	void evaluate() {
+		ObsProperty propCB = getObsProperty("current_benefit");
+		ObsProperty propHB = getObsProperty("highest_benefit");
+		GroupRole.GroupRoleInfo[] roles =  Organization.getGroupRoles();
+		double maxBenefit = 0;
+		GroupRole.GroupRoleInfo bestRole = null;
+		for(GroupRole.GroupRoleInfo role : roles){
+			double benefit = computeBenefit(role);
+			if(benefit > maxBenefit){
+				bestRole = role;
+				maxBenefit = benefit;
+			}
+		}
+		if(currentRoleID != null){
+			GroupRole.GroupRoleInfo currentRole = getRole(currentRoleID, roles);
+			currentRoleBenefit = computeBenefit(currentRole);
+		}
+		propCB.updateValue(currentRoleBenefit);
+		propCB.commitChanges();
+		propHB.updateValue(maxBenefit);
+		propHB.commitChanges();
 	}
 
 	List<List<String>> powerRecords = new ArrayList<>();
 	void loadPowerLogFile(){
 		String wd =  System.getProperty("user.dir");
-		try (BufferedReader br = new BufferedReader(new FileReader(wd + "/log/power_agg_pos16_5min.csv"))) {
+		String id = this.getId().toString();
+		try (BufferedReader br = new BufferedReader(new FileReader(wd + String.format("/log/power_agg_%s_5min.csv", this.getId().toString())))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				String[] values = line.split(";");
@@ -46,7 +97,7 @@ public class Battery extends Artifact {
 	List<List<String>> sensorRecords = new ArrayList<>();
 	void loadSensorLogFile(){
 		String wd =  System.getProperty("user.dir");
-		try (BufferedReader br = new BufferedReader(new FileReader(wd + "/log/sensor_agg_pos16_5min.csv"))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(wd + String.format("/log/sensor_agg_%s_5min.csv", this.getId().toString())))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				String[] values = line.split(";");
@@ -59,13 +110,14 @@ public class Battery extends Artifact {
 		}
 	}
 	@OPERATION
-	void charge(int value) {
+	void charge(double value) {
 		inputEnergy = value;
 	}
 
 	@OPERATION
-	void discharge(int value) {
+	void discharge(double value) {
 		energyConsumed = value;
+		//writeToLogFile(String.format("%s;%d;%d", sensorRecords.get(idx).get(0), batteryCharge, value));
 	}
 
 	int idx = 1;
@@ -74,34 +126,55 @@ public class Battery extends Artifact {
         ObsProperty propL = getObsProperty("bat_level");
 		ObsProperty propI = getObsProperty("input_energy");
 		ObsProperty propT = getObsProperty("temperature");
+
         while(true){
-			String pbat_str = powerRecords.get(idx).get(5);
-			double pbat_mw = Double.parseDouble(pbat_str) * 1000;
-			inputEnergy = (int) (pbat_mw * 5 * 60); //milli joules
-			propI.updateValue(inputEnergy);
-			propI.commitChanges();
+			if(idx > 10000){
+				break;
+			}
+			try {
+				String pbat_str = powerRecords.get(idx).get(5);
+				double pbat_w = Double.parseDouble(pbat_str);
+				inputEnergy = (pbat_w * 5 * 60); //joules
+				propI.updateValue(inputEnergy);
+				propI.commitChanges();
 
-			String tmp_str = sensorRecords.get(idx++).get(5);
-			double temperature = Double.parseDouble(tmp_str);
-			propT.updateValue(temperature);
-			propT.commitChanges();
+				String tmp_str = sensorRecords.get(idx++).get(5);
+				double temperature = Double.parseDouble(tmp_str) + Math.random();
+				propT.updateValue(temperature);
+				propT.commitChanges();
 
-            if(energyConsumed > inputEnergy && currentLevel > 0){
-				currentLevel -= (energyConsumed - inputEnergy);
-				int batLevel = ((currentLevel *100)/ (825*3600));
-                propL.updateValue(batLevel);
-                propL.commitChanges();
-            }
-			//battery capacity CR2032 of 250mAh = 825mWh
-            if(energyConsumed < inputEnergy && currentLevel < 825*3600){
-				currentLevel += (energyConsumed - inputEnergy);
-				int batLevel = ((currentLevel * 100)/ (825*3600)) ;
-				propL.updateValue(batLevel);
-                propL.commitChanges();
-            }
+				if (energyConsumed > inputEnergy && batteryCharge > 0) {
+					batteryCharge -= (energyConsumed - inputEnergy);
+					//int batLevel = ((batteryCharge *100)/ (825*3600));
+					propL.updateValue(batteryCharge);
+					propL.commitChanges();
+				}
+				//battery capacity CR2032 of 250mAh = 825mWh = 2700J
+				if (energyConsumed < inputEnergy && batteryCharge < 2700) {
+					batteryCharge += (inputEnergy - energyConsumed);
+					propL.updateValue(batteryCharge);
+					propL.commitChanges();
+				}
+				writeToLogFile(String.format("%s;%f;%f;%f", sensorRecords.get(idx).get(0), inputEnergy, energyConsumed, batteryCharge));
+			}catch(Exception e){
+				this.log("Exception:" + e.getMessage());
+			}
 			signal("tick");
-            await_time(1000);
+            await_time(250);
         }		
+	}
+
+	BufferedWriter writer;
+	void writeToLogFile(String msg){
+		try {
+			if(writer == null){
+				writer = new BufferedWriter(new FileWriter(fileName + this.getId().toString() + ".csv", true));
+			}
+			writer.append(msg).append("\n");
+			writer.flush();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@OPERATION

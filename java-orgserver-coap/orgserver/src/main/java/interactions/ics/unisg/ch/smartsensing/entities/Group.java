@@ -18,18 +18,7 @@ public class Group extends CoapResource {
         setObservable(true);
         // set display name
         getAttributes().setTitle(String.format("Group:%s" , id));
-        GroupRole.GroupRoleInfo grs = new GroupRole.GroupRoleInfo();
-        grs.id ="gr1";
-        grs.minAllocation = 50;
-        GroupRole.FunctionalSpecification fs = new GroupRole.FunctionalSpecification();
-        fs.hasMeasuredQuantity = "T";
-        fs.measurementInterval = 10;
-        fs.updateInterval = 60;
-        grs.functionalSpecification = fs;
-        this.addGroupRole(grs);
     }
-
-
 
     @Override
     public void handleGET(CoapExchange exchange) {

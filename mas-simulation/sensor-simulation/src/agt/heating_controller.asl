@@ -12,11 +12,10 @@ state(0).
         update_schedule.
 
 +sensor_data(D)[source(Ag)] :state(S) & S > 0
-    <- .print("Received usable sensor data ", D, " from ", Ag, " state ", S);
-        processInput.
+    <- processInput.
 
 +sensor_data(D)[source(Ag)] :state(S) & S < 1
-    <- .print("Received useless sensor data ", D, " from ", Ag).
+    <- processInput.
 
 +state(S):S > 0
     <- .print("State changed to ", S);

@@ -23,6 +23,9 @@ java {
 repositories {
     maven { url "https://raw.githubusercontent.com/jacamo-lang/mvn-repo/master" }
     maven { url "https://repo.gradle.org/gradle/libs-releases" }
+    maven {
+        url 'https://mvnrepository.com/artifact/org.eclipse.californium/californium-core'
+    }
 
     //maven { url "http://jacamo.sourceforge.net/maven2" }
     //maven { url "https://jade.tilab.com/maven/" }
@@ -36,6 +39,9 @@ repositories {
 
 dependencies {
     implementation('org.jacamo:jacamo:1.2')
+    // https://mvnrepository.com/artifact/org.eclipse.californium/californium-core
+    implementation 'org.eclipse.californium:californium-core:3.7.0'
+
 }
 
 sourceSets {

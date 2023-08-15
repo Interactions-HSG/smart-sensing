@@ -1,4 +1,4 @@
-package interactions.ics.unisg.ch.smartsensing.entities;
+package organization_interface;
 
 import com.google.gson.Gson;
 import org.eclipse.californium.core.CoapResource;
@@ -49,6 +49,7 @@ public class RolePlayer extends CoapResource {
     public static class PlayerInfo {
         public String id;
         public int taskAllocation;
+        public int canAllocateUpto;
         public int reward;
         public int cost;
         public int networkCost;

@@ -12,25 +12,19 @@
 mas sensor_simulation {
 
     agent s1: sensor.asl {
-      focus: w.c1 
+      focus: w.pos16
     }
     agent s2: sensor.asl {
-      focus: w.c2 
-    }
-
-    agent s3: sensor.asl {
-      focus: w.c3 
+      focus: w.pos17
     }
 
     agent hc1: heating_controller.asl {
-        focus: w.t1, w.p1
+        focus: w.con01
     }
 
     workspace w {
-      artifact c1: sensor_hardware.Battery(100)
-      artifact c2: sensor_hardware.Battery(100) 
-      artifact c3: sensor_hardware.Battery(100)
-      artifact t1: controller_hardware.TaskScheduler(0)
-      artifact p1: controller_hardware.ControlProgram
+      artifact pos16: sensor_hardware.Battery(505.0)
+      artifact pos17: sensor_hardware.Battery(505.0)
+      artifact con01: controller_hardware.ControlProgram(0)
     }
 }

@@ -1,4 +1,4 @@
-package interactions.ics.unisg.ch.smartsensing.entities;
+package organization_interface;
 
 import com.google.gson.Gson;
 import org.eclipse.californium.core.CoapResource;

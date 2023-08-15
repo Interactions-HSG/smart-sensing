@@ -21,7 +21,9 @@ public class RolePlayer extends CoapResource {
 
     @Override
     public void handleGET(CoapExchange exchange) {
+        System.out.println("RolePlayer::handleGet");
        String data = gson.toJson(currentState);
+       System.out.println(("->" + data));
        exchange.respond(data);
     }
 
@@ -45,9 +47,11 @@ public class RolePlayer extends CoapResource {
     }
 
     public static class PlayerInfo {
-
         public String id;
         public int taskAllocation;
+        public int canAllocateUpto;
         public int reward;
+        public int cost;
+        public int networkCost;
     }
 }
