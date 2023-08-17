@@ -16,9 +16,6 @@ state(0).
        +started(Y,M,D,H,Min,Sec);             // add a new belief
        !!monitor_battery.
 
-+!evaluate:true
-    <- .print("Evaluating current state").
-
 +!search_for_roles:true
     <- .print("Looking for roles to play").
 
@@ -26,7 +23,7 @@ state(0).
     <- update_battery_state.
 
 +!manage_power:bat_level(L) & L > 510
-    <- !sense.
+    <- !evaluate.
 
 +!manage_power: bat_level(L) & state(S) & L >=500 & S==1
     <- !sense.
@@ -40,25 +37,28 @@ state(0).
 
 +!evaluate:true
 <- .print("Evaluating");
-    evaluate;
+    updateRoleStatus;
     !decide.
 
-+!decide:currentBenefit(CB) & highestPossible(HB) & CB == 0 & HB == 0
++!decide:current_benefit(CB) & highest_benefit(HB) & CB == 0 & HB == 0
 <- !sleep.
 
-+!decide:currentBenefit(CB) & highestPossible(HB) & CB >= HB
++!decide:current_benefit(CB) & highest_benefit(HB) & CB >= HB
 <- !sense.
 
-+!decide:currentBenefit(CB) & highestPossible(HB) & CB < HB
-<- !switchRole;
++!decide:current_benefit(CB) & highest_benefit(HB) & CB < HB
+<- switchRole;
    !sense.
 
-+!sense:state(S) & bat_level(L) & temperature(T)
++!decide:current_benefit(CB) & highest_benefit(HB)
+<- .print("Unable to decide with CB=", CB, " and HB=", HB).
+
++!sense:state(S) & bat_level(L) & temperature(T) & current_role(CR)
     <-
     discharge(0.015); //Each sensing cycle takes 30mJ
     -+state(1);
     .broadcast(tell, sensor_data(T));
-    .print("Sense T=", T).
+    .print("Sense T=", T, " for role ", CR).
 
 +!sleep:state(S)
     <-

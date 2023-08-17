@@ -13,11 +13,14 @@ public class Battery extends Artifact {
 	double energyConsumed = 0.0f;
 	double batteryCharge = 600.0f;
 
+	double energyPerMeasurement = 0.15f;
+
 	String wd =  System.getProperty("user.dir");
 	String fileName = wd + "/log/runtime_sen_";
 
-	void init(double initialValue) {
+	void init(double initialValue, double perMeasurement) {
 		batteryCharge = initialValue;
+		energyPerMeasurement = perMeasurement;
 		defineObsProperty("bat_level", initialValue);
         defineObsProperty("input_energy", 0);
         defineObsProperty("energy_consumed", 0);
@@ -26,6 +29,8 @@ public class Battery extends Artifact {
 		defineObsProperty("light_level", 100.0f);
 		defineObsProperty("current_benefit", 0);
 		defineObsProperty("highest_benefit", 0);
+		defineObsProperty("current_role", "unassigned");
+		defineObsProperty("energy_per_measurement", perMeasurement);
 		String wd =  System.getProperty("user.dir");
 
 		loadPowerLogFile();
@@ -36,14 +41,18 @@ public class Battery extends Artifact {
 
 	double computeCost(GroupRole.GroupRoleInfo role){
 		int interval = role.functionalSpecification.measurementInterval;
-		double cost = ((double) 1 /interval) * 60000;
+		int duration = role.functionalSpecification.measurementDuration;
+		int numberOfMeasurements = (duration * 60000 /interval);
+		double cost = numberOfMeasurements * energyPerMeasurement;
 		return  cost;
 	}
 	double computeBenefit(GroupRole.GroupRoleInfo role){
-		return role.reward - computeCost(role);
+		double cost = computeCost(role);
+		double benefit = batteryCharge / cost;
+		return benefit;
 	}
 
-	GroupRole.GroupRoleInfo getRole(String id, GroupRole.GroupRoleInfo[] roles){
+	GroupRole.GroupRoleInfo getRole(String id, List<GroupRole.GroupRoleInfo> roles){
 		for(GroupRole.GroupRoleInfo role : roles){
 			if(role.id.equals(id)){
 				return role;
@@ -53,11 +62,13 @@ public class Battery extends Artifact {
 	}
 	String currentRoleID = null;
 	double currentRoleBenefit = 0;
+	String bestRoleID = null;
+
 	@OPERATION
-	void evaluate() {
+	void updateRoleStatus() {
 		ObsProperty propCB = getObsProperty("current_benefit");
 		ObsProperty propHB = getObsProperty("highest_benefit");
-		GroupRole.GroupRoleInfo[] roles =  Organization.getGroupRoles();
+		List<GroupRole.GroupRoleInfo> roles =  Organization.getGroupRoles();
 		double maxBenefit = 0;
 		GroupRole.GroupRoleInfo bestRole = null;
 		for(GroupRole.GroupRoleInfo role : roles){
@@ -67,6 +78,10 @@ public class Battery extends Artifact {
 				maxBenefit = benefit;
 			}
 		}
+		if(bestRole != null) {
+			bestRoleID = bestRole.id;
+		}
+
 		if(currentRoleID != null){
 			GroupRole.GroupRoleInfo currentRole = getRole(currentRoleID, roles);
 			currentRoleBenefit = computeBenefit(currentRole);
@@ -75,6 +90,16 @@ public class Battery extends Artifact {
 		propCB.commitChanges();
 		propHB.updateValue(maxBenefit);
 		propHB.commitChanges();
+	}
+
+	@OPERATION
+	void switchRole() {
+		if(bestRoleID != null){
+			currentRoleID = bestRoleID;
+			ObsProperty propCR = getObsProperty("current_role");
+			propCR.updateValue(currentRoleID);
+			propCR.commitChanges();
+		}
 	}
 
 	List<List<String>> powerRecords = new ArrayList<>();

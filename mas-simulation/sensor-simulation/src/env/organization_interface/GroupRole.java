@@ -5,6 +5,8 @@ import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 
+import java.util.List;
+
 public class GroupRole extends CoapResource {
     Gson gson = new Gson();
 
@@ -85,6 +87,8 @@ public class GroupRole extends CoapResource {
         public int hasQuantityKind;
         public int measurementInterval;
         public int updateInterval;
+        public int measurementDuration;
+
     }
 
     public static class GroupRoleInfo {
@@ -98,5 +102,10 @@ public class GroupRole extends CoapResource {
         public int minAgents = 1;
         public int maxAgents = 1;
         public int reward = 0;
+    }
+
+    public static class GroupRoleInfos{
+        public List<GroupRoleInfo> elements;
+        public int num_elements;
     }
 }

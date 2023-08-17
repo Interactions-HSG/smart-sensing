@@ -29,7 +29,10 @@ public class Group extends CoapResource {
                 GroupRole gr = (GroupRole)res;
                 grs.add(gr.specification);
             }
-            String response = gson.toJson(grs);
+            GroupRole.GroupRoleInfos col = new GroupRole.GroupRoleInfos();
+            col.elements = grs;
+            col.num_elements = grs.size();
+            String response = gson.toJson(col);
             exchange.respond(response);
         }catch (Exception e){
             System.out.println(e.getMessage());

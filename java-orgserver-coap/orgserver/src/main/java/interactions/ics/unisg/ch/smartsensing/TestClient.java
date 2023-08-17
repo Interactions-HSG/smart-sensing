@@ -17,7 +17,7 @@ public class TestClient {
 
     public static void testConnection(String[] args){
 
-        CoapClient client = new CoapClient("coap://10.0.1.7:5683/room1");
+        CoapClient client = new CoapClient("coap://localhost:5683/room1");
 
         System.out.println("SYNCHRONOUS");
         Gson gson = new Gson();
@@ -39,10 +39,12 @@ public class TestClient {
             fspec.hasQuantityKind = 0;
             fspec.measurementInterval = 1000;
             fspec.updateInterval = 60000;
+            fspec.measurementDuration = 60; //in minutes
             grinfo.id = "gr_comfort_sensing";
             grinfo.maxAgents = 2;
             grinfo.minAllocation = 50;
-            grinfo.reward = 10;
+            grinfo.reward = 300;
+            grinfo.functionalSpecification = fspec;
             response = client.post(gson.toJson(grinfo), MediaTypeRegistry.APPLICATION_JSON).getResponseText();
             System.out.println("Create new group role: " + response);
 
@@ -50,12 +52,14 @@ public class TestClient {
             GroupRole.GroupRoleInfo grinfo2 = new GroupRole.GroupRoleInfo();
             GroupRole.FunctionalSpec fspec2 = new GroupRole.FunctionalSpec();
             fspec2.hasQuantityKind = 0;
-            fspec2.measurementInterval = 1000;
+            fspec2.measurementInterval = 60000;
             fspec2.updateInterval = 60000;
+            fspec2.measurementDuration = 60;
             grinfo2.id = "gr_safety_sensing";
             grinfo2.maxAgents = 2;
             grinfo2.minAllocation = 50;
-            grinfo2.reward = 10;
+            grinfo2.reward = 15;
+            grinfo2.functionalSpecification =fspec2;
             response = client.post(gson.toJson(grinfo2), MediaTypeRegistry.APPLICATION_JSON).getResponseText();
             System.out.println("Create new group role: " + response);
 
