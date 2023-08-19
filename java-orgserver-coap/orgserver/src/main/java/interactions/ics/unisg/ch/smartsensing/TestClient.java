@@ -37,13 +37,13 @@ public class TestClient {
             GroupRole.GroupRoleInfo grinfo = new GroupRole.GroupRoleInfo();
             GroupRole.FunctionalSpec fspec = new GroupRole.FunctionalSpec();
             fspec.hasQuantityKind = 0;
-            fspec.measurementInterval = 1000;
+            fspec.measurementInterval = 30000;
             fspec.updateInterval = 60000;
             fspec.measurementDuration = 60; //in minutes
             grinfo.id = "gr_comfort_sensing";
             grinfo.maxAgents = 2;
             grinfo.minAllocation = 50;
-            grinfo.reward = 300;
+            grinfo.reward = 3;
             grinfo.functionalSpecification = fspec;
             response = client.post(gson.toJson(grinfo), MediaTypeRegistry.APPLICATION_JSON).getResponseText();
             System.out.println("Create new group role: " + response);
@@ -58,7 +58,7 @@ public class TestClient {
             grinfo2.id = "gr_safety_sensing";
             grinfo2.maxAgents = 2;
             grinfo2.minAllocation = 50;
-            grinfo2.reward = 15;
+            grinfo2.reward = 2;
             grinfo2.functionalSpecification =fspec2;
             response = client.post(gson.toJson(grinfo2), MediaTypeRegistry.APPLICATION_JSON).getResponseText();
             System.out.println("Create new group role: " + response);
@@ -71,6 +71,7 @@ public class TestClient {
             System.out.println("Get gr_comfort_sensing: " + response);
 
             //Add a role player
+            /*
             RolePlayer.PlayerInfo pi = new RolePlayer.PlayerInfo();
             pi.id = "ag1";
             pi.taskAllocation = 50;
@@ -79,11 +80,11 @@ public class TestClient {
 
             response = client.get().getResponseText();
             System.out.println("Get gr_comfort_sensing: " + response);
-
+*/
             //Query role player
-            client.setURI("coap://localhost:5683/room1/gr_comfort_sensing/ag1");
-            response = client.get().getResponseText();
-            System.out.println("Get ag1: " + response);
+            //client.setURI("coap://localhost:5683/room1/gr_comfort_sensing/ag1");
+            //response = client.get().getResponseText();
+            //System.out.println("Get ag1: " + response);
 
             //Delete agent as role player
             //response = client.delete().getCode().toString();

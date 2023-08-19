@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.server.resources.CoapExchange;
+import org.eclipse.californium.core.server.resources.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroupRole extends CoapResource {
@@ -23,9 +25,29 @@ public class GroupRole extends CoapResource {
     @Override
     public void handleGET(CoapExchange exchange) {
         // respond to the request
-        specification.currentAgents = this.getChildren().size();
-        String data = gson.toJson(specification);
-        exchange.respond(data);
+        if(exchange.getQueryParameter("players") != null){
+            List<RolePlayer.PlayerInfo> players = new ArrayList<>();
+            for(Resource r : this.getChildren()){
+                RolePlayer rp = (RolePlayer)r;
+                players.add(rp.playerInfo);
+            }
+            String data = gson.toJson(players);
+            exchange.respond(data);
+        }else {
+            specification.currentAgents = this.getChildren().size();
+            String data = gson.toJson(specification);
+            exchange.respond(data);
+        }
+    }
+
+    @Override
+    public void handlePATCH(CoapExchange exchange){
+        String data = exchange.getRequestText();
+        System.out.println("Received update:" + data);
+        GroupRoleInfo groupRoleInfo = gson.fromJson(data, GroupRoleInfo.class);
+
+        exchange.respond(CoAP.ResponseCode.CHANGED);
+        changed();
     }
 
     @Override
@@ -37,17 +59,20 @@ public class GroupRole extends CoapResource {
         changed();
     }
 
+    final Object lock = new Object();
     @Override
     public void handlePOST(CoapExchange exchange) {
-        if(this.getChildren().size() >= specification.maxAgents){
-            exchange.respond(CoAP.ResponseCode.FORBIDDEN);
-            return;
+        synchronized (lock) {
+            if (this.getChildren().size() >= specification.maxAgents || specification.currentAllocation >= 100) {
+                exchange.respond(CoAP.ResponseCode.FORBIDDEN);
+                return;
+            }
+            String resource = exchange.getRequestText();
+            // respond to the request
+            RolePlayer.PlayerInfo playerState = gson.fromJson(resource, RolePlayer.PlayerInfo.class);
+            addRolePlayer(resource, playerState);
+            exchange.respond(CoAP.ResponseCode.CREATED);
         }
-        String resource = exchange.getRequestText();
-        // respond to the request
-        RolePlayer.PlayerInfo playerState = gson.fromJson(resource, RolePlayer.PlayerInfo.class);
-        addRolePlayer(resource, playerState);
-        exchange.respond(CoAP.ResponseCode.CHANGED);
         changed();
     }
 
@@ -64,16 +89,18 @@ public class GroupRole extends CoapResource {
 
     private void addRolePlayer(String roleName, RolePlayer.PlayerInfo state){
         RolePlayer player = new RolePlayer(state);
-        player.currentState.reward = specification.reward * player.currentState.taskAllocation/100;
-        specification.reward -= player.currentState.reward;
-        specification.currentAllocation += player.currentState.taskAllocation;
+        player.playerInfo.reward = specification.reward * player.playerInfo.taskAllocation/100;
+        specification.reward -= player.playerInfo.reward;
+        specification.currentAllocation += player.playerInfo.taskAllocation;
         this.add(player);
     }
 
     protected void removeRolePlayer(RolePlayer player){
-        this.specification.reward += player.currentState.reward;
-        specification.currentAllocation -= player.currentState.taskAllocation;
+        this.specification.reward += player.playerInfo.reward;
+        specification.currentAllocation -= player.playerInfo.taskAllocation;
+        specification.currentAgents--;
         this.delete(player);
+
     }
 
     protected void updateInfo(RolePlayer.PlayerInfo currentInfo, RolePlayer.PlayerInfo newInfo){

@@ -23,8 +23,8 @@ mas sensor_simulation {
     }
 
     workspace w {
-      artifact pos16: sensor_hardware.Battery(510.0, 0.15)
-      artifact pos17: sensor_hardware.Battery(510.0, 0.15)
+      artifact pos16: sensor_hardware.SensorSimulator(510.0, 0.15)
+      artifact pos17: sensor_hardware.SensorSimulator(510.0, 0.15)
       artifact con01: controller_hardware.ControlProgram(0)
     }
 }
