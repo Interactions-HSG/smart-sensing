@@ -50,7 +50,7 @@ public class RolePlayer extends CoapResource {
         public String id;
         public int taskAllocation;
         public int canAllocateUpto;
-        public int reward;
+        public double reward;
         public int cost;
         public int networkCost;
     }

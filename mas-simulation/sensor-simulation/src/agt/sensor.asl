@@ -25,17 +25,17 @@ engagement(0).
 
 +!manage_power:energy_in_buffer(L) & L > 510 & state(S) & S==0 & engagement(R) & R == 0
     <-
-        .print("Energized! But no job. Buffer=", L).
+        //.print("Energized! But no job. Buffer=", L);
         !evaluate.
 
-+!manage_power: energy_in_buffer(L) & state(S) & L >=500 & S==0 & engagement(R) & R > 0
++!manage_power: energy_in_buffer(L) & state(S) & L >=510 & S==0 & engagement(R) & R > 0
     <-
-        .print("Got energy, have job, will do work");
+        //.print("Got energy, have job, will do work");
         -+state(1);
         !sense.
 
 +!manage_power: energy_in_buffer(L) & state(S) & L >=500 & S==1 & engagement(R) & R > 0
-    <- .print("Got energy, have job, working");
+    <- //.print("Got energy, have job, working");
         !sense.
 
 +!manage_power: energy_in_buffer(L) & state(S) & S==1 & L < 500
@@ -49,20 +49,19 @@ engagement(0).
     findAltRole;
     !decide.
 
-+revaluate:true
++on_org_update:true
     <- //.print("Revaluating");
-    !evaluate.
+    !decide.
 
 +!decide:current_benefit(CB) & alternative_benefit(HB) & CB == 0 & HB == 0 & engagement(R) & R > 0
 <-  exitCurrentRole;
     -+engagement(0).
 
 +!decide:current_benefit(CB) & alternative_benefit(HB) & CB >= HB & state(S) & S==0 & engagement(R) & R > 0
-<-
-    .print("Keeping my job and sleeping").
+<- nop.
 
 +!decide:current_benefit(CB) & alternative_benefit(HB) & CB >= HB & state(S) & S==1 & engagement(R) & R > 0
-<- .print("Happily doing my job").
+<- nop.
 
 +!decide:current_role(CR) & alternative_role(AR) & current_benefit(CB) & alternative_benefit(HB) & CB < HB
 <- .print("Deciding to switch from ", CR, ":", CB, " to ", AR, ":", HB);
@@ -70,7 +69,8 @@ engagement(0).
     -+engagement(1).
 
 +!decide:current_benefit(CB) & alternative_benefit(HB) & state(S) & engagement(R)
-<- .print("Unable to decide with CB=", CB, " and HB=", HB, " engagement=", R, " state=", S).
+<- //.print("Unable to decide with CB=", CB, " and HB=", HB, " engagement=", R, " state=", S).
+    nop.
 
 +!sense:state(S) & energy_in_buffer(L) & temperature(T) & current_role(CR) & S==1
     <-
@@ -84,7 +84,7 @@ engagement(0).
     -+state(0).
 
 +!sleep:state(S) & S==0
-    <- .print("z").
+    <- enterSleepMode.
 
 +current_role(CR):true
 <- .print("Role changed to ", CR).
@@ -92,7 +92,7 @@ engagement(0).
 //+energy_in_buffer[source(A)] <- .print("Battery update from ",A).
 
 +tick: energy_in_buffer(L) & energy_input(I) & state(S)
-    <-  .print("Battery charge=",L, " Input=", I, " State=", S);
+    <-  //.print("Battery charge=",L, " Input=", I, " State=", S);
         !manage_power.
 
 { include("$jacamo/templates/common-cartago.asl") }

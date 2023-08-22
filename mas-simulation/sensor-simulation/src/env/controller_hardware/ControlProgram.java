@@ -4,6 +4,8 @@ import cartago.Artifact;
 import cartago.OPERATION;
 import cartago.ObsProperty;
 import jade.util.Logger;
+import organization_interface.GroupRole;
+import organization_interface.Organization;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -45,6 +47,23 @@ public class ControlProgram extends Artifact {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @OPERATION
+    void joinOrganization() {
+        GroupRole.GroupRoleInfo role = new GroupRole.GroupRoleInfo();
+        GroupRole.FunctionalSpec fs = new GroupRole.FunctionalSpec();
+        fs.measurementInterval = 30000;
+        fs.hasQuantityKind = 1;
+        fs.measurementDuration = 60;
+        fs.updateInterval = 60000;
+        role.id = "gr_thermal_sensing";
+        role.reward = 1;
+        role.isActive = false;
+        role.maxAgents = 5;
+        role.minAllocation = 20;
+        role.functionalSpecification = fs;
+        Organization.createGroupRole(role);
     }
 
     @OPERATION

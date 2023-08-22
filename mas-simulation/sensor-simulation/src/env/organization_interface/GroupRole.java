@@ -101,7 +101,7 @@ public class GroupRole extends CoapResource {
         public int currentAgents = 0;
         public int minAgents = 1;
         public int maxAgents = 1;
-        public int reward = 0;
+        public double reward = 0;
     }
 
     public static class GroupRoleInfos{

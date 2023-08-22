@@ -8,7 +8,7 @@ import organization_interface.RolePlayer;
 import java.io.*;
 import java.util.*;
 
-public class SensorSimulator extends Artifact implements Organization.GroupRoleListener {
+public class SensorSimulator extends Artifact implements Organization.OrganizationListener {
 	double energyInput = 0.0f; 		// Amount of energy obtained (from PV array) in one cycle
 	double energyConsumed = 0.0f; 	// Amount of energy consumed in one cycle
 	double energyInBuffer = 0.0f; 	// Amount of energy in the buffer (capacitor / battery)
@@ -18,8 +18,10 @@ public class SensorSimulator extends Artifact implements Organization.GroupRoleL
 	String myName = "unknown"; // Id of the sensor (not the agent)
 	String currentRoleID = null;
 	double currentRoleBenefit = 0;
+	double currentReward = 0;
 	String altRoleID = null;
 	double altRoleBenefit = 0;
+	double altRoleReward = 0;
 
 	void init(double initialValue, double perMeasurement) {
 		energyInBuffer = initialValue;
@@ -55,8 +57,16 @@ public class SensorSimulator extends Artifact implements Organization.GroupRoleL
 		return  cost;
 	}
 	double computeBenefit(GroupRole.GroupRoleInfo role){
+        if(!role.isActive){
+            return 0.0f;
+        }
+		double r = role.reward;
 		double cost = computeCost(role);
-		double benefit = (double)role.reward  - (cost / energyInBuffer);
+		double usableEnergy = energyInBuffer - 500; //low limit is 500
+		if(usableEnergy <= 0){
+			return 0;
+		}
+		double benefit = r  - (cost / usableEnergy);
 		return benefit;
 	}
 
@@ -64,9 +74,10 @@ public class SensorSimulator extends Artifact implements Organization.GroupRoleL
 	@OPERATION
 	void monitorOrganization() {
 		while(true){
+			await_time(5000);
 			updateCurrentRoleState();
 			findAltRole();
-			signal("revaluate");
+			signal("on_org_update");
 			await_time(5000);
 		}
 	}
@@ -75,8 +86,18 @@ public class SensorSimulator extends Artifact implements Organization.GroupRoleL
 	void updateCurrentRoleState() {
 		if(currentRoleID != null && !currentRoleID.isEmpty()){
 			GroupRole.GroupRoleInfo roleInfo = Organization.getGroupRole(currentRoleID);
-			if(roleInfo.id.equals(currentRoleID) && !roleInfo.isActive){
-				currentRoleBenefit = 0;
+			if(roleInfo.id.equals(currentRoleID)){
+				if(!roleInfo.isActive){
+					currentRoleBenefit = 0;
+				}else {
+					double cost = computeCost(roleInfo);
+					double usableEnergy = energyInBuffer - 500; //low limit is 500
+					if(usableEnergy <= 0){
+						currentRoleBenefit = 0;
+					}else {
+						currentRoleBenefit = currentReward - (cost / usableEnergy);
+					}
+				}
 				ObsProperty propCB = getObsProperty("current_benefit");
 				propCB.updateValue(currentRoleBenefit);
 				propCB.commitChanges();
@@ -105,17 +126,14 @@ public class SensorSimulator extends Artifact implements Organization.GroupRoleL
 			altRoleID = bestRole.id;
 			propAR.updateValue(altRoleID);
 			propAR.commitChanges();
+			altRoleReward = bestRole.reward;
+			altRoleBenefit = maxBenefit;
 		}else {
 			altRoleID = null;
 			altRoleBenefit = 0;
+			altRoleReward = 0;
 		}
-
-		if(currentRoleID != null){
-			GroupRole.GroupRoleInfo currentRole = getRole(currentRoleID, roles);
-			//currentRoleBenefit = computeBenefit(currentRole);
-		}
-		altRoleBenefit = maxBenefit;
-		propHB.updateValue(maxBenefit);
+		propHB.updateValue(altRoleBenefit);
 		propHB.commitChanges();
 		//System.out.printf("Agent %s thinks %s (%f) role is better than %s (%f)\n", this.getId().toString(), bestRoleID, maxBenefit, currentRoleID, currentRoleBenefit);
 	}
@@ -138,6 +156,7 @@ public class SensorSimulator extends Artifact implements Organization.GroupRoleL
 		}
 		currentRoleID = null;
 		currentRoleBenefit = 0;
+		currentReward = 0;
 		ObsProperty propCR = getObsProperty("current_role");
 		propCR.updateValue(currentRoleID);
 		propCR.commitChanges();
@@ -159,20 +178,22 @@ public class SensorSimulator extends Artifact implements Organization.GroupRoleL
 		if(joinOk) {
 			currentRoleID = altRoleID;
 			currentRoleBenefit = altRoleBenefit;
-			altRoleID = null;
-			altRoleBenefit = 0;
+			currentReward = altRoleReward;
+			//altRoleID = null;
+			//altRoleBenefit = 0;
+			//altRoleReward = 0;
 			ObsProperty propCB = getObsProperty("current_benefit");
 			ObsProperty propCR = getObsProperty("current_role");
 			ObsProperty propAB = getObsProperty("alternative_benefit");
 			ObsProperty propAR = getObsProperty("alternative_role");
 			propCR.updateValue(currentRoleID);
-			propCR.commitChanges();
+			//propCR.commitChanges();
 			propCB.updateValue(currentRoleBenefit);
 			propCB.commitChanges();
-			propAR.updateValue(altRoleID);
-			propAR.commitChanges();
-			propAB.updateValue(altRoleBenefit);
-			propAB.commitChanges();
+			//propAR.updateValue(altRoleID);
+			//propAR.commitChanges();
+			//propAB.updateValue(altRoleBenefit);
+			//propAB.commitChanges();
 			//Organization.observeGroupRole(currentRoleID, this);
 		}else{
 			System.out.println(System.out.printf("[%s] Could not join role %s\n", myName, altRoleID));
@@ -198,6 +219,11 @@ public class SensorSimulator extends Artifact implements Organization.GroupRoleL
 	void enterSleepMode() {
 		energyConsumed = 0.0f; //TODO: consider sleep-mode energy consumption. Sleep is not free.
 		//writeToLogFile(String.format("%s;%d;%d", sensorRecords.get(idx).get(0), batteryCharge, value));
+	}
+
+	@OPERATION
+	void nop() {
+
 	}
 
 	int idx = 1;
@@ -302,7 +328,7 @@ public class SensorSimulator extends Artifact implements Organization.GroupRoleL
 
 	//---------------------------------- Interface implementation ---------------------------------
 	@Override
-	public void onGroupRoleChange(String data) {
+	public void onGroupRoleInfoChange(String data) {
 		//changed = true;
 	}
 }

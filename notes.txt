@@ -1,0 +1,10 @@
+coap post coap://localhost:5683/room1/gr_safety_sensing -p {"id":"ag1","taskAllocation":100,"canAllocateUpto":100,"reward":0,"cost":0,"networkCost":0}
+
+
+coap put coap://localhost:5683/room1/gr_comfort_sensing -p {"id":"gr_comfort_sensing","isActive":false,"functionalSpecification":{"hasQuantityKind":0,"measurementInterval":30000,"updateInterval":60000,"measurementDuration":60},"minAllocation":50,"currentAllocation":0,"currentAgents":0,"minAgents":1,"maxAgents":2,"reward":0}
+
+coap put coap://localhost:5683/room1/gr_comfort_sensing -p {"id":"gr_comfort_sensing","isActive":true,"functionalSpecification":{"hasQuantityKind":0,"measurementInterval":30000,"updateInterval":60000,"measurementDuration":60},"minAllocation":50,"currentAllocation":0,"currentAgents":0,"minAgents":1,"maxAgents":2,"reward":3}
+
+coap put coap://localhost:5683/room1/gr_safety_sensing -p {"id":"gr_safety_sensing","isActive":false,"functionalSpecification":{"hasQuantityKind":0,"measurementInterval":30000,"updateInterval":60000,"measurementDuration":60},"minAllocation":50,"currentAllocation":0,"currentAgents":0,"minAgents":1,"maxAgents":2,"reward":0}
+
+coap put coap://localhost:5683/room1/gr_safety_sensing -p {"id":"gr_safety_sensing","isActive":true,"functionalSpecification":{"hasQuantityKind":0,"measurementInterval":30000,"updateInterval":60000,"measurementDuration":60},"minAllocation":50,"currentAllocation":0,"currentAgents":0,"minAgents":1,"maxAgents":2,"reward":2}

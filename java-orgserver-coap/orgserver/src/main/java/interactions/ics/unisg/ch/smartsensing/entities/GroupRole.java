@@ -89,7 +89,7 @@ public class GroupRole extends CoapResource {
 
     private void addRolePlayer(String roleName, RolePlayer.PlayerInfo state){
         RolePlayer player = new RolePlayer(state);
-        player.playerInfo.reward = specification.reward * player.playerInfo.taskAllocation/100;
+        player.playerInfo.reward = specification.reward * (double)player.playerInfo.taskAllocation/100.0f;
         specification.reward -= player.playerInfo.reward;
         specification.currentAllocation += player.playerInfo.taskAllocation;
         this.add(player);
@@ -127,7 +127,7 @@ public class GroupRole extends CoapResource {
         public int currentAgents = 0;
         public int minAgents = 1;
         public int maxAgents = 1;
-        public int reward = 0;
+        public double reward = 0.0f;
     }
 
     public static class GroupRoleInfos{

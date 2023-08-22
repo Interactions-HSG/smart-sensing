@@ -37,9 +37,9 @@ public class TestClient {
             GroupRole.GroupRoleInfo grinfo = new GroupRole.GroupRoleInfo();
             GroupRole.FunctionalSpec fspec = new GroupRole.FunctionalSpec();
             fspec.hasQuantityKind = 0;
-            fspec.measurementInterval = 30000;
+            fspec.measurementInterval = 5000;
             fspec.updateInterval = 60000;
-            fspec.measurementDuration = 60; //in minutes
+            fspec.measurementDuration = 5; //in minutes
             grinfo.id = "gr_comfort_sensing";
             grinfo.maxAgents = 2;
             grinfo.minAllocation = 50;
@@ -52,13 +52,13 @@ public class TestClient {
             GroupRole.GroupRoleInfo grinfo2 = new GroupRole.GroupRoleInfo();
             GroupRole.FunctionalSpec fspec2 = new GroupRole.FunctionalSpec();
             fspec2.hasQuantityKind = 0;
-            fspec2.measurementInterval = 60000;
+            fspec2.measurementInterval = 6000;
             fspec2.updateInterval = 60000;
-            fspec2.measurementDuration = 60;
+            fspec2.measurementDuration = 10;
             grinfo2.id = "gr_safety_sensing";
             grinfo2.maxAgents = 2;
             grinfo2.minAllocation = 50;
-            grinfo2.reward = 2;
+            grinfo2.reward = 1;
             grinfo2.functionalSpecification =fspec2;
             response = client.post(gson.toJson(grinfo2), MediaTypeRegistry.APPLICATION_JSON).getResponseText();
             System.out.println("Create new group role: " + response);

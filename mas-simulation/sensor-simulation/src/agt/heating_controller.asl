@@ -5,23 +5,24 @@ state(0).
     <- .print("Starting heating controller");
        .date(Y,M,D); .time(H,Min,Sec,MilSec); // get current date & time
        +started(Y,M,D,H,Min,Sec);
+       joinOrganization;
        !!start_scheduler.
 
 +!start_scheduler:true
     <- .print("Starting scheduler");
         update_schedule.
 
-+sensor_data(D)[source(Ag)] :state(S) & S > 0
++sensor_data(D)[source(Ag)] :state(S) & S == 1
     <- processInput.
 
-+sensor_data(D)[source(Ag)] :state(S) & S < 1
++sensor_data(D)[source(Ag)] :state(S) & S == 0
     <- processInput.
 
-+state(S):S > 0
++state(S):S == 1
     <- .print("State changed to ", S);
     activate.
 
-+state(S):S < 1
++state(S):S == 0
     <-.print("State changed to ", S);
     deactivate.
 
