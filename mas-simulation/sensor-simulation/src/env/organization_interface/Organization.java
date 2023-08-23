@@ -26,8 +26,6 @@ public class Organization {
     static Gson gson = new Gson();
 
     public static List<GroupRole.GroupRoleInfo> getGroupRoles(){
-
-
         // synchronous
         String response = null;
         try {

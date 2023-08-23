@@ -14,9 +14,9 @@ mas sensor_simulation {
     agent s1: sensor.asl {
       focus: w.pos16
     }
-    agent s2: sensor.asl {
-      focus: w.pos17
-    }
+    //agent s2: sensor.asl {
+     // focus: w.pos17
+    //}
 
     agent hc1: heating_controller.asl {
         focus: w.con01
@@ -24,7 +24,7 @@ mas sensor_simulation {
 
     workspace w {
       artifact pos16: sensor_hardware.SensorSimulator(510.0, 0.15)
-      artifact pos17: sensor_hardware.SensorSimulator(510.0, 0.15)
+      //artifact pos17: sensor_hardware.SensorSimulator(510.0, 0.15)
       artifact con01: controller_hardware.ControlProgram(0)
     }
 }

@@ -1,16 +1,15 @@
-state(0).
+room_occupied(0).
 !start.
 
 +!start : true
     <- .print("Starting heating controller");
        .date(Y,M,D); .time(H,Min,Sec,MilSec); // get current date & time
        +started(Y,M,D,H,Min,Sec);
-       joinOrganization;
-       !!start_scheduler.
+       !!start_simulator.
 
-+!start_scheduler:true
-    <- .print("Starting scheduler");
-        update_schedule.
++!start_simulator:true
+    <- .print("Starting simulator");
+        simulateOccupancy.
 
 +sensor_data(D)[source(Ag)] :state(S) & S == 1
     <- processInput.
@@ -18,11 +17,11 @@ state(0).
 +sensor_data(D)[source(Ag)] :state(S) & S == 0
     <- processInput.
 
-+state(S):S == 1
++room_occupied(S):S == 1
     <- .print("State changed to ", S);
     activate.
 
-+state(S):S == 0
++room_occupied(S):S == 0
     <-.print("State changed to ", S);
     deactivate.
 

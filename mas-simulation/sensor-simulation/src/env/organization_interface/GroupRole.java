@@ -93,6 +93,8 @@ public class GroupRole extends CoapResource {
 
     public static class GroupRoleInfo {
         public String id;
+
+        public String creatorId;
         public Boolean isActive = true;
         public FunctionalSpec functionalSpecification;
         public int minAllocation = 100;

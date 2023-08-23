@@ -40,35 +40,15 @@ public class TestClient {
             fspec.measurementInterval = 5000;
             fspec.updateInterval = 60000;
             fspec.measurementDuration = 5; //in minutes
-            grinfo.id = "gr_comfort_sensing";
+            grinfo.id = "gr_test_role";
             grinfo.maxAgents = 2;
             grinfo.minAllocation = 50;
             grinfo.reward = 3;
             grinfo.functionalSpecification = fspec;
+            grinfo.isActive = false;
+            grinfo.creatorId = "test";
             response = client.post(gson.toJson(grinfo), MediaTypeRegistry.APPLICATION_JSON).getResponseText();
             System.out.println("Create new group role: " + response);
-
-            //Create a new GroupRole
-            GroupRole.GroupRoleInfo grinfo2 = new GroupRole.GroupRoleInfo();
-            GroupRole.FunctionalSpec fspec2 = new GroupRole.FunctionalSpec();
-            fspec2.hasQuantityKind = 0;
-            fspec2.measurementInterval = 6000;
-            fspec2.updateInterval = 60000;
-            fspec2.measurementDuration = 10;
-            grinfo2.id = "gr_safety_sensing";
-            grinfo2.maxAgents = 2;
-            grinfo2.minAllocation = 50;
-            grinfo2.reward = 1;
-            grinfo2.functionalSpecification =fspec2;
-            response = client.post(gson.toJson(grinfo2), MediaTypeRegistry.APPLICATION_JSON).getResponseText();
-            System.out.println("Create new group role: " + response);
-
-            response = client.get().getResponseText();
-            System.out.println("Get group info: " + response);
-
-            client.setURI("coap://localhost:5683/room1/gr_comfort_sensing");
-            response = client.get().getResponseText();
-            System.out.println("Get gr_comfort_sensing: " + response);
 
             //Add a role player
             /*

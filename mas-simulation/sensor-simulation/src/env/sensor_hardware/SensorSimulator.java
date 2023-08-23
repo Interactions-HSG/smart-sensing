@@ -2,6 +2,7 @@
 package sensor_hardware;
 
 import cartago.*;
+import common.GlobalClock;
 import organization_interface.GroupRole;
 import organization_interface.Organization;
 import organization_interface.RolePlayer;
@@ -22,6 +23,8 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 	String altRoleID = null;
 	double altRoleBenefit = 0;
 	double altRoleReward = 0;
+
+	int minutesInCurrentRole = 0;
 
 	void init(double initialValue, double perMeasurement) {
 		energyInBuffer = initialValue;
@@ -72,13 +75,13 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 
 	//---------------------------------------- Artifact operations ---------------------------
 	@OPERATION
-	void monitorOrganization() {
+	void observeOrganization() {
 		while(true){
-			await_time(5000);
+			await_time(500);
 			updateCurrentRoleState();
 			findAltRole();
-			signal("on_org_update");
-			await_time(5000);
+			signal("onOrgUpdate");
+			await_time(500);
 		}
 	}
 
@@ -86,22 +89,30 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 	void updateCurrentRoleState() {
 		if(currentRoleID != null && !currentRoleID.isEmpty()){
 			GroupRole.GroupRoleInfo roleInfo = Organization.getGroupRole(currentRoleID);
+
 			if(roleInfo.id.equals(currentRoleID)){
+				double cost=0;
+				double fraction=0;
+				double usableEnergy=0;
 				if(!roleInfo.isActive){
 					currentRoleBenefit = 0;
 				}else {
-					double cost = computeCost(roleInfo);
-					double usableEnergy = energyInBuffer - 500; //low limit is 500
-					if(usableEnergy <= 0){
+					cost = computeCost(roleInfo);
+					fraction = 1.0 - ((double)minutesInCurrentRole / (double)roleInfo.functionalSpecification.measurementDuration);
+					cost = cost * fraction;
+					usableEnergy = energyInBuffer - 500; //low limit is 500
+					if(usableEnergy <= 0 || fraction <= 0){
+						System.out.printf("[%s] Updating current role %s: Moving to CB=0 fraction=%f uEnergy=%f\n", myName, currentRoleID, fraction, usableEnergy );
 						currentRoleBenefit = 0;
 					}else {
 						currentRoleBenefit = currentReward - (cost / usableEnergy);
 					}
 				}
+				System.out.printf("[%s] Updating current role %s: CB=%f cost=%f fraction=%f uEnergy=%f\n", myName, currentRoleID, currentRoleBenefit, cost, fraction, usableEnergy );
 				ObsProperty propCB = getObsProperty("current_benefit");
 				propCB.updateValue(currentRoleBenefit);
 				propCB.commitChanges();
-				signal("revaluate");
+				//signal("onOrgUpdate");
 			}
 		}
 	}
@@ -187,7 +198,7 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 			ObsProperty propAB = getObsProperty("alternative_benefit");
 			ObsProperty propAR = getObsProperty("alternative_role");
 			propCR.updateValue(currentRoleID);
-			//propCR.commitChanges();
+			propCR.commitChanges();
 			propCB.updateValue(currentRoleBenefit);
 			propCB.commitChanges();
 			//propAR.updateValue(altRoleID);
@@ -206,6 +217,7 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 			return;
 		}
 		joinAlternateRole();
+		minutesInCurrentRole = 0;
 	}
 
 
@@ -226,26 +238,56 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 
 	}
 
+	double getEnergyInput1(){
+		if(idx > 10000){
+			idx=1;
+		}
+		String pbat_str = powerRecords.get(idx).get(5);
+		double pbat_w = Double.parseDouble(pbat_str);
+		idx++;
+		return (pbat_w * 5 * 60);
+	}
+
+	double getEnergyInput2(){
+		if(idx > 10000){
+			idx=1;
+		}
+		int hour = GlobalClock.hour;
+		if(hour > 18 || hour < 6){
+			return 0.0;
+		}
+		double deg = (double) ((hour-6) * 180) /12;
+		double rad = Math.toRadians(deg);
+		double p = 3.0 * Math.pow(10,-4) * Math.sin(rad);
+		p = p * (1 + Math.random() / 100);
+		double pbat_w = Math.max(p, 0.0f);
+		idx++;
+		return (pbat_w * 5 * 60);
+	}
+
+	double getTemperatureMeasurement1(){
+		if(idx > 10000){
+			idx=1;
+		}
+		String tmp_str = sensorRecords.get(idx++).get(5);
+		double temperature = Double.parseDouble(tmp_str) + Math.random();
+		return  temperature;
+	}
+
 	int idx = 1;
 	@OPERATION
-	void monitorBatteryState() {
+	void simulateSensorState() {
         ObsProperty propL = getObsProperty("energy_in_buffer");
 		ObsProperty propI = getObsProperty("energy_input");
 		ObsProperty propT = getObsProperty("temperature");
 
         while(true){
-			if(idx > 10000){
-				break;
-			}
 			try {
-				String pbat_str = powerRecords.get(idx).get(5);
-				double pbat_w = Double.parseDouble(pbat_str);
-				energyInput = (pbat_w * 5 * 60); //joules
+				energyInput = getEnergyInput2(); //joules
 				propI.updateValue(energyInput);
 				propI.commitChanges();
 
-				String tmp_str = sensorRecords.get(idx++).get(5);
-				double temperature = Double.parseDouble(tmp_str) + Math.random();
+				double temperature = getTemperatureMeasurement1();
 				propT.updateValue(temperature);
 				propT.commitChanges();
 
@@ -261,12 +303,14 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 					propL.updateValue(energyInBuffer);
 					propL.commitChanges();
 				}
+				System.out.println(String.format("[%s] %d:%d  EnergyInput=%f EnergyConsumed=%f EnergyStore=%f", myName, GlobalClock.hour, GlobalClock.minute, energyInput, energyConsumed, energyInBuffer));
 				writeToLogFile(String.format("%s;%f;%f;%f", sensorRecords.get(idx).get(0), energyInput, energyConsumed, energyInBuffer));
 			}catch(Exception e){
 				this.log("Exception:" + e.getMessage());
 			}
+			minutesInCurrentRole+=5;
 			signal("tick");
-            await_time(250);
+            await_time(1000);
         }		
 	}
 

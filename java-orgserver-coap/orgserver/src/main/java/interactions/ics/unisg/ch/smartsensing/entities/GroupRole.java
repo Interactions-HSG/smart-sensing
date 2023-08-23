@@ -93,6 +93,7 @@ public class GroupRole extends CoapResource {
         specification.reward -= player.playerInfo.reward;
         specification.currentAllocation += player.playerInfo.taskAllocation;
         this.add(player);
+        System.out.printf("Added RolePlayer %s in GroupRole %s\n", state.id, roleName);
     }
 
     protected void removeRolePlayer(RolePlayer player){
@@ -100,7 +101,7 @@ public class GroupRole extends CoapResource {
         specification.currentAllocation -= player.playerInfo.taskAllocation;
         specification.currentAgents--;
         this.delete(player);
-
+        System.out.printf("Removed RolePlayer %s in GroupRole %s\n", player.playerInfo.id, this.getName());
     }
 
     protected void updateInfo(RolePlayer.PlayerInfo currentInfo, RolePlayer.PlayerInfo newInfo){
@@ -108,6 +109,7 @@ public class GroupRole extends CoapResource {
         specification.currentAllocation -= currentInfo.taskAllocation;
         this.specification.reward -= newInfo.reward;
         specification.currentAllocation += newInfo.taskAllocation;
+        System.out.printf("Updated GroupRole %s\n", this.getName());
     }
 
     public static class FunctionalSpec {
@@ -119,6 +121,9 @@ public class GroupRole extends CoapResource {
 
     public static class GroupRoleInfo {
         public String id;
+        public String creatorId;
+
+
         public Boolean isActive = true;
         public FunctionalSpec functionalSpecification;
         public int minAllocation = 100;

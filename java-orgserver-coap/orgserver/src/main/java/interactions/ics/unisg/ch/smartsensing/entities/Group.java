@@ -52,5 +52,6 @@ public class Group extends CoapResource {
     private void addGroupRole(GroupRole.GroupRoleInfo spec){
         GroupRole groupRole = new GroupRole(spec);
         this.add(groupRole);
+        System.out.printf("New GroupRole %s created by %s\n", spec.id, spec.creatorId);
     }
 }

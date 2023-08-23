@@ -12,31 +12,34 @@ engagement(0).
        .date(Y,M,D); .time(H,Min,Sec,MilSec); // get current date & time
        +started(Y,M,D,H,Min,Sec);             // add a new belief
        !!monitor_organization;
-       !!monitor_battery.
+       !!start_simulation.
 
 +!search_for_roles:true
     <- .print("Looking for roles to play").
 
-+!monitor_battery: true
-    <- monitorBatteryState.
++!start_simulation: true
+    <- simulateSensorState.
 
 +!monitor_organization:true
-    <- monitorOrganization.
+    <- observeOrganization.
 
 +!manage_power:energy_in_buffer(L) & L > 510 & state(S) & S==0 & engagement(R) & R == 0
     <-
         //.print("Energized! But no job. Buffer=", L);
         !evaluate.
 
-+!manage_power: energy_in_buffer(L) & state(S) & L >=510 & S==0 & engagement(R) & R > 0
++!manage_power: energy_in_buffer(L) & state(S) & L >=510 & S==0 & current_benefit(CB) & CB > 0
     <-
-        //.print("Got energy, have job, will do work");
+        //.print("Got energy, have benefit, will do work");
         -+state(1);
         !sense.
 
-+!manage_power: energy_in_buffer(L) & state(S) & L >=500 & S==1 & engagement(R) & R > 0
-    <- //.print("Got energy, have job, working");
++!manage_power: energy_in_buffer(L) & state(S) & L >=500 & S==1 & current_benefit(CB) & CB > 0
+    <- //.print("Got energy, have benefit working");
         !sense.
+
++!manage_power: energy_in_buffer(L) & state(S) & S==1 & L >= 500 & current_benefit(CB) & CB == 0
+    <- !sleep.
 
 +!manage_power: energy_in_buffer(L) & state(S) & S==1 & L < 500
     <- !sleep.
@@ -49,13 +52,14 @@ engagement(0).
     findAltRole;
     !decide.
 
-+on_org_update:true
++onOrgUpdate:true
     <- //.print("Revaluating");
     !decide.
 
-+!decide:current_benefit(CB) & alternative_benefit(HB) & CB == 0 & HB == 0 & engagement(R) & R > 0
-<-  exitCurrentRole;
-    -+engagement(0).
++!decide:current_benefit(CB) & current_role(CR) & alternative_benefit(AB) & CB == 0 & AB == 0 & engagement(R) & R > 0
+<-   //.print("Deciding to exit from ", CR, " since CB=", CB, "  and AB=", AB, " engaged in ", R);
+    .print("On the bench");
+    nop.
 
 +!decide:current_benefit(CB) & alternative_benefit(HB) & CB >= HB & state(S) & S==0 & engagement(R) & R > 0
 <- nop.
@@ -63,8 +67,8 @@ engagement(0).
 +!decide:current_benefit(CB) & alternative_benefit(HB) & CB >= HB & state(S) & S==1 & engagement(R) & R > 0
 <- nop.
 
-+!decide:current_role(CR) & alternative_role(AR) & current_benefit(CB) & alternative_benefit(HB) & CB < HB
-<- .print("Deciding to switch from ", CR, ":", CB, " to ", AR, ":", HB);
++!decide:current_role(CR) & alternative_role(AR) & current_benefit(CB) & alternative_benefit(AB) & CB < AB & not CR == AR
+<- .print("Deciding to switch from ", CR, "(", CB, ") to ", AR, "(", AB, ")");
     switchRole;
     -+engagement(1).
 
