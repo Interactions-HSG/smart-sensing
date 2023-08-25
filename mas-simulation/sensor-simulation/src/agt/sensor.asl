@@ -14,19 +14,25 @@ engagement(0).
        !!monitor_organization;
        !!start_simulation.
 
-+!search_for_roles:true
-    <- .print("Looking for roles to play").
-
 +!start_simulation: true
     <- simulateSensorState.
 
 +!monitor_organization:true
     <- observeOrganization.
 
-+!manage_power:energy_in_buffer(L) & L > 510 & state(S) & S==0 & engagement(R) & R == 0
+
++!evaluate:true
+<-  //updateCurrentRoleState;
+    //findAltRole;
+    //!decide.
+    refreshRoles;
+    evaluateCurrentState.
+
++!manage_power:energy_in_buffer(L) & L > 510 & state(S) & S==0 & current_benefit(CB) & CB == 0
     <-
         //.print("Energized! But no job. Buffer=", L);
-        !evaluate.
+        //!evaluate.
+        nop.
 
 +!manage_power: energy_in_buffer(L) & state(S) & L >=510 & S==0 & current_benefit(CB) & CB > 0
     <-
@@ -47,14 +53,9 @@ engagement(0).
 +!manage_power: energy_in_buffer(L) & state(S) & L <=510 & S==0
     <- !sleep.
 
-+!evaluate:true
-<-  updateCurrentRoleState;
-    findAltRole;
-    !decide.
-
 +onOrgUpdate:true
-    <- //.print("Revaluating");
-    !decide.
+    <- .print("org state updated").
+    //!decide.
 
 +!decide:current_benefit(CB) & current_role(CR) & alternative_benefit(AB) & CB == 0 & AB == 0 & engagement(R) & R > 0
 <-   //.print("Deciding to exit from ", CR, " since CB=", CB, "  and AB=", AB, " engaged in ", R);
@@ -76,7 +77,7 @@ engagement(0).
 <- //.print("Unable to decide with CB=", CB, " and HB=", HB, " engagement=", R, " state=", S).
     nop.
 
-+!sense:state(S) & energy_in_buffer(L) & temperature(T) & current_role(CR) & S==1
++!sense:state(S) & S==1
     <-
     doTask; //Each sensing cycle takes 30mJ
     .broadcast(tell, sensor_data(T)).

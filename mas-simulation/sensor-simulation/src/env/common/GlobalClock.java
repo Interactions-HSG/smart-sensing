@@ -5,6 +5,8 @@ public class GlobalClock {
     public static int hour;
     public static int minute;
     public static int second;
+
+    public static long ticks=0;
     public static double scaling = 300; // 1 sec = 5 min
 
     private static Object lock = new Object();
@@ -30,6 +32,7 @@ public class GlobalClock {
                             second = 0;
                             if(minute < 59){
                                 minute++;
+                                ticks++;
                             }else{
                                 minute = 0;
                                 if(hour < 23){

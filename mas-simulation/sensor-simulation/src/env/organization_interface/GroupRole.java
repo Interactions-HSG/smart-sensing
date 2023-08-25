@@ -104,6 +104,10 @@ public class GroupRole extends CoapResource {
         public int minAgents = 1;
         public int maxAgents = 1;
         public double reward = 0;
+
+
+        public double foreseenBenefit = 0;
+        public double getForeseenBenefit(){return foreseenBenefit;}
     }
 
     public static class GroupRoleInfos{

@@ -48,10 +48,16 @@ public class RolePlayer extends CoapResource {
 
     public static class PlayerInfo {
         public String id;
+        public String groupRoleId;
         public int taskAllocation;
         public int canAllocateUpto;
         public double reward;
-        public int cost;
-        public int networkCost;
+        public double cost;
+        public double networkCost;
+        public double benefit;
+
+        public long startTime;
+
+        public double getBenefit(){return benefit;}
     }
 }
