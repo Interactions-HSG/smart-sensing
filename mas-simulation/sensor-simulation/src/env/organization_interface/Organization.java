@@ -30,9 +30,16 @@ public class Organization {
         String response = null;
         try {
             client.setURI("coap://localhost:5683/room1");
-            response = client.get().getResponseText();
-            //System.out.println("Get group info: " + response);
+            CoapResponse coapResponse = client.get();
+            if(coapResponse == null){
+                System.out.println("No response from server for " + client.getURI());
+                return null;
+            }
+            response = coapResponse.getResponseText();
             GroupRole.GroupRoleInfos roles = gson.fromJson(response, GroupRole.GroupRoleInfos.class);
+            if(roles == null){
+                return null;
+            }
             return roles.elements;
         } catch (ConnectorException e) {
             throw new RuntimeException(e);
@@ -47,7 +54,12 @@ public class Organization {
         String response = null;
         try {
             client.setURI("coap://localhost:5683/room1/" + groupRoleId);
-            response = client.get().getResponseText();
+            CoapResponse coapResponse = client.get();
+            if(coapResponse == null){
+                System.out.println("No response from server for " + client.getURI());
+                return null;
+            }
+            response = coapResponse.getResponseText();
             //System.out.println("Get group info: " + response);
             GroupRole.GroupRoleInfo role = gson.fromJson(response, GroupRole.GroupRoleInfo.class);
             return role;

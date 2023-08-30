@@ -1,4 +1,4 @@
-room_occupied(0).
+program_active(0).
 !start.
 
 +!start : true
@@ -9,21 +9,21 @@ room_occupied(0).
 
 +!start_simulator:true
     <- .print("Starting simulator");
-        simulateOccupancy.
+        simulateProgramActivity.
 
-+sensor_data(D)[source(Ag)] :state(S) & S == 1
++sensor_data(D)[source(Ag)] :program_active(S) & S == 1
     <- processInput.
 
-+sensor_data(D)[source(Ag)] :state(S) & S == 0
-    <- processInput.
++sensor_data(D)[source(Ag)] :program_active(S) & S == 0
+    <- nop.
 
-+room_occupied(S):S == 1
++program_active(S):S == 1
     <- .print("State changed to ", S);
-    activate.
+    recruitSensors.
 
-+room_occupied(S):S == 0
++program_active(S):S == 0
     <-.print("State changed to ", S);
-    deactivate.
+    releaseSensors.
 
 { include("$jacamo/templates/common-cartago.asl") }
 { include("$jacamo/templates/common-moise.asl") }

@@ -125,6 +125,7 @@ public class GroupRole extends CoapResource {
 
 
         public Boolean isActive = true;
+        public long isActiveSince = 0;
         public FunctionalSpec functionalSpecification;
         public int minAllocation = 100;
 

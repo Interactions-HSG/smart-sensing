@@ -22,63 +22,44 @@ engagement(0).
 
 
 +!evaluate:true
-<-  //updateCurrentRoleState;
-    //findAltRole;
-    //!decide.
-    refreshRoles;
+<-  refreshRoles;
     evaluateCurrentState.
 
-+!manage_power:energy_in_buffer(L) & L > 510 & state(S) & S==0 & current_benefit(CB) & CB == 0
++!manage_power:energy_in_buffer(L) & L > 500 & state(S) & S==0 & current_benefit(CB) & CB <= 0
     <-
         //.print("Energized! But no job. Buffer=", L);
         //!evaluate.
         nop.
 
-+!manage_power: energy_in_buffer(L) & state(S) & L >=510 & S==0 & current_benefit(CB) & CB > 0
++!manage_power: energy_in_buffer(L) & state(S) & L > 500 & S==0 & current_benefit(CB) & CB > 0
     <-
         //.print("Got energy, have benefit, will do work");
         -+state(1);
         !sense.
 
-+!manage_power: energy_in_buffer(L) & state(S) & L >=500 & S==1 & current_benefit(CB) & CB > 0
++!manage_power: energy_in_buffer(L) & state(S) & L >500 & S==1 & current_benefit(CB) & CB > 0
     <- //.print("Got energy, have benefit working");
         !sense.
 
-+!manage_power: energy_in_buffer(L) & state(S) & S==1 & L >= 500 & current_benefit(CB) & CB == 0
++!manage_power: energy_in_buffer(L) & state(S) & S==1 & L > 500 & current_benefit(CB) & CB <= 0
     <- !sleep.
 
 +!manage_power: energy_in_buffer(L) & state(S) & S==1 & L < 500
     <- !sleep.
 
-+!manage_power: energy_in_buffer(L) & state(S) & L <=510 & S==0
++!manage_power: energy_in_buffer(L) & state(S) & L <=500 & S==0
+    <- !sleep.
+
++!manage_power: current_benefit(CB) & state(S) & CB<=0 & S==0
     <- !sleep.
 
 +onOrgUpdate:true
     <- .print("org state updated").
     //!decide.
 
-+!decide:current_benefit(CB) & current_role(CR) & alternative_benefit(AB) & CB == 0 & AB == 0 & engagement(R) & R > 0
-<-   //.print("Deciding to exit from ", CR, " since CB=", CB, "  and AB=", AB, " engaged in ", R);
-    .print("On the bench");
-    nop.
-
-+!decide:current_benefit(CB) & alternative_benefit(HB) & CB >= HB & state(S) & S==0 & engagement(R) & R > 0
-<- nop.
-
-+!decide:current_benefit(CB) & alternative_benefit(HB) & CB >= HB & state(S) & S==1 & engagement(R) & R > 0
-<- nop.
-
-+!decide:current_role(CR) & alternative_role(AR) & current_benefit(CB) & alternative_benefit(AB) & CB < AB & not CR == AR
-<- .print("Deciding to switch from ", CR, "(", CB, ") to ", AR, "(", AB, ")");
-    switchRole;
-    -+engagement(1).
-
-+!decide:current_benefit(CB) & alternative_benefit(HB) & state(S) & engagement(R)
-<- //.print("Unable to decide with CB=", CB, " and HB=", HB, " engagement=", R, " state=", S).
-    nop.
-
-+!sense:state(S) & S==1
++!sense:state(S) & S==1 & temperature(T)
     <-
+    .print("Sense T=", T);
     doTask; //Each sensing cycle takes 30mJ
     .broadcast(tell, sensor_data(T)).
 
@@ -96,7 +77,7 @@ engagement(0).
 
 //+energy_in_buffer[source(A)] <- .print("Battery update from ",A).
 
-+tick: energy_in_buffer(L) & energy_input(I) & state(S)
++tick: energy_in_buffer(L) & energy_input(I) & state(S) & current_benefit(CB)
     <-  //.print("Battery charge=",L, " Input=", I, " State=", S);
         !manage_power.
 
