@@ -24,12 +24,12 @@ public class Group extends CoapResource {
     public void handleGET(CoapExchange exchange) {
         // respond to the request
         try {
-            List<GroupRole.GroupRoleInfo> grs = new ArrayList<>();
+            List<GroupRoleInfo> grs = new ArrayList<>();
             for(Resource res : this.getChildren()) {
                 GroupRole gr = (GroupRole)res;
                 grs.add(gr.specification);
             }
-            GroupRole.GroupRoleInfos col = new GroupRole.GroupRoleInfos();
+            GroupRoleInfos col = new GroupRoleInfos();
             col.elements = grs;
             col.num_elements = grs.size();
             String response = gson.toJson(col);
@@ -43,13 +43,13 @@ public class Group extends CoapResource {
     public void handlePOST(CoapExchange exchange) {
         String data = exchange.getRequestText();
         // respond to the request
-        GroupRole.GroupRoleInfo spec = gson.fromJson(data, GroupRole.GroupRoleInfo.class);
+        GroupRoleInfo spec = gson.fromJson(data, GroupRoleInfo.class);
         addGroupRole(spec);
         exchange.respond(CoAP.ResponseCode.CREATED);
         changed();
     }
 
-    private void addGroupRole(GroupRole.GroupRoleInfo spec){
+    private void addGroupRole(GroupRoleInfo spec){
         GroupRole groupRole = new GroupRole(spec);
         this.add(groupRole);
         System.out.printf("New GroupRole %s created by %s\n", spec.id, spec.creatorId);

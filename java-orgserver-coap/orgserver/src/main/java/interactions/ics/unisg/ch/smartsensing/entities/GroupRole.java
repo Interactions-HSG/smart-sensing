@@ -13,6 +13,7 @@ public class GroupRole extends CoapResource {
     Gson gson = new Gson();
 
     public GroupRoleInfo specification;
+    MeasurementReceiver receiver;
     public GroupRole(GroupRoleInfo spec) {
         // set resource identifier
         super(spec.id);
@@ -20,13 +21,15 @@ public class GroupRole extends CoapResource {
         setObservable(true);
         // set display name
         getAttributes().setTitle(String.format("GroupRole:%s" , spec.id));
+        receiver = new MeasurementReceiver("receiver");
+        this.add(receiver);
     }
 
     @Override
     public void handleGET(CoapExchange exchange) {
         // respond to the request
         if(exchange.getQueryParameter("players") != null){
-            List<RolePlayer.PlayerInfo> players = new ArrayList<>();
+            List<PlayerInfo> players = new ArrayList<>();
             for(Resource r : this.getChildren()){
                 RolePlayer rp = (RolePlayer)r;
                 players.add(rp.playerInfo);
@@ -43,7 +46,7 @@ public class GroupRole extends CoapResource {
     @Override
     public void handlePATCH(CoapExchange exchange){
         String data = exchange.getRequestText();
-        System.out.println("Received update:" + data);
+        //System.out.println("Received update:" + data);
         GroupRoleInfo groupRoleInfo = gson.fromJson(data, GroupRoleInfo.class);
 
         exchange.respond(CoAP.ResponseCode.CHANGED);
@@ -53,10 +56,11 @@ public class GroupRole extends CoapResource {
     @Override
     public void handlePUT(CoapExchange exchange) {
         String data = exchange.getRequestText();
-        System.out.println("Received update:" + data);
+        //System.out.println("Received update:" + data);
         specification = gson.fromJson(data, GroupRoleInfo.class);
         exchange.respond(CoAP.ResponseCode.CHANGED);
         changed();
+        receiver.reset();
     }
 
     final Object lock = new Object();
@@ -69,7 +73,7 @@ public class GroupRole extends CoapResource {
             }
             String resource = exchange.getRequestText();
             // respond to the request
-            RolePlayer.PlayerInfo playerState = gson.fromJson(resource, RolePlayer.PlayerInfo.class);
+            PlayerInfo playerState = gson.fromJson(resource, PlayerInfo.class);
             addRolePlayer(resource, playerState);
             exchange.respond(CoAP.ResponseCode.CREATED);
         }
@@ -87,7 +91,7 @@ public class GroupRole extends CoapResource {
         }
     }
 
-    private void addRolePlayer(String roleName, RolePlayer.PlayerInfo state){
+    private void addRolePlayer(String roleName, PlayerInfo state){
         RolePlayer player = new RolePlayer(state);
         player.playerInfo.reward = specification.reward * (double)player.playerInfo.taskAllocation/100.0f;
         specification.reward -= player.playerInfo.reward;
@@ -104,7 +108,7 @@ public class GroupRole extends CoapResource {
         System.out.printf("Removed RolePlayer %s in GroupRole %s\n", player.playerInfo.id, this.getName());
     }
 
-    protected void updateInfo(RolePlayer.PlayerInfo currentInfo, RolePlayer.PlayerInfo newInfo){
+    protected void updateInfo(PlayerInfo currentInfo, PlayerInfo newInfo){
         this.specification.reward += currentInfo.reward;
         specification.currentAllocation -= currentInfo.taskAllocation;
         this.specification.reward -= newInfo.reward;
@@ -112,32 +116,9 @@ public class GroupRole extends CoapResource {
         System.out.printf("Updated GroupRole %s\n", this.getName());
     }
 
-    public static class FunctionalSpec {
-        public int hasQuantityKind;
-        public int measurementInterval;
-        public int updateInterval;
-        public int measurementDuration;
-    }
-
-    public static class GroupRoleInfo {
-        public String id;
-        public String creatorId;
 
 
-        public Boolean isActive = true;
-        public long isActiveSince = 0;
-        public FunctionalSpec functionalSpecification;
-        public int minAllocation = 100;
 
-        public int currentAllocation = 0;
-        public int currentAgents = 0;
-        public int minAgents = 1;
-        public int maxAgents = 1;
-        public double reward = 0.0f;
-    }
 
-    public static class GroupRoleInfos{
-        public List<GroupRoleInfo> elements;
-        public int num_elements;
-    }
+
 }

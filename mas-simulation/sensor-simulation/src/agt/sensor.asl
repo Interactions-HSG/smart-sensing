@@ -60,8 +60,7 @@ engagement(0).
 +!sense:state(S) & S==1 & temperature(T)
     <-
     .print("Sense T=", T);
-    doTask; //Each sensing cycle takes 30mJ
-    .broadcast(tell, sensor_data(T)).
+    doTask.
 
 +!sleep:state(S) & S==1
     <-

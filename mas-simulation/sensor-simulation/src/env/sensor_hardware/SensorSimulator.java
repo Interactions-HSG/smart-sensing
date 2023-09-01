@@ -3,10 +3,10 @@ package sensor_hardware;
 
 import cartago.*;
 import common.GlobalClock;
-import moise.oe.Player;
-import organization_interface.GroupRole;
+import organization_interface.GroupRoleInfo;
 import organization_interface.Organization;
-import organization_interface.RolePlayer;
+import organization_interface.PlayerInfo;
+
 import java.io.*;
 import java.util.*;
 
@@ -21,8 +21,8 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 	String fileName = workingDirectory + "/log/runtime_sen_";
 	String myName = "unknown"; // Id of the sensor (not the agent)
 
-	List<RolePlayer.PlayerInfo> currentlyPlaying = new ArrayList<>();
-	List <GroupRole.GroupRoleInfo> alternateRoles = new ArrayList<>();
+	List<PlayerInfo> currentlyPlaying = new ArrayList<>();
+	List <GroupRoleInfo> alternateRoles = new ArrayList<>();
 
 	String energyProfile = null;
 	double disturbance = 0.0f;
@@ -54,17 +54,20 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 	}
 
 	//-------------------------------- Utility functions -----------------------------------
-	double computeCost(GroupRole.GroupRoleInfo role){
+	double computeCost(GroupRoleInfo role){
 		int interval = role.functionalSpecification.measurementInterval; //In milliseconds
 		int duration = role.functionalSpecification.measurementDuration; //In minutes
 		int numberOfMeasurements = (duration * 60000 /interval);
 		double fraction = (double)(duration - (GlobalClock.ticks - role.isActiveSince)) / duration;
 		fraction = Math.max(fraction, 0);
 		double cost = (double)numberOfMeasurements * energyPerMeasurement * fraction;
+		if(energyProfile.equals("battery")){
+			cost = cost * (energyInBuffer/500); //Zuschlag für nicht-Erneubaresenergie
+		}
 		return  cost;
 	}
 
-	double computeBenefit(GroupRole.GroupRoleInfo role){
+	double computeBenefit(GroupRoleInfo role){
 		int duration = role.functionalSpecification.measurementDuration;
 		double fraction = (double)(duration - (GlobalClock.ticks - role.isActiveSince)) / duration;
 		fraction = Math.max(fraction, 0);
@@ -98,26 +101,99 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 			await_time(500);
 			//updateCurrentRoleState();
 			//findAltRole();
-			refreshRoles();
-			evaluateCurrentState();
+			//refreshRoles();
+			//evaluateCurrentState();
+			reviewCurrentStateAndDecide();
 			signal("onOrgUpdate");
-			await_time(5000);
+			await_time(500);
 		}
 	}
 
 //------------------------------------------------------------------------------------
-boolean joinRole(GroupRole.GroupRoleInfo role, RolePlayer.PlayerInfo player){
+boolean joinRole(GroupRoleInfo role, PlayerInfo player){
 
 	boolean joinOk = Organization.joinGroupRole(role.id, player);
 	return  joinOk;
 }
 
-	boolean leaveRole(RolePlayer.PlayerInfo player){
+	boolean leaveRole(PlayerInfo player){
 		boolean res = Organization.leaveGroupRole(player.groupRoleId, player);
 		return  res;
 	}
 
-	List<GroupRole.GroupRoleInfo> lastGroupRoleInfos;
+	List<GroupRoleInfo> lastGroupRoleInfos;
+
+	void reviewCurrentStateAndDecide(){
+		List<GroupRoleInfo> groupRoles =  Organization.getGroupRoles();
+		List<GroupRoleInfo> alternatives = new ArrayList<>();
+		for(GroupRoleInfo groupRoleInfo : groupRoles){
+			boolean expired = (GlobalClock.ticks - groupRoleInfo.isActiveSince) > groupRoleInfo.functionalSpecification.measurementDuration;
+			PlayerInfo currentPlayer = isCurrentlyPlayedBy(groupRoleInfo.id);
+			if(currentPlayer != null){
+				//Get out of inactive or expired roles
+				if(!groupRoleInfo.isActive || expired){
+					leaveRole(currentPlayer);
+					currentlyPlaying.remove(currentPlayer);
+				}
+			}else{
+				double benefit = computeBenefit(groupRoleInfo);
+				if(groupRoleInfo.isActive && !expired && benefit > 0) {
+					groupRoleInfo.foreseenBenefit = benefit;
+					alternatives.add(groupRoleInfo);
+				}
+			}
+		}
+
+		if(alternatives.size() == 0){
+			updateCurrentBeliefs();
+			return;
+		}
+		currentlyPlaying.sort(Comparator.comparing(PlayerInfo::getBenefit)); //ascending
+		alternatives.sort(Comparator.comparing(GroupRoleInfo::getForeseenBenefit).reversed()); //descending
+		//----- simple logic: leave the lowest benefit role and join the highest benefit alternative.
+		PlayerInfo player = new PlayerInfo();
+		player.id = myName;
+		player.benefit = alternatives.get(0).foreseenBenefit;
+		player.cost = computeCost(alternatives.get(0));
+		player.groupRoleId = alternatives.get(0).id;
+		player.startTime = GlobalClock.ticks;
+		player.taskAllocation = 100;
+		player.canAllocateUpto = 100;
+		player.networkCost = 0;
+		player.reward = alternatives.get(0).reward;
+
+		boolean joinOk = false;
+		//Leave the least beneficial role in the currently played roles, and adopt the most beneficial role in the alternate list
+		if(currentlyPlaying.size() > 0 && (currentlyPlaying.get(0).benefit < alternatives.get(0).foreseenBenefit)){
+			if(leaveRole(currentlyPlaying.get(0))) {
+				joinOk = joinRole(alternatives.get(0), player);
+				currentlyPlaying.remove(currentlyPlaying.get(0));
+			}
+		} else if(currentlyPlaying.size() == 0 ){
+			joinOk = joinRole(alternatives.get(0), player);
+		}else{
+			double currentTotalCost = getCurrentTotalCost();
+			for(GroupRoleInfo role : alternatives){
+				double cost = computeCost(role);
+				if((cost + currentTotalCost) < (energyInBuffer-500)){
+					joinOk = joinRole(role, player);
+					break;
+				}
+			}
+		}
+		if(joinOk){
+			currentlyPlaying.add(player);
+		}
+		updateCurrentBeliefs();
+	}
+
+	double getCurrentTotalCost(){
+		double cost = 0;
+		for(PlayerInfo player:currentlyPlaying){
+			cost+= player.cost;
+		}
+		return cost;
+	}
 
 	@OPERATION
 	void refreshRoles(){
@@ -127,13 +203,13 @@ boolean joinRole(GroupRole.GroupRoleInfo role, RolePlayer.PlayerInfo player){
 			return;
 		}
 		energyAllocated = 0;
-		for(RolePlayer.PlayerInfo player: currentlyPlaying){
+		for(PlayerInfo player: currentlyPlaying){
 			energyAllocated += player.cost;
 		}
 		System.out.printf("Sensor: energyAllocation=%f\n", energyAllocated);
 
-		for(GroupRole.GroupRoleInfo roleInfo : lastGroupRoleInfos) {
-			RolePlayer.PlayerInfo player = isCurrentlyPlayedBy(roleInfo.id);
+		for(GroupRoleInfo roleInfo : lastGroupRoleInfos) {
+			PlayerInfo player = isCurrentlyPlayedBy(roleInfo.id);
 			if (player != null) {
 				double c = computeCost(roleInfo);
 				double b = computeBenefit(roleInfo);
@@ -146,14 +222,14 @@ boolean joinRole(GroupRole.GroupRoleInfo role, RolePlayer.PlayerInfo player){
 		}
 		//Recompute how much energy is commited
 		energyAllocated = 0;
-		for(RolePlayer.PlayerInfo player: currentlyPlaying){
+		for(PlayerInfo player: currentlyPlaying){
 			energyAllocated += player.cost;
 		}
 		System.out.printf("Sensor: After current role update, energyAllocation=%f\n", energyAllocated);
 
-		currentlyPlaying.sort(Comparator.comparing(RolePlayer.PlayerInfo::getBenefit));
+		currentlyPlaying.sort(Comparator.comparing(PlayerInfo::getBenefit));
 		alternateRoles.clear();
-		for(GroupRole.GroupRoleInfo roleInfo : lastGroupRoleInfos){
+		for(GroupRoleInfo roleInfo : lastGroupRoleInfos){
 			if(isCurrentlyPlayedBy(roleInfo.id) != null){
 				continue;
 			}
@@ -177,8 +253,8 @@ boolean joinRole(GroupRole.GroupRoleInfo role, RolePlayer.PlayerInfo player){
 
 	@OPERATION
 	void evaluateCurrentState(){
-		currentlyPlaying.sort(Comparator.comparing(RolePlayer.PlayerInfo::getBenefit)); //ascending
-		alternateRoles.sort(Comparator.comparing(GroupRole.GroupRoleInfo::getForeseenBenefit).reversed()); //descending
+		currentlyPlaying.sort(Comparator.comparing(PlayerInfo::getBenefit)); //ascending
+		alternateRoles.sort(Comparator.comparing(GroupRoleInfo::getForeseenBenefit).reversed()); //descending
 		//we switch one role at a time
 
 		if(alternateRoles.size() == 0){
@@ -187,7 +263,7 @@ boolean joinRole(GroupRole.GroupRoleInfo role, RolePlayer.PlayerInfo player){
 		}
 
 		//----- simple logic: leave the lowest benefit role and join the highest benefit alternative.
-		RolePlayer.PlayerInfo player = new RolePlayer.PlayerInfo();
+		PlayerInfo player = new PlayerInfo();
 		player.id = myName;
 		player.benefit = alternateRoles.get(0).foreseenBenefit;
 		player.cost = computeCost(alternateRoles.get(0));
@@ -217,7 +293,7 @@ boolean joinRole(GroupRole.GroupRoleInfo role, RolePlayer.PlayerInfo player){
 	void updateCurrentBeliefs(){
 		ObsProperty propCB = getObsProperty("current_benefit");
 		double totalBenefit = 0;
-		for(RolePlayer.PlayerInfo p: currentlyPlaying){
+		for(PlayerInfo p: currentlyPlaying){
 			totalBenefit += p.benefit;
 		}
 		propCB.updateValue(totalBenefit);
@@ -226,13 +302,13 @@ boolean joinRole(GroupRole.GroupRoleInfo role, RolePlayer.PlayerInfo player){
 
 		energyAllocated = 0;
 
-		for(RolePlayer.PlayerInfo p: currentlyPlaying){
+		for(PlayerInfo p: currentlyPlaying){
 			energyAllocated += p.cost;
 		}
 	}
 
-	RolePlayer.PlayerInfo isCurrentlyPlayedBy(String groupId){
-		for(RolePlayer.PlayerInfo pi : currentlyPlaying){
+	PlayerInfo isCurrentlyPlayedBy(String groupId){
+		for(PlayerInfo pi : currentlyPlaying){
 			if(pi.groupRoleId.equals(groupId)){
 				return pi;
 			}
@@ -243,6 +319,9 @@ boolean joinRole(GroupRole.GroupRoleInfo role, RolePlayer.PlayerInfo player){
 @OPERATION
 void doTask() {
 	energyConsumed = energyPerMeasurement;
+	for(PlayerInfo roleInfo : currentlyPlaying) {
+		Organization.sendMeasurement(roleInfo.groupRoleId, getTemperatureMeasurement());
+	}
 	//writeToLogFile(String.format("%s;%d;%d", sensorRecords.get(idx).get(0), batteryCharge, value));
 }
 
@@ -276,6 +355,7 @@ void doTask() {
 	double getEnergyInput2(){
 		double e_in = 0.0;
 		int hour = GlobalClock.hour;
+		int hour_n = hour == 23 ? 0 : hour + 1;
 		if(energyProfile.equals("sine")) {
 
 			if (hour > 18 || hour < 6) {
@@ -287,11 +367,11 @@ void doTask() {
 			p = p * (1 + Math.random() / 100);
 			e_in = Math.max(p, 0.0f);
 		} else if (energyProfile.equals("profile1")){
-			e_in = profile1[hour] + (profile1[hour] * Math.random() * disturbance);
+			e_in = profile1[hour] + (((profile1[hour_n] - profile1[hour]) * GlobalClock.minute)/60) + (profile1[hour] * Math.random() * disturbance);
 		}else if (energyProfile.equals("profile2")){
-			e_in = profile2[hour] + (profile2[hour] * Math.random() * disturbance);
+			e_in = profile2[hour] + (((profile2[hour_n] - profile2[hour]) * GlobalClock.minute)/60) + (profile2[hour] * Math.random() * disturbance);
 		}else if (energyProfile.equals("profile3")){
-			e_in = profile3[hour] + (profile3[hour] * Math.random() * disturbance);
+			e_in = profile3[hour] + (((profile3[hour_n] - profile3[hour]) * GlobalClock.minute)/60) + (profile3[hour] * Math.random() * disturbance);
 		}
 		return (e_in * Math.pow(10,-3) * 5 * 60);
 	}
@@ -332,7 +412,7 @@ void doTask() {
 					propL.commitChanges();
 				}
 				System.out.println(String.format("[%s] %d:%d  EnergyInput=%f EnergyConsumed=%f EnergyStore=%f", myName, GlobalClock.hour, GlobalClock.minute, energyInput, energyConsumed, energyInBuffer));
-				writeToLogFile(String.format("%d;%f;%f;%f;%f;%d;%f", GlobalClock.ticks, energyInput, energyConsumed, energyInBuffer, energyAllocated,currentlyPlaying.size(), currentTotalBenefit));
+				writeToLogFile(String.format("%d;%f;%f;%f;%f;%d;%f;%s", GlobalClock.ticks, energyInput, energyConsumed, energyInBuffer, energyAllocated,currentlyPlaying.size(), currentTotalBenefit, getRoleNames()));
 			}catch(Exception e){
 				this.log("Exception:" + e.getMessage());
 			}
@@ -343,8 +423,15 @@ void doTask() {
 
 //-------------------------------------------- Helper methods --------------------------------
 
-	GroupRole.GroupRoleInfo getRole(String id, List<GroupRole.GroupRoleInfo> roles){
-		for(GroupRole.GroupRoleInfo role : roles){
+	String getRoleNames(){
+		String roles = "";
+		for(PlayerInfo player:currentlyPlaying){
+			roles+= player.groupRoleId + ",";
+		}
+		return roles;
+	}
+	GroupRoleInfo getRole(String id, List<GroupRoleInfo> roles){
+		for(GroupRoleInfo role : roles){
 			if(role.id.equals(id)){
 				return role;
 			}
@@ -405,5 +492,10 @@ void doTask() {
 	@Override
 	public void onGroupRoleInfoChange(String data) {
 		//changed = true;
+	}
+
+	@Override
+	public void onMeasurement(String groupId, String data) {
+
 	}
 }

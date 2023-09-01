@@ -14,30 +14,22 @@ mas sensor_simulation {
     agent s1: sensor.asl {
       focus: w.sen01
     }
-    agent s2: sensor.asl {
-      focus: w.sen02
-    }
-    agent s3: sensor.asl {
-      focus: w.sen03
-    }
+
     agent con1_hc: heating_controller.asl {
         focus: w.con01
     }
     agent con2_lc: heating_controller.asl {
         focus: w.con02
     }
-    agent con3_sm: heating_controller.asl {
-        focus: w.con03
-    }
 
     workspace w {
       artifact sen01: sensor_hardware.SensorSimulator(510.0, 0.15, "profile3", 0.1)
-      artifact sen02: sensor_hardware.SensorSimulator(510.0, 0.15, "profile2", 0.1)
-      artifact sen03: sensor_hardware.SensorSimulator(510.0, 0.15, "profile3", 0.1)
-      artifact sen04: sensor_hardware.SensorSimulator(2500.0, 0.15, "battery", 0.0)
-      artifact sen05: sensor_hardware.SensorSimulator(5000.0, 0.15, "battery", 0.0)
+      //artifact sen02: sensor_hardware.SensorSimulator(510.0, 0.15, "profile2", 0.1)
+      //artifact sen03: sensor_hardware.SensorSimulator(510.0, 0.15, "profile3", 0.1)
+      //artifact sen04: sensor_hardware.SensorSimulator(2500.0, 0.15, "battery", 0.0)
+      //artifact sen05: sensor_hardware.SensorSimulator(5000.0, 0.15, "battery", 0.0)
       artifact con01: controller_hardware.ControlProgram("TC")
       artifact con02: controller_hardware.ControlProgram("LC")
-      artifact con03: controller_hardware.ControlProgram("SM")
+      //artifact con03: controller_hardware.ControlProgram("SM")
     }
 }

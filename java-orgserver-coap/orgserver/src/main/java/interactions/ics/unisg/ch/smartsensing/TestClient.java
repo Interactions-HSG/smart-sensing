@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import com.google.gson.Gson;
+import interactions.ics.unisg.ch.smartsensing.entities.FunctionalSpec;
 import interactions.ics.unisg.ch.smartsensing.entities.GroupRole;
+import interactions.ics.unisg.ch.smartsensing.entities.GroupRoleInfo;
 import interactions.ics.unisg.ch.smartsensing.entities.RolePlayer;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
@@ -34,8 +36,8 @@ public class TestClient {
             System.out.println("Get group info: " + response);
 
             //Create a new GroupRole
-            GroupRole.GroupRoleInfo grinfo = new GroupRole.GroupRoleInfo();
-            GroupRole.FunctionalSpec fspec = new GroupRole.FunctionalSpec();
+            GroupRoleInfo grinfo = new GroupRoleInfo();
+            FunctionalSpec fspec = new FunctionalSpec();
             fspec.hasQuantityKind = 0;
             fspec.measurementInterval = 5000;
             fspec.updateInterval = 60000;
