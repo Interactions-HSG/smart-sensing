@@ -62,7 +62,7 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 		fraction = Math.max(fraction, 0);
 		double cost = (double)numberOfMeasurements * energyPerMeasurement * fraction;
 		if(energyProfile.equals("battery")){
-			cost = cost * (energyInBuffer/500); //Zuschlag für nicht-Erneubaresenergie
+			cost = cost * energyInBuffer/500.0f; //Zuschlag für nicht-Erneubaresenergie
 		}
 		return  cost;
 	}

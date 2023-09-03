@@ -99,7 +99,7 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
                     Organization.updateGroupRole(roleInfo);
                 }
                 if(roleInfo != null && roleInfo.currentAllocation < 100 && cyclesActive > 3){
-                    if(roleInfo.reward <= 3.0) {
+                    if(roleInfo.reward <= 10.0) {
                         roleInfo.reward += 0.1;
                         offeredReward += 0.1;
                         Organization.updateGroupRole(roleInfo);
