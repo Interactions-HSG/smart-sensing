@@ -3,12 +3,11 @@ package sensor_hardware;
 
 import cartago.*;
 import common.GlobalClock;
-import organization_interface.GroupRoleInfo;
-import organization_interface.Organization;
-import organization_interface.PlayerInfo;
+import organization_interface.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 public class SensorSimulator extends Artifact implements Organization.OrganizationListener {
 	double energyInput = 0.0f;         // Amount of energy obtained (from PV array) in one cycle
@@ -26,6 +25,12 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 
 	String energyProfile = null;
 	double disturbance = 0.0f;
+
+	final Object orgListener = new Object();
+	boolean changed = false;
+
+	Organization organization = new Organization();
+
 
 	void init(double initialValue, double perMeasurement, String profile, double disturbance) {
 		energyInBuffer = initialValue;
@@ -51,19 +56,24 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 			loadSensorLogFile();
 		}
 		myName = this.getId().toString();
+		organization.observeGroupRole("room1", this);
 	}
 
 	//-------------------------------- Utility functions -----------------------------------
+	double getCostOfMeasurement(GroupRoleInfo role){
+		int q = role.functionalSpecification.hasQuantityKind;
+		//------Temperature ------- Humidity ----------- Light ------------- CO2 -----------
+		return ((q & 0x01)*0.030) + (((q & 0x02) >> 1)*0.050) + (((q & 0x04) >> 2) *0.10) + (((q & 0x08)>>3)*0.20);
+	}
+
 	double computeCost(GroupRoleInfo role){
 		int interval = role.functionalSpecification.measurementInterval; //In milliseconds
 		int duration = role.functionalSpecification.measurementDuration; //In minutes
 		int numberOfMeasurements = (duration * 60000 /interval);
 		double fraction = (double)(duration - (GlobalClock.ticks - role.isActiveSince)) / duration;
 		fraction = Math.max(fraction, 0);
+		energyPerMeasurement = getCostOfMeasurement(role);
 		double cost = (double)numberOfMeasurements * energyPerMeasurement * fraction;
-		if(energyProfile.equals("battery")){
-			cost = cost * energyInBuffer/500.0f; //Zuschlag für nicht-Erneubaresenergie
-		}
 		return  cost;
 	}
 
@@ -86,11 +96,19 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 		if(usableEnergy <= 0){
 			return -101;
 		}
-		double benefit = r  - (cost / usableEnergy);
-
-		if(benefit <= 0){
-			System.out.println("Negative benefit");
+		double benefit = 0.0f;
+		if(energyProfile.equals("battery") ){
+			if(r > 1.1)
+				benefit = r - (cost * 1.5) / 500.0f;
+			else
+				benefit = 0;
+		}else {
+			benefit = r - (cost / usableEnergy);
 		}
+
+		//if(benefit <= 0){
+		//	System.out.println("Negative benefit");
+		//}
 		return benefit;
 	}
 
@@ -98,48 +116,78 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 	@OPERATION
 	void observeOrganization() {
 		while(true){
-			await_time(500);
-			//updateCurrentRoleState();
-			//findAltRole();
-			//refreshRoles();
-			//evaluateCurrentState();
-			reviewCurrentStateAndDecide();
-			signal("onOrgUpdate");
-			await_time(500);
+			await_time(1000);
+			{
+				//updateCurrentRoleState();
+				//findAltRole();
+				//refreshRoles();
+				//evaluateCurrentState();
+				if(true) {
+					reviewCurrentStateAndDecide();
+					//signal("onOrgUpdate");
+					changed = false;
+				}
+			}
 		}
 	}
 
 //------------------------------------------------------------------------------------
 boolean joinRole(GroupRoleInfo role, PlayerInfo player){
 
-	boolean joinOk = Organization.joinGroupRole(role.id, player);
+	boolean joinOk = organization.joinGroupRole(role.id, player);
 	return  joinOk;
 }
 
 	boolean leaveRole(PlayerInfo player){
-		boolean res = Organization.leaveGroupRole(player.groupRoleId, player);
+		boolean res = organization.leaveGroupRole(player.groupRoleId, player);
 		return  res;
 	}
 
 	List<GroupRoleInfo> lastGroupRoleInfos;
 
 	void reviewCurrentStateAndDecide(){
-		List<GroupRoleInfo> groupRoles =  Organization.getGroupRoles();
+
+		List<GroupRoleInfo> groupRoles =  organization.getGroupRoles();
+		if(groupRoles == null){
+			System.out.println("No roles visible in org node");
+			return;
+		}
+
 		List<GroupRoleInfo> alternatives = new ArrayList<>();
 		for(GroupRoleInfo groupRoleInfo : groupRoles){
-			boolean expired = (GlobalClock.ticks - groupRoleInfo.isActiveSince) > groupRoleInfo.functionalSpecification.measurementDuration;
+			if(groupRoleInfo.functionalSpecification == null){
+				continue;
+			}
+			boolean roleExpired = (GlobalClock.ticks - groupRoleInfo.isActiveSince) > groupRoleInfo.functionalSpecification.measurementDuration;
+
 			PlayerInfo currentPlayer = isCurrentlyPlayedBy(groupRoleInfo.id);
 			if(currentPlayer != null){
 				//Get out of inactive or expired roles
-				if(!groupRoleInfo.isActive || expired){
+				boolean rolePlayExpired = (GlobalClock.ticks - currentPlayer.startTime) > groupRoleInfo.functionalSpecification.measurementDuration;
+				if(!groupRoleInfo.isActive || roleExpired || rolePlayExpired){
 					leaveRole(currentPlayer);
 					currentlyPlaying.remove(currentPlayer);
+					System.out.printf("Sensor %s: Leaving role %s. IsActive=%b role expired=%b committment expired=%b\n", myName, currentPlayer.groupRoleId, groupRoleInfo.isActive, roleExpired, rolePlayExpired);
+				}
+
+				if(groupRoleInfo.isActive && !roleExpired){
+					double benefit = computeBenefit(groupRoleInfo);
+					if(benefit > 0) {
+						groupRoleInfo.foreseenBenefit = benefit;
+						alternatives.add(groupRoleInfo);
+					}
 				}
 			}else{
 				double benefit = computeBenefit(groupRoleInfo);
-				if(groupRoleInfo.isActive && !expired && benefit > 0) {
-					groupRoleInfo.foreseenBenefit = benefit;
-					alternatives.add(groupRoleInfo);
+				if(groupRoleInfo.isActive && !roleExpired && groupRoleInfo.currentAllocation < 100) {
+					if(benefit > 0) {
+						groupRoleInfo.foreseenBenefit = benefit;
+						alternatives.add(groupRoleInfo);
+					}else{
+						double cost = computeCost(groupRoleInfo);
+						System.out.printf("Sensor %s:Ignoring role %s because benefit=%f. Cost=%f storage=%f reward=%f \n", myName, groupRoleInfo.id, benefit, cost, energyInBuffer, groupRoleInfo.reward);
+					}
+
 				}
 			}
 		}
@@ -150,6 +198,18 @@ boolean joinRole(GroupRoleInfo role, PlayerInfo player){
 		}
 		currentlyPlaying.sort(Comparator.comparing(PlayerInfo::getBenefit)); //ascending
 		alternatives.sort(Comparator.comparing(GroupRoleInfo::getForeseenBenefit).reversed()); //descending
+		//System.out.println("------------- " + myName + " -------------------");
+		//System.out.println("Role\tCost\tBenefit\tTime\n");
+		//writeToTraceFile(String.format("%d:%d: Currently", GlobalClock.hour, GlobalClock.minute));
+		//for(PlayerInfo player: currentlyPlaying){
+		//	writeToTraceFile(String.format("%s\t%f\t%f\t%d\n", player.groupRoleId, player.cost, player.benefit, (GlobalClock.ticks - player.startTime)));
+		//}
+		//System.out.println("Alternatives:");
+		//for(GroupRoleInfo gr: alternatives){
+		//	writeToTraceFile(String.format("%s\t%f\t%f\t%d\n", gr.id, gr.reward, gr.foreseenBenefit, (GlobalClock.ticks - gr.isActiveSince)));
+		//}
+		//System.out.println("-------------------------------------");
+
 		//----- simple logic: leave the lowest benefit role and join the highest benefit alternative.
 		PlayerInfo player = new PlayerInfo();
 		player.id = myName;
@@ -164,23 +224,30 @@ boolean joinRole(GroupRoleInfo role, PlayerInfo player){
 
 		boolean joinOk = false;
 		//Leave the least beneficial role in the currently played roles, and adopt the most beneficial role in the alternate list
-		if(currentlyPlaying.size() > 0 && (currentlyPlaying.get(0).benefit < alternatives.get(0).foreseenBenefit)){
-			if(leaveRole(currentlyPlaying.get(0))) {
-				joinOk = joinRole(alternatives.get(0), player);
-				currentlyPlaying.remove(currentlyPlaying.get(0));
+		if(currentlyPlaying.size() > 0){
+			//int im = Math.min(currentlyPlaying.size(), alternatives.size());
+			int i = 0;
+			{
+				if(currentlyPlaying.get(i).benefit < alternatives.get(i).foreseenBenefit){
+					System.out.printf("Sensor %s: Leaving role %s and joining %s\n", myName, currentlyPlaying.get(i).groupRoleId, alternatives.get(i).id);
+					joinOk = joinRole(alternatives.get(i), player);
+
+					System.out.printf("Sensor %s: Joining role %s resulted %b \n", myName,alternatives.get(i).id, joinOk);
+					if(joinOk && leaveRole(currentlyPlaying.get(i))) {
+						currentlyPlaying.remove(i);
+					}
+				}
 			}
-		} else if(currentlyPlaying.size() == 0 ){
-			joinOk = joinRole(alternatives.get(0), player);
-		}else{
-			double currentTotalCost = getCurrentTotalCost();
-			for(GroupRoleInfo role : alternatives){
-				double cost = computeCost(role);
-				if((cost + currentTotalCost) < (energyInBuffer-500)){
-					joinOk = joinRole(role, player);
-					break;
+		}else if(currentlyPlaying.size() == 0 ){
+			{
+				if( (energyProfile.equals("battery") && alternatives.get(0).foreseenBenefit > 0.8) || (!energyProfile.equals("battery") && alternatives.get(0).foreseenBenefit > 0)){
+					System.out.printf("Sensor %s: Joining role %s with foreseen benefit of %f  \n", myName,alternatives.get(0).id, alternatives.get(0).foreseenBenefit);
+					joinOk = joinRole(alternatives.get(0), player);
+					System.out.printf("Sensor %s: Joining role %s resulted %b \n", myName,alternatives.get(0).id, joinOk);
 				}
 			}
 		}
+
 		if(joinOk){
 			currentlyPlaying.add(player);
 		}
@@ -193,101 +260,6 @@ boolean joinRole(GroupRoleInfo role, PlayerInfo player){
 			cost+= player.cost;
 		}
 		return cost;
-	}
-
-	@OPERATION
-	void refreshRoles(){
-		lastGroupRoleInfos = Organization.getGroupRoles();
-		if(lastGroupRoleInfos == null){
-			//TODO: Quit current players
-			return;
-		}
-		energyAllocated = 0;
-		for(PlayerInfo player: currentlyPlaying){
-			energyAllocated += player.cost;
-		}
-		System.out.printf("Sensor: energyAllocation=%f\n", energyAllocated);
-
-		for(GroupRoleInfo roleInfo : lastGroupRoleInfos) {
-			PlayerInfo player = isCurrentlyPlayedBy(roleInfo.id);
-			if (player != null) {
-				double c = computeCost(roleInfo);
-				double b = computeBenefit(roleInfo);
-				player.cost = c;
-				player.benefit = b;
-				if(b < 0)
-					player.cost = 0;
-				System.out.printf("Sensor: current role in %s is updated with cost=%f and benefit=%f\n", player.groupRoleId, player.cost, player.benefit);
-			}
-		}
-		//Recompute how much energy is commited
-		energyAllocated = 0;
-		for(PlayerInfo player: currentlyPlaying){
-			energyAllocated += player.cost;
-		}
-		System.out.printf("Sensor: After current role update, energyAllocation=%f\n", energyAllocated);
-
-		currentlyPlaying.sort(Comparator.comparing(PlayerInfo::getBenefit));
-		alternateRoles.clear();
-		for(GroupRoleInfo roleInfo : lastGroupRoleInfos){
-			if(isCurrentlyPlayedBy(roleInfo.id) != null){
-				continue;
-			}
-			boolean expired = (GlobalClock.ticks - roleInfo.isActiveSince) > roleInfo.functionalSpecification.measurementDuration;
-			if(!roleInfo.isActive || expired){
-				continue;
-			}
-
-			double benefitOfAltRole = computeBenefit(roleInfo);
-			if(benefitOfAltRole <= 0){
-				continue;
-			}
-			double currentLowestBenefit =currentlyPlaying.size() > 0 ? currentlyPlaying.get(0).benefit : 0;
-			boolean noCurrentRoles = currentlyPlaying.size() == 0;
-			if(noCurrentRoles  || (benefitOfAltRole > currentLowestBenefit)) { // benefitOfAltRole is more than the lowest current.
-				roleInfo.foreseenBenefit = benefitOfAltRole;
-				alternateRoles.add(roleInfo);
-			}
-		}
-	}
-
-	@OPERATION
-	void evaluateCurrentState(){
-		currentlyPlaying.sort(Comparator.comparing(PlayerInfo::getBenefit)); //ascending
-		alternateRoles.sort(Comparator.comparing(GroupRoleInfo::getForeseenBenefit).reversed()); //descending
-		//we switch one role at a time
-
-		if(alternateRoles.size() == 0){
-			updateCurrentBeliefs();
-			return;
-		}
-
-		//----- simple logic: leave the lowest benefit role and join the highest benefit alternative.
-		PlayerInfo player = new PlayerInfo();
-		player.id = myName;
-		player.benefit = alternateRoles.get(0).foreseenBenefit;
-		player.cost = computeCost(alternateRoles.get(0));
-		player.groupRoleId = alternateRoles.get(0).id;
-		player.startTime = GlobalClock.ticks;
-		player.taskAllocation = 100;
-		player.canAllocateUpto = 100;
-		player.networkCost = 0;
-		player.reward = alternateRoles.get(0).reward;
-
-		boolean joinOk = false;
-		//Leave the least beneficial role in the currently played roles, and adopt the most beneficial role in the alternate list
-		if(currentlyPlaying.size() > 0 && (currentlyPlaying.get(0).benefit < alternateRoles.get(0).foreseenBenefit && alternateRoles.get(0).foreseenBenefit > 0)){
-			if(leaveRole(currentlyPlaying.get(0))) {
-				joinOk = joinRole(alternateRoles.get(0), player);
-				currentlyPlaying.remove(currentlyPlaying.get(0));
-			}
-		} else if(currentlyPlaying.size() == 0 && alternateRoles.get(0).foreseenBenefit > 0){
-			joinOk = joinRole(alternateRoles.get(0), player);
-		}
-		if(joinOk){
-			currentlyPlaying.add(player);
-		}
-		updateCurrentBeliefs();
 	}
 
 	void updateCurrentBeliefs(){
@@ -318,9 +290,23 @@ boolean joinRole(GroupRoleInfo role, PlayerInfo player){
 //-------------------------------------------------------------------------------------------
 @OPERATION
 void doTask() {
-	energyConsumed = energyPerMeasurement;
-	for(PlayerInfo roleInfo : currentlyPlaying) {
-		Organization.sendMeasurement(roleInfo.groupRoleId, getTemperatureMeasurement());
+	//Note: Timing Sensitive
+	energyConsumed = 0;
+	for(PlayerInfo player : currentlyPlaying) {
+		GroupRoleInfo roleInfo = Organization.getGroupRole(player.groupRoleId);
+		boolean expired = roleInfo.functionalSpecification.measurementDuration <= (GlobalClock.ticks - roleInfo.isActiveSince);
+		if(expired || !roleInfo.isActive){
+			System.out.println("Achtung!");
+			continue;
+		}
+		int measurementsToSend = GlobalClock.simulation_window_size / roleInfo.functionalSpecification.measurementInterval;
+		double measurementEnergy = getCostOfMeasurement(roleInfo);
+		for(int i=0; i < measurementsToSend; i++)
+			Organization.sendMeasurement(player.groupRoleId, getTemperatureMeasurement());
+		energyConsumed += (measurementsToSend * measurementEnergy);
+		if(energyConsumed > 5){
+			System.out.println("Stop...");
+		}
 	}
 	//writeToLogFile(String.format("%s;%d;%d", sensorRecords.get(idx).get(0), batteryCharge, value));
 }
@@ -373,7 +359,8 @@ void doTask() {
 		}else if (energyProfile.equals("profile3")){
 			e_in = profile3[hour] + (((profile3[hour_n] - profile3[hour]) * GlobalClock.minute)/60) + (profile3[hour] * Math.random() * disturbance);
 		}
-		return (e_in * Math.pow(10,-3) * 5 * 60);
+		//Note: Timing Sensitive
+		return (e_in * Math.pow(10,-3) * GlobalClock.simulation_window_size/1000);
 	}
 
 	double getTemperatureMeasurement(){
@@ -411,13 +398,14 @@ void doTask() {
 					propL.updateValue(energyInBuffer);
 					propL.commitChanges();
 				}
-				System.out.println(String.format("[%s] %d:%d  EnergyInput=%f EnergyConsumed=%f EnergyStore=%f", myName, GlobalClock.hour, GlobalClock.minute, energyInput, energyConsumed, energyInBuffer));
+				//System.out.println(String.format("[%s] %d:%d  EnergyInput=%f EnergyConsumed=%f EnergyStore=%f", myName, GlobalClock.hour, GlobalClock.minute, energyInput, energyConsumed, energyInBuffer));
 				writeToLogFile(String.format("%d;%f;%f;%f;%f;%d;%f;%s", GlobalClock.ticks, energyInput, energyConsumed, energyInBuffer, energyAllocated,currentlyPlaying.size(), currentTotalBenefit, getRoleNames()));
 			}catch(Exception e){
 				this.log("Exception:" + e.getMessage());
 			}
 			signal("tick");
-            await_time(1000);
+			//Note: Timing Sensitive
+            await_time(GlobalClock.simulation_time_step);
         }
 	}
 
@@ -430,6 +418,7 @@ void doTask() {
 		}
 		return roles;
 	}
+
 	GroupRoleInfo getRole(String id, List<GroupRoleInfo> roles){
 		for(GroupRoleInfo role : roles){
 			if(role.id.equals(id)){
@@ -488,10 +477,24 @@ void doTask() {
 		}
 	}
 
+	void writeToTraceFile(String msg){
+		try {
+			if(writer == null){
+				writer = new BufferedWriter(new FileWriter(fileName + myName + "_trace.txt", true));
+			}
+			writer.append(msg).append("\n");
+			writer.flush();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	//---------------------------------- Interface implementation ---------------------------------
 	@Override
 	public void onGroupRoleInfoChange(String data) {
-		//changed = true;
+		{
+			changed = true;
+		}
 	}
 
 	@Override

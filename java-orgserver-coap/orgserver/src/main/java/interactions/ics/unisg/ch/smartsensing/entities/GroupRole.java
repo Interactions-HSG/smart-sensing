@@ -50,7 +50,7 @@ public class GroupRole extends CoapResource {
         GroupRoleInfo groupRoleInfo = gson.fromJson(data, GroupRoleInfo.class);
 
         exchange.respond(CoAP.ResponseCode.CHANGED);
-        changed();
+        //changed();
     }
 
     @Override
@@ -59,8 +59,10 @@ public class GroupRole extends CoapResource {
         //System.out.println("Received update:" + data);
         specification = gson.fromJson(data, GroupRoleInfo.class);
         exchange.respond(CoAP.ResponseCode.CHANGED);
-        changed();
+        //changed();
         receiver.reset();
+        Group group = (Group) this.getParent();
+        group.signalChange();
     }
 
     final Object lock = new Object();
@@ -77,7 +79,9 @@ public class GroupRole extends CoapResource {
             addRolePlayer(resource, playerState);
             exchange.respond(CoAP.ResponseCode.CREATED);
         }
-        changed();
+        //changed();
+        //Group group = (Group) this.getParent();
+        //group.signalChange();
     }
 
     @Override
@@ -89,6 +93,8 @@ public class GroupRole extends CoapResource {
         else{
             exchange.respond(CoAP.ResponseCode.FORBIDDEN);
         }
+        //Group group = (Group) this.getParent();
+        //group.signalChange();
     }
 
     private void addRolePlayer(String roleName, PlayerInfo state){

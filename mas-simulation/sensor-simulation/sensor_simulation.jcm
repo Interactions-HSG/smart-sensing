@@ -26,13 +26,13 @@ mas sensor_simulation {
     agent s5: sensor.asl {
       focus: w.sen05
     }
-    agent con1_hc: heating_controller.asl {
+    agent con1_hc: actor.asl {
         focus: w.con01
     }
-    agent con2_lc: heating_controller.asl {
+    agent con2_lc: actor.asl {
         focus: w.con02
     }
-    agent con3_sm: heating_controller.asl {
+    agent con3_sm: actor.asl {
         focus: w.con03
     }
 

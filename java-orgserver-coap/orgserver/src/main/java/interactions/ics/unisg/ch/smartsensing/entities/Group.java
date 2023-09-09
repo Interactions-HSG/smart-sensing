@@ -49,6 +49,10 @@ public class Group extends CoapResource {
         changed();
     }
 
+    public void signalChange(){
+        changed();
+    }
+
     private void addGroupRole(GroupRoleInfo spec){
         GroupRole groupRole = new GroupRole(spec);
         this.add(groupRole);

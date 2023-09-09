@@ -31,25 +31,47 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
 
     String groupRoleId = "";
 
+    Organization organization = new Organization();
+
+    int time_step = 1000;
+
     void init(String type) {
         defineObsProperty("program_type", type);
         defineObsProperty("program_active", 0);
-
         currentState = 0;
         programType = type;
         groupRoleId = "gr_sensing_" + programType + "_" + this.getId().getName();
+        writeToLogFile("Ticks;Time;Duration;State;Cycles;Updates;Expected;Reward");
         loadSensorLogFile();
         addOrgGroupRole();
         GlobalClock.start();
     }
 
+    FunctionalSpec getFunctionalSpec(){
+        FunctionalSpec fs = new FunctionalSpec();
+        if(programType.equals("TC")) {
+            fs.measurementInterval = 60000; // => 50 measurements
+            fs.hasQuantityKind = 0x01; //Temperature
+            fs.measurementDuration = 50;
+            fs.updateInterval = 60000;
+        }else if(programType.equals("LC")){
+            fs.measurementInterval = 20000; // => 45 measurements
+            fs.hasQuantityKind = 0x04; //Light level
+            fs.measurementDuration = 15; // 15meas per window => 15 * 0.10 = 1.5 J.
+            fs.updateInterval = 10000;
+        }else if(programType.equals("SM")){
+            fs.measurementInterval = 120000; // => 60 measurements
+            fs.hasQuantityKind = 0x01 ; //Temperature, CO2| 0x08
+            fs.measurementDuration = 120;
+            fs.updateInterval = 60000;
+        }
+        else{
+            System.out.println("Unknown control program");
+        }
+        return fs;
+    }
     @OPERATION
     void addOrgGroupRole() {
-        FunctionalSpec fs = new FunctionalSpec();
-        fs.measurementInterval = 60000;
-        fs.hasQuantityKind = 1;
-        fs.measurementDuration = 50;
-        fs.updateInterval = 60000;
         GroupRoleInfo role = new GroupRoleInfo();
         role.id = groupRoleId;
         role.reward = 1;
@@ -58,10 +80,10 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
         role.currentAgents = 0;
         role.currentAllocation = 0;
         role.minAllocation = 20;
-        role.functionalSpecification = fs;
+        role.functionalSpecification = getFunctionalSpec();
         role.creatorId = this.getId().getName();
-        Organization.createGroupRole(role);
-        Organization.observeMeasurements(role.id, this);
+        organization.createGroupRole(role);
+        organization.observeMeasurements(role.id, this);
         offeredReward = 1.0;
     }
 
@@ -89,16 +111,14 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
             if(currentState == 1){
                 cyclesActive++;
                 GroupRoleInfo roleInfo = Organization.getGroupRole(groupRoleId);
-                if(roleInfo != null && GlobalClock.ticks - roleInfo.isActiveSince >= roleInfo.functionalSpecification.measurementDuration){
-                    System.out.println("Controller: Extending role duration");
-                    roleInfo.isActive = true;
-                    roleInfo.reward = 1.0f;
-                    offeredReward = 1.0f;
-                    roleInfo.isActiveSince = GlobalClock.ticks;
-                    roleInfo.functionalSpecification.measurementDuration = 50;
-                    Organization.updateGroupRole(roleInfo);
+                if(roleInfo != null && roleInfo.isActive && (GlobalClock.ticks - roleInfo.isActiveSince) >= roleInfo.functionalSpecification.measurementDuration){
+                    System.out.println("Controller: Time up. Release sensors");
+                    currentState = 0;
+                    cyclesInactive = 0;
+                    propProgramActive.updateValue(0);
+                    propProgramActive.commitChanges();
                 }
-                if(roleInfo != null && roleInfo.currentAllocation < 100 && cyclesActive > 3){
+                else if(roleInfo != null && roleInfo.isActive && roleInfo.currentAllocation < 100 && cyclesActive > 3){
                     if(roleInfo.reward <= 10.0) {
                         roleInfo.reward += 0.1;
                         offeredReward += 0.1;
@@ -113,7 +133,7 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
                 cyclesInactive++;
             }
             idx++;
-            await_time(1000);
+            await_time(GlobalClock.simulation_time_step);
         }
     }
 
@@ -122,27 +142,27 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
         this.log(String.format("Controller: Program start at %d:%d", GlobalClock.hour, GlobalClock.minute));
         start = GlobalClock.ticks;
         inputUpdates = 0;
-        GroupRoleInfo roleInfo = Organization.getGroupRole(groupRoleId);
+        GroupRoleInfo roleInfo = organization.getGroupRole(groupRoleId);
         roleInfo.isActive = true;
         roleInfo.reward = 1.0f;
         offeredReward = 1.0f;
         roleInfo.isActiveSince = GlobalClock.ticks;
         roleInfo.functionalSpecification.measurementDuration = 50;
-        Organization.updateGroupRole(roleInfo);
+        organization.updateGroupRole(roleInfo);
         //String msg = String.format("%s;%d;%d;%d", sensorRecords.get(idx).get(0), 1, 0, 0);
         //writeToLogFile(msg);
     }
 
     @OPERATION
     void releaseSensors(){
-
         this.log(String.format("Controller: Program end. Got %d updates in %d minutes", inputUpdates, GlobalClock.ticks - start));
-        GroupRoleInfo roleInfo = Organization.getGroupRole(groupRoleId);
+        GroupRoleInfo roleInfo = organization.getGroupRole(groupRoleId);
         roleInfo.isActive = false;
         roleInfo.reward = 0.0f;
+        organization.updateGroupRole(roleInfo);
+        int expectedUpdates = (roleInfo.functionalSpecification.measurementDuration * 60000) / roleInfo.functionalSpecification.measurementInterval;
 
-        Organization.updateGroupRole(roleInfo);
-        writeToLogFile(String.format("%d;%s;%d;%d;%d;%d;%f", GlobalClock.ticks, String.format("%d:%d", GlobalClock.hour, GlobalClock.minute), GlobalClock.ticks - start, currentState, cyclesActive, inputUpdates, offeredReward));
+        writeToLogFile(String.format("%d;%s;%d;%d;%d;%d;%d;%f", GlobalClock.ticks, String.format("%d:%d", GlobalClock.hour, GlobalClock.minute), GlobalClock.ticks - start, currentState, cyclesActive, inputUpdates, expectedUpdates, offeredReward));
         offeredReward = 0.0f;
         inputUpdates = 0;
         //String msg = String.format("%s;%d;%d;%d", sensorRecords.get(idx).get(0), 0, inputUpdates, cyclesActive);
@@ -186,7 +206,7 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
         }
     }
 
-
+    //-------------------------------- Organization callbacks --------------------------
     @Override
     public void onGroupRoleInfoChange(String data) {
 
@@ -195,6 +215,6 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
     @Override
     public void onMeasurement(String groupId, String data) {
         inputUpdates++;
-        System.out.printf("Controller: %s got measurement update from %s:%s\n",this.getId().getName(), groupId, data);
+        //System.out.printf("Controller: %s got measurement update from %s:%s\n",this.getId().getName(), groupId, data);
     }
 }

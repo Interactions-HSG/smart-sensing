@@ -53,18 +53,12 @@ engagement(0).
 +!manage_power: current_benefit(CB) & state(S) & CB<=0 & S==0
     <- !sleep.
 
-+onOrgUpdate:true
-    <- .print("org state updated").
-    //!decide.
-
-+!sense:state(S) & S==1 & temperature(T)
++!sense:state(S) & S==1
     <-
-    .print("Sense T=", T);
     doTask.
 
 +!sleep:state(S) & S==1
     <-
-    .print("Will sleep now");
     enterSleepMode;
     -+state(0).
 
