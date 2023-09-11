@@ -25,6 +25,8 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
     String fileName = wd + "/log/runtime_con_";
     int cyclesActive = 0;
     int cyclesInactive = 0;
+
+    int cyclesExpected = 0;
     List<List<String>> sensorRecords = new ArrayList<>();
 
     double offeredReward = 0.0;
@@ -50,19 +52,19 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
     FunctionalSpec getFunctionalSpec(){
         FunctionalSpec fs = new FunctionalSpec();
         if(programType.equals("TC")) {
-            fs.measurementInterval = 60000; // => 50 measurements
+            fs.measurementInterval = 120000; // => 50 measurements
             fs.hasQuantityKind = 0x01; //Temperature
-            fs.measurementDuration = 50;
+            fs.measurementDuration = 100; // 10 windows 5 meas per window
             fs.updateInterval = 60000;
         }else if(programType.equals("LC")){
-            fs.measurementInterval = 20000; // => 45 measurements
+            fs.measurementInterval = 60000; // => 50 measurements
             fs.hasQuantityKind = 0x04; //Light level
-            fs.measurementDuration = 15; // 15meas per window => 15 * 0.10 = 1.5 J.
+            fs.measurementDuration = 50; // 3 windows 15meas per window => 15 * 0.10 = 1.5 J.
             fs.updateInterval = 10000;
         }else if(programType.equals("SM")){
-            fs.measurementInterval = 120000; // => 60 measurements
+            fs.measurementInterval = 300000; // => 60 measurements
             fs.hasQuantityKind = 0x01 ; //Temperature, CO2| 0x08
-            fs.measurementDuration = 120;
+            fs.measurementDuration = 300; // 60 windows, 1 meas per window =>
             fs.updateInterval = 60000;
         }
         else{
@@ -97,38 +99,30 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
             }else{
                 occupied = Math.random() > 0.9;
             }
-            if(occupied && currentState == 0 && cyclesInactive > 2){ //5min delay
+            if(occupied && currentState == 0 /*&& cyclesInactive > 2*/){ //5min delay
                 currentState = 1;
                 cyclesActive = 0;
                 propProgramActive.updateValue(1);
                 propProgramActive.commitChanges();
-            }else if (!occupied && currentState == 1 && cyclesActive > 15){ //15min delay
-                currentState = 0;
-                cyclesInactive = 0;
-                propProgramActive.updateValue(0);
-                propProgramActive.commitChanges();
-            }
-            if(currentState == 1){
-                cyclesActive++;
-                GroupRoleInfo roleInfo = Organization.getGroupRole(groupRoleId);
-                if(roleInfo != null && roleInfo.isActive && (GlobalClock.ticks - roleInfo.isActiveSince) >= roleInfo.functionalSpecification.measurementDuration){
-                    System.out.println("Controller: Time up. Release sensors");
+            }else if (currentState == 1){ //15min delay
+                if(cyclesActive > cyclesExpected) {
                     currentState = 0;
                     cyclesInactive = 0;
                     propProgramActive.updateValue(0);
                     propProgramActive.commitChanges();
-                }
-                else if(roleInfo != null && roleInfo.isActive && roleInfo.currentAllocation < 100 && cyclesActive > 3){
-                    if(roleInfo.reward <= 10.0) {
-                        roleInfo.reward += 0.1;
-                        offeredReward += 0.1;
-                        Organization.updateGroupRole(roleInfo);
-                    }else{
-                        System.out.printf("Controller:%s is starving\f", this.getId().getName());
+                }else {
+                    cyclesActive++;
+                    GroupRoleInfo roleInfo = Organization.getGroupRole(groupRoleId);
+                    if (roleInfo != null && roleInfo.isActive && roleInfo.currentAllocation < 100 && cyclesActive > 1) {
+                        if (roleInfo.reward <= 10.0) {
+                            roleInfo.reward += 0.1;
+                            offeredReward += 0.1;
+                            Organization.updateGroupRole(roleInfo);
+                        } else {
+                            System.out.printf("Controller:%s is starving\f", this.getId().getName());
+                        }
                     }
                 }
-                //role.functionalSpecification.measurementDuration = 50;
-                //Organization.updateGroupRole(role);
             }else {
                 cyclesInactive++;
             }
@@ -147,8 +141,9 @@ public class ControlProgram extends Artifact implements Organization.Organizatio
         roleInfo.reward = 1.0f;
         offeredReward = 1.0f;
         roleInfo.isActiveSince = GlobalClock.ticks;
-        roleInfo.functionalSpecification.measurementDuration = 50;
+        //roleInfo.functionalSpecification.measurementDuration = 50;
         organization.updateGroupRole(roleInfo);
+        cyclesExpected = roleInfo.functionalSpecification.measurementDuration / (GlobalClock.simulation_window_size/60000);
         //String msg = String.format("%s;%d;%d;%d", sensorRecords.get(idx).get(0), 1, 0, 0);
         //writeToLogFile(msg);
     }

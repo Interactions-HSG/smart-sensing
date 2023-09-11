@@ -49,7 +49,7 @@ public class GlobalClock {
                             }
                         }
                         try {
-                            Thread.sleep(clock_time_step);
+                            Thread.sleep(clock_time_step, 333);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }

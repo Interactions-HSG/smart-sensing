@@ -98,8 +98,8 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 		}
 		double benefit = 0.0f;
 		if(energyProfile.equals("battery") ){
-			if(r > 1.1)
-				benefit = r - (cost * 1.5) / 500.0f;
+			if(role.reward >= 1.4)
+				benefit = role.reward;// - (cost) / 100.0f;
 			else
 				benefit = 0;
 		}else {
