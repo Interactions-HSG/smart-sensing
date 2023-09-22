@@ -1,0 +1,49 @@
+/*
+    JaCaMo Application File Template
+    --------------------------------
+
+    This file defines the initial state of the MAS (initial agents, environment, organisation, ....)
+
+    (see jacamo/doc/jcm.html for more information about what can be defined in this file)
+
+    JaCaMo 1.2
+*/
+
+mas sensor_simulation {
+
+    agent s1: sensor.asl {
+      focus: w.sen01
+    }
+    agent s2: sensor.asl {
+      focus: w.sen02
+    }
+    agent s3: sensor.asl {
+      focus: w.sen03
+    }
+    agent s4: sensor.asl {
+      focus: w.sen04
+    }
+    agent s5: sensor.asl {
+      focus: w.sen05
+    }
+    agent con1_hc: actor.asl {
+        focus: w.con01
+    }
+    agent con2_lc: actor.asl {
+        focus: w.con02
+    }
+    agent con3_sm: actor.asl {
+        focus: w.con03
+    }
+
+    workspace w {
+      artifact sen01: sensor_hardware.SensorSimulator(510.0, 0.15, "profile3", 0.1, "gr_sensing_TC")
+      artifact sen02: sensor_hardware.SensorSimulator(510.0, 0.15, "profile2", 0.1,"gr_sensing_SM")
+      artifact sen03: sensor_hardware.SensorSimulator(510.0, 0.15, "profile3", 0.1, "gr_sensing_LC")
+      artifact sen04: sensor_hardware.SensorSimulator(2500.0, 0.15, "battery", 0.0,"gr_sensing_LC")
+      artifact sen05: sensor_hardware.SensorSimulator(5000.0, 0.15, "battery", 0.0, "gr_sensing_SM")
+      artifact con01: controller_hardware.ControlProgram("TC")
+      artifact con02: controller_hardware.ControlProgram("LC")
+      artifact con03: controller_hardware.ControlProgram("SM")
+    }
+}

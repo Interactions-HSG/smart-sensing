@@ -21,7 +21,7 @@
 /**************************************************************************************************
   IPv6 Address of CoAP Server
 **************************************************************************************************/
-static const char *const serverAddress = "fd19:99a6:cda:f9e6:0:ff:fe00:fc11";
+static const char *const serverAddress = "fd19:99a6:cda:f9e6:0:ff:fe00:fc11"; //fd19:99a6:cda:f9e6:0:ff:fe00:fc11
 
 
 typedef void (*coap_response_cb_t)(void *p_context,  otMessage *p_message,  const otMessageInfo *p_message_info, otError result);
@@ -41,13 +41,12 @@ class CoapClient
 {
     public:
         static otError initialize();
-        static otError sendRequest(CoapRequest* pRequest);
-        static otError sendRequest2(const char* uri, const char* query, otCoapType requestType, otCoapCode requestCode, uint32_t requestObserve, void* pContext);
+        static otError sendRequest2(const char* uri, const char* query, const char* payload, otCoapType requestType, otCoapCode requestCode, uint32_t requestObserve, void* pContext);
         static otError cleanup();
     private:
         static void coap_response_handler(void *p_context,	otMessage *p_message,const otMessageInfo *p_message_info, otError aResult);
         static void coap_default_handler(void *p_context,	otMessage *p_message,const otMessageInfo *p_message_info);
-        static otError init_coap_message(otMessage *aMessage, const char *aUriPath, const char *aQuery, otCoapType aType, 	  otCoapCode aCode, uint32_t aObserve);
+        static otError init_coap_message(otMessage *aMessage, const char *aUriPath, const char *aQuery, const char* payload, otCoapType aType, 	  otCoapCode aCode, uint32_t aObserve);
 };
 
 #endif

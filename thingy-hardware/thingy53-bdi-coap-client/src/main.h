@@ -15,7 +15,6 @@
 #include <math.h>
 #include <numeric>
 #include <algorithm>
-#include "Role.h"
 #include "peripherals/BME688.h"
 
 /**************************************************************************************************
@@ -34,17 +33,13 @@
   Task include files.
 **************************************************************************************************/
 #include "agent/agent.h"
-#include "config/configuration.h"
-#include "bdi-agent/functions.h"
-#include "parse_xml.h"
 #include <coap_server_client_interface.h>
 
 extern "C" {
-  #include "coap_client_utils.h"
   #include "peripherals/sensors.h"
   #include "peripherals/battery.h"
   #include "peripherals/gpio.h"
-  #include "thread_helper.h"
+  #include "thread/thread_helper.h"
 }
 
 /**************************************************************************************************
@@ -103,13 +98,6 @@ extern bool local_capabilities_changed;
 extern bool optimal_state;
 extern bool role_assigned;
 extern bool role_deleted;
-
-
-uint8_t find_best_role(void);
-int calculate_role_costs(int measurement_period, int update_period, int battery_volt);
-
-
-
 
 extern bool role_available;
 extern uint8_t iterations;

@@ -34,7 +34,7 @@ public class MeasurementReceiver extends CoapResource {
     @Override
     public void handlePOST(CoapExchange exchange) {
         String data = exchange.getRequestText();
-        //System.out.println("Received measurement:" + data);
+        System.out.println("Received measurement:" + data);
         Double meas = gson.fromJson(data, Double.class);
         measurements.add(meas);
         exchange.respond(CoAP.ResponseCode.CREATED);

@@ -1,7 +1,6 @@
 #ifndef __ORGANIZATION_H__
 #define __ORGANIZATION_H__
 
-#include "communication/AbstractChannel.h"
 #include <zephyr/logging/log.h>
 #include <dk_buttons_and_leds.h>
 #include <iostream>
@@ -9,11 +8,11 @@
 #include "mas-abstractions/organization/GroupRole.h"
 #include "coap/CoapClient.h"
 
-class Organization : public ChannelClient
+class Organization 
 {
 
     public:
-        Organization(AbstractChannel* pCommChannel);
+        Organization();
 
         /**
          * This function returns GroupRoles known in the organization after the last refresh.
@@ -24,7 +23,10 @@ class Organization : public ChannelClient
         static std::list<PlayerInfo*> getMyRoles();
         static void refresh();
         static void refreshGroupRoles(std::string groupName);
+        static void joinRole(std::string groupRoleName);
+        static void leaveRole(std::string groupRoleName);
         static void onDirectResponse(void* pContext,  uint8_t *p_message, uint16_t length);
+        static void sendMeasurement(std::string groupName, double value);
     private:
         
         

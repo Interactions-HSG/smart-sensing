@@ -31,10 +31,13 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 
 	Organization organization = new Organization();
 
+	String affliatedRole = "none";
 
-	void init(double initialValue, double perMeasurement, String profile, double disturbance) {
+
+	void init(double initialValue, double perMeasurement, String profile, double disturbance, String affRole) {
 		energyInBuffer = initialValue;
 		energyPerMeasurement = perMeasurement;
+		this.affliatedRole = affRole;
 		defineObsProperty("energy_in_buffer", initialValue);
         defineObsProperty("energy_input", 0);
         defineObsProperty("energy_consumed", 0);
@@ -78,27 +81,47 @@ public class SensorSimulator extends Artifact implements Organization.Organizati
 	}
 
 	double computeBenefit(GroupRoleInfo role){
+		if(!affliatedRole.equals("none") ){
+			String[] roles = affliatedRole.split(";");
+			boolean reject = true;
+			for(String r:roles){
+				if(role.id.contains(r)){
+					reject = false;
+					break;
+				}
+			}
+			if(reject)
+				return 0.0;
+		}
+
 		int duration = role.functionalSpecification.measurementDuration;
 		double fraction = (double)(duration - (GlobalClock.ticks - role.isActiveSince)) / duration;
 		fraction = Math.max(fraction, 0);
+
 		double r= 0;
 		if(role.isActive) {
 			r = role.reward * fraction; //If you are joining now, you only get fraction of the reward because you cost is also a fraction
 		}else{
 			r = 0; //This should not be necessary as we expect the actor agent to do set the reward to zero
 		}
+
 		double cost = computeCost(role);
 		//Benefit that is evaluated under current energy circumstance
 		//double usableEnergy = energyInBuffer - 500 - energyAllocated; //low limit is 500
 		//Alternative: Benefit evaluated under what-if we had all the available energy for alternate roles
-		double usableEnergy = energyInBuffer - 500; //low limit is 500
+		double committedEnergy = 0;
+		for(PlayerInfo player: currentlyPlaying){
+			committedEnergy += player.cost;
+		}
+
+		double usableEnergy = energyInBuffer - committedEnergy - 500; //low limit is 500
 
 		if(usableEnergy <= 0){
 			return -101;
 		}
 		double benefit = 0.0f;
 		if(energyProfile.equals("battery") ){
-			if(role.reward >= 1.4)
+			if(role.reward >= 1.2)
 				benefit = role.reward;// - (cost) / 100.0f;
 			else
 				benefit = 0;
@@ -163,19 +186,11 @@ boolean joinRole(GroupRoleInfo role, PlayerInfo player){
 			PlayerInfo currentPlayer = isCurrentlyPlayedBy(groupRoleInfo.id);
 			if(currentPlayer != null){
 				//Get out of inactive or expired roles
-				boolean rolePlayExpired = (GlobalClock.ticks - currentPlayer.startTime) > groupRoleInfo.functionalSpecification.measurementDuration;
-				if(!groupRoleInfo.isActive || roleExpired || rolePlayExpired){
+				//boolean rolePlayExpired = (GlobalClock.ticks - currentPlayer.startTime) > groupRoleInfo.functionalSpecification.measurementDuration;
+				if(!groupRoleInfo.isActive || roleExpired){
 					leaveRole(currentPlayer);
 					currentlyPlaying.remove(currentPlayer);
-					System.out.printf("Sensor %s: Leaving role %s. IsActive=%b role expired=%b committment expired=%b\n", myName, currentPlayer.groupRoleId, groupRoleInfo.isActive, roleExpired, rolePlayExpired);
-				}
-
-				if(groupRoleInfo.isActive && !roleExpired){
-					double benefit = computeBenefit(groupRoleInfo);
-					if(benefit > 0) {
-						groupRoleInfo.foreseenBenefit = benefit;
-						alternatives.add(groupRoleInfo);
-					}
+					System.out.printf("Sensor %s: Leaving role %s. IsActive=%b role expired=%b\n", myName, currentPlayer.groupRoleId, groupRoleInfo.isActive, roleExpired);
 				}
 			}else{
 				double benefit = computeBenefit(groupRoleInfo);
@@ -185,9 +200,8 @@ boolean joinRole(GroupRoleInfo role, PlayerInfo player){
 						alternatives.add(groupRoleInfo);
 					}else{
 						double cost = computeCost(groupRoleInfo);
-						System.out.printf("Sensor %s:Ignoring role %s because benefit=%f. Cost=%f storage=%f reward=%f \n", myName, groupRoleInfo.id, benefit, cost, energyInBuffer, groupRoleInfo.reward);
+						System.out.printf("Sensor %s:Ignoring role %s as alternative because benefit=%f. Cost=%f storage=%f reward=%f \n", myName, groupRoleInfo.id, benefit, cost, energyInBuffer, groupRoleInfo.reward);
 					}
-
 				}
 			}
 		}
@@ -223,29 +237,30 @@ boolean joinRole(GroupRoleInfo role, PlayerInfo player){
 		player.reward = alternatives.get(0).reward;
 
 		boolean joinOk = false;
+		/*
 		//Leave the least beneficial role in the currently played roles, and adopt the most beneficial role in the alternate list
-		if(currentlyPlaying.size() > 0){
-			//int im = Math.min(currentlyPlaying.size(), alternatives.size());
-			int i = 0;
-			{
-				if(currentlyPlaying.get(i).benefit < alternatives.get(i).foreseenBenefit){
-					System.out.printf("Sensor %s: Leaving role %s and joining %s\n", myName, currentlyPlaying.get(i).groupRoleId, alternatives.get(i).id);
-					joinOk = joinRole(alternatives.get(i), player);
-
-					System.out.printf("Sensor %s: Joining role %s resulted %b \n", myName,alternatives.get(i).id, joinOk);
-					if(joinOk && leaveRole(currentlyPlaying.get(i))) {
-						currentlyPlaying.remove(i);
-					}
+		if(currentlyPlaying.size() > 1){
+			//Low on loyalty: I will quit the least beneficial role
+			if(currentlyPlaying.get(0).benefit < alternatives.get(0).foreseenBenefit){
+				System.out.printf("Sensor %s: Leaving role %s and joining %s\n", myName, currentlyPlaying.get(i).groupRoleId, alternatives.get(i).id);
+				joinOk = joinRole(alternatives.get(0), player);
+				System.out.printf("Sensor %s: Joining role %s resulted %b \n", myName,alternatives.get(i).id, joinOk);
+				if(joinOk && leaveRole(currentlyPlaying.get(0))) {
+					currentlyPlaying.remove(0);
 				}
 			}
 		}else if(currentlyPlaying.size() == 0 ){
 			{
-				if( (energyProfile.equals("battery") && alternatives.get(0).foreseenBenefit > 0.8) || (!energyProfile.equals("battery") && alternatives.get(0).foreseenBenefit > 0)){
-					System.out.printf("Sensor %s: Joining role %s with foreseen benefit of %f  \n", myName,alternatives.get(0).id, alternatives.get(0).foreseenBenefit);
-					joinOk = joinRole(alternatives.get(0), player);
-					System.out.printf("Sensor %s: Joining role %s resulted %b \n", myName,alternatives.get(0).id, joinOk);
-				}
+				System.out.printf("Sensor %s: Joining role %s with foreseen benefit of %f  \n", myName,alternatives.get(0).id, alternatives.get(0).foreseenBenefit);
+				joinOk = joinRole(alternatives.get(0), player);
+				System.out.printf("Sensor %s: Joining role %s resulted %b \n", myName,alternatives.get(0).id, joinOk);
 			}
+		}
+		*/
+		{
+			System.out.printf("Sensor %s: Joining role %s with foreseen benefit of %f  \n", myName,alternatives.get(0).id, alternatives.get(0).foreseenBenefit);
+			joinOk = joinRole(alternatives.get(0), player);
+			System.out.printf("Sensor %s: Joining role %s resulted %b \n", myName,alternatives.get(0).id, joinOk);
 		}
 
 		if(joinOk){

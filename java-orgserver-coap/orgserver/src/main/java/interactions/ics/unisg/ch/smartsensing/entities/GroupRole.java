@@ -68,6 +68,7 @@ public class GroupRole extends CoapResource {
     final Object lock = new Object();
     @Override
     public void handlePOST(CoapExchange exchange) {
+        System.out.println("GroupRole: Received POST with " + exchange.getRequestText());
         synchronized (lock) {
             if (this.getChildren().size() >= specification.maxAgents || specification.currentAllocation >= 100) {
                 exchange.respond(CoAP.ResponseCode.FORBIDDEN);

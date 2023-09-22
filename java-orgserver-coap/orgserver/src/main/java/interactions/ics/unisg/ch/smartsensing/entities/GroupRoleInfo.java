@@ -3,8 +3,6 @@ package interactions.ics.unisg.ch.smartsensing.entities;
 public class GroupRoleInfo {
     public String id;
     public String creatorId;
-
-
     public Boolean isActive = true;
     public long isActiveSince = 0;
     public FunctionalSpec functionalSpecification;

@@ -2,6 +2,7 @@ package interactions.ics.unisg.ch.smartsensing;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 import com.google.gson.Gson;
 import interactions.ics.unisg.ch.smartsensing.entities.FunctionalSpec;
@@ -48,6 +49,7 @@ public class TestClient {
             grinfo.reward = 3;
             grinfo.functionalSpecification = fspec;
             grinfo.isActive = false;
+            grinfo.isActiveSince = (new Date()).getTime();
             grinfo.creatorId = "test";
             response = client.post(gson.toJson(grinfo), MediaTypeRegistry.APPLICATION_JSON).getResponseText();
             System.out.println("Create new group role: " + response);

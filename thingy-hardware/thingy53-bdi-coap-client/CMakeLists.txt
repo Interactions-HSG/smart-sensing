@@ -14,19 +14,13 @@ project(bdi-coap-client)
 
 
 FILE(GLOB APP_SOURCES src/main.cpp
-			   src/coap_client_utils.c
          src/peripherals/sensors.c
          src/peripherals/BME688.cpp
          src/coap/CoapClient.cpp
-         src/communication/CoapChannel.cpp
-         src/communication/AbstractChannel.h
          src/mas-abstractions/organization/Organization.cpp
-         src/Role.cpp
-         src/thread_helper.c
+         src/thread/thread_helper.c
          src/peripherals/gpio.c
-         src/peripherals/battery.c
-         src/bdi-agent/functions.cpp
-         src/parse_xml.cpp)
+         src/peripherals/battery.c)
 
 FILE(GLOB EMB_BDI_AGENT_SOURCES embedded-bdi/lib/agent/*.cpp)
 FILE(GLOB EMB_BDI_BDI_SOURCES embedded-bdi/lib/bdi/*.cpp)

@@ -1,5 +1,5 @@
 #include "coap/CoapClient.h"
-
+#define OPENTHREAD_CONFIG_COAP_OBSERVE_API_ENABLE 1
 LOG_MODULE_REGISTER(CoapClient, CONFIG_SENSOR_LOG_LEVEL);
 
 static char uriPath[180];
@@ -73,51 +73,7 @@ uint16_t received_size;
 /**************************************************************************************************
   Generic function to initialize CoAP message.
 **************************************************************************************************/
-otError CoapClient::init_coap_message(otMessage *aMessage, const char *aUriPath, const char *aQuery, otCoapType aType, 
-						  otCoapCode aCode, uint32_t aObserve)
-{	
-	
-	otError error = OT_ERROR_NONE;
-	
-	otCoapMessageInit(aMessage, aType, aCode);
 
-	if (aObserve != 1){
-		otCoapMessageGenerateToken(aMessage, OT_COAP_DEFAULT_TOKEN_LENGTH);
-		error = otCoapMessageAppendObserveOption(aMessage, aObserve);
-		if (error != OT_ERROR_NONE){ 
-			LOG_ERR("%s","Append Observe Option Error\n");
-			return error;
-		}
-	}
-		
-	error = otCoapMessageAppendUriPathOptions(aMessage, aUriPath);
-	if (error != OT_ERROR_NONE){ 
-		LOG_ERR("%s","URI PATH FAIL\n");
-		return error;
-	}
-
-	error = otCoapMessageAppendContentFormatOption(aMessage, 
-										OT_COAP_OPTION_CONTENT_FORMAT_JSON);
-	if (error != OT_ERROR_NONE){ 
-		LOG_ERR("%s","Content Error\n");
-		return error;
-	}
-
-	if (strlen(aQuery) != 0){
-		error = otCoapMessageAppendUriQueryOption(aMessage, aQuery);
-		if (error != OT_ERROR_NONE){ 
-			LOG_ERR("%s","QUERY OPTION FAIL\n");
-			return error;
-		}
-	}
-	
-	error = otCoapMessageSetPayloadMarker(aMessage);
-	if (error != OT_ERROR_NONE){ 
-		LOG_ERR("%s","Set Payload Marker Error\n");
-		return error;
-	}
-	return error;
-}
 
 otError CoapClient::initialize()
 {
@@ -146,8 +102,58 @@ otError CoapClient::cleanup()
     return error;
 }
 
+otError CoapClient::init_coap_message(otMessage *aMessage, const char *aUriPath, const char *aQuery, const char* payload, otCoapType aType, 
+						  otCoapCode aCode, uint32_t aObserve)
+{	
+	
+	otError error = OT_ERROR_NONE;
+	
+	otCoapMessageInit(aMessage, aType, aCode);
+	otCoapMessageGenerateToken(aMessage, OT_COAP_DEFAULT_TOKEN_LENGTH);
+	
+	#if OPENTHREAD_CONFIG_COAP_OBSERVE_API_ENABLE
+	if (aObserve == 1){		
+		error = otCoapMessageAppendObserveOption(aMessage, 0);
+		if (error != OT_ERROR_NONE){ 
+			LOG_ERR("%s","Append Observe Option Error\n");
+			return error;
+		}
+	}
+	#endif
 
-otError CoapClient::sendRequest2(const char* uri, const char* query, otCoapType requestType, otCoapCode requestCode, uint32_t requestObserve, void* pContext)
+	error = otCoapMessageAppendUriPathOptions(aMessage, aUriPath);
+	if (error != OT_ERROR_NONE){ 
+		LOG_ERR("%s","URI PATH FAIL\n");
+		return error;
+	}
+
+	error = otCoapMessageAppendContentFormatOption(aMessage, 
+										OT_COAP_OPTION_CONTENT_FORMAT_JSON);
+	if (error != OT_ERROR_NONE){ 
+		LOG_ERR("%s","Content Error\n");
+		return error;
+	}
+
+	if (strlen(aQuery) != 0){
+		error = otCoapMessageAppendUriQueryOption(aMessage, aQuery);
+		if (error != OT_ERROR_NONE){ 
+			LOG_ERR("%s","QUERY OPTION FAIL\n");
+			return error;
+		}
+	}
+	
+	if(strlen(payload) != 0){
+		error = otCoapMessageSetPayloadMarker(aMessage);
+		if (error != OT_ERROR_NONE){ 
+			LOG_ERR("%s","Set Payload Marker Error\n");
+			return error;
+		}
+		error = otMessageAppend(aMessage, payload, strlen(payload));
+	}
+	return error;
+}
+
+otError CoapClient::sendRequest2(const char* uri, const char* query, const char* payload, otCoapType requestType, otCoapCode requestCode, uint32_t requestObserve, void* pContext)
 {
     //ARG_UNUSED(item);
 	otError 		error = OT_ERROR_NONE;
@@ -155,12 +161,25 @@ otError CoapClient::sendRequest2(const char* uri, const char* query, otCoapType 
 	otMessageInfo 	myMessageInfo;
 	otInstance 		*myInstance = openthread_get_default_instance();
 
+	#if OPENTHREAD_CONFIG_COAP_BLOCKWISE_TRANSFER_ENABLE
+    bool           coapBlock     = false;
+    otCoapBlockSzx coapBlockSize = OT_COAP_OPTION_BLOCK_SZX_16;
+    BlockType      coapBlockType = (aCoapCode == OT_COAP_CODE_GET) ? kBlockType2 : kBlockType1;
+	#endif
+	#if OPENTHREAD_CONFIG_COAP_OBSERVE_API_ENABLE && OPENTHREAD_CONFIG_COAP_BLOCKWISE_TRANSFER_ENABLE
+    if (aCoapObserve)
+    {
+        coapBlockType = kBlockType1;
+    }
+	#endif	
+
 	strncpy(uriPath, uri, 180);
 	strncpy(queryOption, query, 180);
 	
 	do{
 		LOG_INF("%s","Creating new message");
 		myMessage = otCoapNewMessage(myInstance, NULL);
+		
 		if (myMessage == NULL) {
 			LOG_ERR("%s","Failed to allocate message for CoAP Request\n");
 			break;
@@ -172,56 +191,13 @@ otError CoapClient::sendRequest2(const char* uri, const char* query, otCoapType 
 			LOG_ERR("%s","Parse IPv6 Error\n");
 			break;
 		}
-		error = init_coap_message(myMessage, uriPath, queryOption, requestType, requestCode, requestObserve);
+		error = init_coap_message(myMessage, uriPath, queryOption, payload, requestType, requestCode, requestObserve);
 		if (error != OT_ERROR_NONE){ 
 			LOG_ERR("%s","CoAP message initialization error!\n");
 			break;
 		}
 		LOG_INF("%s","Sending message");
 		error = otCoapSendRequest(myInstance, myMessage, &myMessageInfo, coap_response_handler, pContext);		
-	}
-	while(false);
-
-	if (error != OT_ERROR_NONE) {
-		LOG_WRN("Failed to send GET ROLE request: %d\n", error);
-		otMessageFree(myMessage);
-	}
-	else{
-		//LOG_INF("%i: GET REWARD sent success\n", log_iterator++);
-		LOG_INF("%s","Send sucessful!");
-	}
-	return error;
-}
-
-otError CoapClient::sendRequest(CoapRequest* pRequest)
-{
-    //ARG_UNUSED(item);
-	otError 		error = OT_ERROR_NONE;
-	otMessage 		*myMessage;
-	otMessageInfo 	myMessageInfo;
-	otInstance 		*myInstance = openthread_get_default_instance();
-	
-	do{
-		LOG_INF("%s","Creating new message");
-		myMessage = otCoapNewMessage(myInstance, NULL);
-		if (myMessage == NULL) {
-			LOG_ERR("%s","Failed to allocate message for CoAP Request\n");
-			break;
-		}
-		memset(&myMessageInfo, 0, sizeof(myMessageInfo));
-		myMessageInfo.mPeerPort = OT_DEFAULT_COAP_PORT;
-		otIp6AddressFromString(pRequest->serverAddress, &myMessageInfo.mPeerAddr);
-		if (error != OT_ERROR_NONE){ 
-			LOG_ERR("%s","Parse IPv6 Error\n");
-			break;
-		}
-		error = init_coap_message(myMessage, pRequest->uriPath, pRequest->queryOption, pRequest->requestType, pRequest->requestCode, pRequest->requestObserver);
-		if (error != OT_ERROR_NONE){ 
-			LOG_ERR("%s","CoAP message initialization error!\n");
-			break;
-		}
-		LOG_INF("%s","Sending message");
-		error = otCoapSendRequest(myInstance, myMessage, &myMessageInfo, pRequest->responseCallback, pRequest->aContext);		
 	}
 	while(false);
 
