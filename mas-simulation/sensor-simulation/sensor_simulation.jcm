@@ -37,9 +37,9 @@ mas sensor_simulation {
     }
 
     workspace w {
-      artifact sen01: sensor_hardware.SensorSimulator(510.0, 0.15, "profile3", 0.1, "none")
-      artifact sen02: sensor_hardware.SensorSimulator(510.0, 0.15, "profile2", 0.1,"none")
-      artifact sen03: sensor_hardware.SensorSimulator(510.0, 0.15, "profile3", 0.1, "none")
+      artifact sen01: sensor_hardware.SensorSimulator(510.0, 0.15, "profile1", 0.1, "gr_sensing_TC;gr_sensing_SM")
+      artifact sen02: sensor_hardware.SensorSimulator(510.0, 0.15, "profile2", 0.1,"gr_sensing_TC;gr_sensing_SM")
+      artifact sen03: sensor_hardware.SensorSimulator(510.0, 0.15, "profile3", 0.1, "gr_sensing_LC")
       artifact sen04: sensor_hardware.SensorSimulator(2500.0, 0.15, "battery", 0.0,"none")
       artifact sen05: sensor_hardware.SensorSimulator(5000.0, 0.15, "battery", 0.0, "none")
       artifact con01: controller_hardware.ControlProgram("TC")

@@ -21,6 +21,7 @@ class Organization
          *
          */
         static std::list<PlayerInfo*> getMyRoles();
+        static std::list<GroupRoleInfo*> getAvailableRoles();
         static void refresh();
         static void refreshGroupRoles(std::string groupName);
         static void joinRole(std::string groupRoleName);

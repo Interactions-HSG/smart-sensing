@@ -7,9 +7,11 @@
 #include <dk_buttons_and_leds.h>
 #include <ram_pwrdn.h>
 #include <zephyr/pm/device.h>
+#include <zephyr/pm/pm.h>
 
 #include "main.h"
 #include "mas-abstractions/organization/Organization.h"
+#include "mas-abstractions/agent/ReactiveAgent.h"
 
 
 LOG_MODULE_REGISTER(main, CONFIG_COAP_CLIENT_LOG_LEVEL);
@@ -31,6 +33,7 @@ std::string agent_id = "agent-" + std::to_string(AGENT_ID);
   Variables for BDI-reasoner
 **************************************************************************************************/
 int32_t agent_period = DEFAULT_AGENT_PERIOD;
+//
 
 /**************************************************************************************************
   Global Variables.
@@ -41,8 +44,11 @@ int32_t agent_period = DEFAULT_AGENT_PERIOD;
 **************************************************************************************************/
 
 BME688* m_p_bme_sensor;
-
-
+#ifdef USE_EMB_BDI
+	Agent* m_p_sensor_agent;
+#else
+ReactiveAgent* m_p_sensor_agent;
+#endif
 /**************************************************************************************************
   Thread Declarations.
 **************************************************************************************************/
@@ -166,7 +172,7 @@ void sensing_thread_cb(void)
 **************************************************************************************************/
 void transmission_thread_cb(void)
 {
-	k_sleep(K_FOREVER);
+	//k_sleep(K_FOREVER);
 	/* Run transmission loop */
 	while(true){
 		/* Transmit to Server */
@@ -186,8 +192,14 @@ void transmission_thread_cb(void)
 void agent_run_thread_cb(void)
 {
 	k_sleep(K_FOREVER);
-	LOG_INF("%i: Initialize Agent Thread...\n", log_iterator++);
-	k_msleep(agent_period);
+	while(true){
+		LOG_INF("%s","Waking agent..");
+		dk_set_led_off(BLUE_LED);
+		dk_set_led_off(RED_LED);
+		dk_set_led_on(GREEN_LED);
+		m_p_sensor_agent->run();
+		k_msleep(agent_period);
+	}
 }
 
 /**************************************************************************************************
@@ -211,6 +223,9 @@ int main(void)
 		gpio_pin_set_dt(&out2, 0);
 	#endif /* USE_GPIO_OUTPUT */
 
+	struct otInstance *openthread = openthread_get_default_instance();
+	struct net_if * net = net_if_get_default();
+
 	/* Enabled if built as sleepy end device */
 	if (IS_ENABLED(CONFIG_RAM_POWER_DOWN_LIBRARY)) {
 		power_down_unused_ram();
@@ -232,16 +247,43 @@ int main(void)
 
 	/* Initialize Sensor object*/
 	m_p_bme_sensor = new BME688(agent_id);
+	m_p_sensor_agent = new ReactiveAgent();
+	/* Initialize battery measurement */
+	ret = battery_measure_enable(true);
+	if (ret) {
+		LOG_ERR("Failed initialize battery measurement (error: %d)", ret);
+		return 0;
+	}
 
 	LOG_INF("Creating CoAP channel %d",1);
 	//LOG_INF("CoAP channel initialized. Response=%d", resp);
 	startThread(on_mtd_mode_toggle);
 	k_msleep(2000);
 	otLinkModeConfig mode = getCurrentMode();
-	mode.mRxOnWhenIdle = 1;
+	mode.mRxOnWhenIdle = 0;
+	mode.mDeviceType = 0;
+	mode.mNetworkData = 0;
 	setCurrentMode(mode);
 	k_msleep(2000);
 	CoapClient::initialize();
 	LOG_INF("Creating organization entity object %d", 2);
-	Organization::refresh();
+	
+
+	//otThreadSetEnabled(openthread,false);
+	//net_if_down(net);
+	dk_set_led_off(BLUE_LED);
+	dk_set_led_off(RED_LED);
+	dk_set_led_off(GREEN_LED);
+	//nrf_radio_power_set(NRF_RADIO,false);
+
+	while(true){
+		dk_set_led_on(GREEN_LED);
+		dk_set_led_off(BLUE_LED);
+		k_sleep(K_MSEC(2000));
+		dk_set_led_off(GREEN_LED);
+		Organization::refresh();
+		m_p_sensor_agent->run();
+		//int ret = sys_pm_ctrl_set_state(SYS_POWER_STATE_SLEEP_1);
+		k_sleep(K_MSEC(8000));
+	}
 }

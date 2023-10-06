@@ -3,6 +3,7 @@
 LOG_MODULE_REGISTER(Organization, CONFIG_COAP_CLIENT_UTILS_LOG_LEVEL);
 
 static std::list<PlayerInfo*> currentRoles{};
+static std::list<GroupRoleInfo*> availableRoles{};
 
 static uint8_t ctx_read_player_info = 0;
 static uint8_t ctx_read_group_roles = 1;
@@ -27,6 +28,12 @@ void Organization::onDirectResponse(void* pContext,  uint8_t *p_message, uint16_
         if (ret < 0)
         {
             LOG_ERR("JSON Parse Error: %d", ret);
+        }else{
+            availableRoles.clear();
+            for(int i=0; i < grinfos.num_elements; i++)
+            {
+                availableRoles.push_back(&grinfos.elements[i]);
+            }           
         }
     }else if (context == &ctx_read_player_info){
         struct PlayerInfo pi;
@@ -55,7 +62,7 @@ void Organization::onDirectResponse(void* pContext,  uint8_t *p_message, uint16_
 
 void Organization::refreshGroupRoles(std::string groupName)
 {
-    std::string uri = "room1";
+    std::string uri = groupName;
     std::string param = "";
     std::string payload = "";
     CoapClient::sendRequest2(uri.c_str(), param.c_str(), payload.c_str(), otCoapType::OT_COAP_TYPE_CONFIRMABLE, otCoapCode::OT_COAP_CODE_GET, 1, &ctx_read_group_roles);
@@ -116,4 +123,9 @@ void Organization::refresh()
 std::list<PlayerInfo*> Organization::getMyRoles()
 {
     return currentRoles;
+}
+
+std::list<GroupRoleInfo*> Organization::getAvailableRoles()
+{
+    return availableRoles;
 }

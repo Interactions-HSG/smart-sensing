@@ -18,20 +18,26 @@ FILE(GLOB APP_SOURCES src/main.cpp
          src/peripherals/BME688.cpp
          src/coap/CoapClient.cpp
          src/mas-abstractions/organization/Organization.cpp
+         src/mas-abstractions/agent/ReactiveAgent.cpp
          src/thread/thread_helper.c
          src/peripherals/gpio.c
          src/peripherals/battery.c)
 
-FILE(GLOB EMB_BDI_AGENT_SOURCES embedded-bdi/lib/agent/*.cpp)
-FILE(GLOB EMB_BDI_BDI_SOURCES embedded-bdi/lib/bdi/*.cpp)
-FILE(GLOB EMB_BDI_LIB_SOURCES embedded-bdi/lib/lib/*.cpp)
-FILE(GLOB EMB_BDI_SYNTAX_SOURCES embedded-bdi/lib/syntax/*.cpp)
+#FILE(GLOB EMB_BDI_AGENT_SOURCES embedded-bdi/lib/agent/*.cpp)
+#FILE(GLOB EMB_BDI_BDI_SOURCES embedded-bdi/lib/bdi/*.cpp)
+#FILE(GLOB EMB_BDI_LIB_SOURCES embedded-bdi/lib/lib/*.cpp)
+#FILE(GLOB EMB_BDI_SYNTAX_SOURCES embedded-bdi/lib/syntax/*.cpp)
 
 # NORDIC SDK APP START
 
-target_sources(app PRIVATE ${APP_SOURCES} ${EMB_BDI_AGENT_SOURCES} ${EMB_BDI_BDI_SOURCES} ${EMB_BDI_LIB_SOURCES} ${EMB_BDI_SYNTAX_SOURCES})
+# Using Embedded BDI (Uncomment following two lines)
+#target_sources(app PRIVATE ${APP_SOURCES} ${EMB_BDI_AGENT_SOURCES} ${EMB_BDI_BDI_SOURCES} ${EMB_BDI_LIB_SOURCES} ${EMB_BDI_SYNTAX_SOURCES})
+#target_include_directories(app PRIVATE src embedded-bdi embedded-bdi/lib interface)
 
-target_include_directories(app PRIVATE src embedded-bdi embedded-bdi/lib interface)
+# Using Reactive Agent
+target_sources(app PRIVATE ${APP_SOURCES})
+target_include_directories(app PRIVATE src interface)
+
 
 # Preinitialization related to Thingy:53 DFU
 target_sources_ifdef(CONFIG_BOARD_THINGY53_NRF5340_CPUAPP app PRIVATE

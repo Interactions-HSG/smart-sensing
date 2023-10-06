@@ -16,9 +16,9 @@ translate:
 	java -cp                                                                  \
 	    embedded-bdi/lib/parser/lib/jason-2.6.jar:embedded-bdi/lib/parser/src \
         translator.As2Json                                                    \
-        src/bdi-agent/agentspeak.asl                                          \
-        src/bdi-agent/functions.h                                             \
-        src/config/configuration.h                                      	  \
+        src/mas-abstractions/agent/bdi-agent/agentspeak.asl                                          \
+        src/mas-abstractions/agent/bdi-agent/functions.h                                             \
+        src/mas-abstractions/agent/bdi-agent/configuration.h                                      	  \
         $(EVENT_BASE_SIZE) $(INTENTION_BASE_SIZE) $(INTENTION_STACK_SIZE)
 
 

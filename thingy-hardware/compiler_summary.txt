@@ -1,0 +1,20 @@
+BLE5 Actor
+Memory region         Used Size  Region Size  %age Used
+           FLASH:      191908 B       992 KB     18.89%
+            SRAM:       52036 B       448 KB     11.34%
+        IDT_LIST:          0 GB         2 KB      0.00%
+		
+		
+
+BLE5 Sensor
+Memory region         Used Size  Region Size  %age Used
+           FLASH:      673172 B     916992 B     73.41%
+            SRAM:      411528 B       440 KB     91.34%
+        IDT_LIST:          0 GB         2 KB      0.00%	
+		
+
+BDI Sensor
+Memory region         Used Size  Region Size  %age Used
+           FLASH:      528744 B     916992 B     57.66%
+            SRAM:      395448 B       440 KB     87.77%
+        IDT_LIST:          0 GB         2 KB      0.00%

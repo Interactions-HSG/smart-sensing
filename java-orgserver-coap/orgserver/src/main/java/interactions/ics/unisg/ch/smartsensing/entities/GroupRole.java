@@ -28,6 +28,7 @@ public class GroupRole extends CoapResource {
     @Override
     public void handleGET(CoapExchange exchange) {
         // respond to the request
+        System.out.printf("GroupRole:Get request for %s \n", this.getName());
         if(exchange.getQueryParameter("players") != null){
             List<PlayerInfo> players = new ArrayList<>();
             for(Resource r : this.getChildren()){
@@ -36,6 +37,7 @@ public class GroupRole extends CoapResource {
             }
             String data = gson.toJson(players);
             exchange.respond(data);
+            System.out.printf("Group:Get request for %s responded %s\n", this.getName(), data);
         }else {
             specification.currentAgents = this.getChildren().size();
             String data = gson.toJson(specification);
@@ -56,6 +58,7 @@ public class GroupRole extends CoapResource {
     @Override
     public void handlePUT(CoapExchange exchange) {
         String data = exchange.getRequestText();
+        System.out.printf("GroupRole:Update request for %s wiht data %s \n", this.getName(), data);
         //System.out.println("Received update:" + data);
         specification = gson.fromJson(data, GroupRoleInfo.class);
         exchange.respond(CoAP.ResponseCode.CHANGED);
@@ -68,7 +71,7 @@ public class GroupRole extends CoapResource {
     final Object lock = new Object();
     @Override
     public void handlePOST(CoapExchange exchange) {
-        System.out.println("GroupRole: Received POST with " + exchange.getRequestText());
+        System.out.printf("GroupRole: Received POST for %s with data %s\n", this.getName(), exchange.getRequestText());
         synchronized (lock) {
             if (this.getChildren().size() >= specification.maxAgents || specification.currentAllocation >= 100) {
                 exchange.respond(CoAP.ResponseCode.FORBIDDEN);
@@ -87,6 +90,7 @@ public class GroupRole extends CoapResource {
 
     @Override
     public void handleDELETE(CoapExchange exchange) {
+        System.out.printf("GroupRole:Delete request for %s \n", this.getName());
         if(this.getChildren().size() == 0){
             this.getParent().delete(this);
             exchange.respond(CoAP.ResponseCode.DELETED);
@@ -104,7 +108,7 @@ public class GroupRole extends CoapResource {
         specification.reward -= player.playerInfo.reward;
         specification.currentAllocation += player.playerInfo.taskAllocation;
         this.add(player);
-        System.out.printf("Added RolePlayer %s in GroupRole %s\n", state.id, roleName);
+        System.out.printf("GroupRole:Added RolePlayer %s in GroupRole %s\n", state.id, roleName);
     }
 
     protected void removeRolePlayer(RolePlayer player){
@@ -112,7 +116,7 @@ public class GroupRole extends CoapResource {
         specification.currentAllocation -= player.playerInfo.taskAllocation;
         specification.currentAgents--;
         this.delete(player);
-        System.out.printf("Removed RolePlayer %s in GroupRole %s\n", player.playerInfo.id, this.getName());
+        System.out.printf("GroupRole:Removed RolePlayer %s in GroupRole %s\n", player.playerInfo.id, this.getName());
     }
 
     protected void updateInfo(PlayerInfo currentInfo, PlayerInfo newInfo){
@@ -120,7 +124,7 @@ public class GroupRole extends CoapResource {
         specification.currentAllocation -= currentInfo.taskAllocation;
         this.specification.reward -= newInfo.reward;
         specification.currentAllocation += newInfo.taskAllocation;
-        System.out.printf("Updated GroupRole %s\n", this.getName());
+        System.out.printf("GroupRole:Updated GroupRole %s\n", this.getName());
     }
 
 

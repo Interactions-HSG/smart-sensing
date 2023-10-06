@@ -24,6 +24,7 @@ public class Group extends CoapResource {
     public void handleGET(CoapExchange exchange) {
         // respond to the request
         try {
+            System.out.printf("Group:Get request for %s \n", this.getName());
             List<GroupRoleInfo> grs = new ArrayList<>();
             for(Resource res : this.getChildren()) {
                 GroupRole gr = (GroupRole)res;
@@ -34,6 +35,7 @@ public class Group extends CoapResource {
             col.num_elements = grs.size();
             String response = gson.toJson(col);
             exchange.respond(response);
+            System.out.printf("Group:Get request for %s responded %s\n", this.getName(), response);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -42,6 +44,7 @@ public class Group extends CoapResource {
     @Override
     public void handlePOST(CoapExchange exchange) {
         String data = exchange.getRequestText();
+        System.out.printf("Group:Post request for %s with data %s\n", this.getName(),data);
         // respond to the request
         GroupRoleInfo spec = gson.fromJson(data, GroupRoleInfo.class);
         addGroupRole(spec);
@@ -56,6 +59,6 @@ public class Group extends CoapResource {
     private void addGroupRole(GroupRoleInfo spec){
         GroupRole groupRole = new GroupRole(spec);
         this.add(groupRole);
-        System.out.printf("New GroupRole %s created\n", spec.id, spec.creatorId);
+        System.out.printf("Group:New GroupRole %s created\n", spec.id, spec.creatorId);
     }
 }
