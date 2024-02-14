@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="http://moise.sourceforge.net/xml/os.xsl" type="text/xsl"?>
+<organisational-specification
+	id="smartSensing"
+	os-version="0.8"
+	xmlns='http://moise.sourceforge.net/os'
+	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:schemaLocation='http://moise.sourceforge.net/os http://moise.sourceforge.net/xml/os.xsd'>
+	<structural-specification>
+		<role-definitions>
+			<role id="role_comfort_sensor">
+				<properties>
+					<property value="300" id="update_period" />
+					<property value="60" id="measurement_period" />
+					<property value="T,Rh" id="measurements" />
+				</properties>
+			</role>
+			<role id="role_lifesafety_sensor">
+				<properties>
+					<property value="10" id="update_period" />
+					<property value="5" id="measurement_period" />
+					<property value="T,Aq" id="measurements" />
+				</properties>
+			</role>
+		</role-definitions>
+		<group-specification id="group_room_automation">
+			<roles>
+				<role id="role_comfort_sensor" min="0" max="5"/>
+				<role id="role_lifesafety_sensor" min="0" max="2" />
+			</roles>
+		</group-specification>
+	</structural-specification>
+	<functional-specification>
+		<scheme id="scheme_measure_comfort">
+			<goal id="goal_measure_air_condition" type="achievement">
+				<plan operator="parallel">
+					<goal id="goal_measure_room_temperature" min="1">
+						<argument id="measurement_period" value="60" />
+					</goal>
+					<goal id="goal_measure_room_humidity">
+						<argument id="measurement_period" value="60" />
+					</goal>
+				</plan>
+			</goal>
+			<mission id="mission_measure_comfort" min="1" max="2">
+				<goal id="goal_measure_room_temperature" />
+				<goal id="goal_measure_room_humidity" />
+			</mission>
+		</scheme>
+		<scheme id="scheme_measure_lifesafety_condition">
+			<goal id="goal_detect_fire">
+				<plan operator="parallel">
+					<goal id="goal_measure_air_quality">
+						<argument id="measurement_period" value="10" />
+					</goal>
+					<goal id="goal_measure_air_temperature">
+						<argument id="measurement_period" value="20" />
+					</goal>
+				</plan>
+			</goal>
+			<mission id="mission_detect_lifesafety_danger" min="2"
+				max="5">
+				<goal id="goal_measure_air_quality" />
+				<goal id="goal_measure_air_temperature" />
+			</mission>
+		</scheme>
+	</functional-specification>
+	<normative-specification>
+		<norm id="norm1" type="obligation" role="role_comfort_sensor" mission="mission_measure_comfort" />
+		<norm id="norm2" type="obligation" role="role_lifesafety_sensor" mission="mission_detect_lifesafety_danger" />
+	</normative-specification>
+</organisational-specification>

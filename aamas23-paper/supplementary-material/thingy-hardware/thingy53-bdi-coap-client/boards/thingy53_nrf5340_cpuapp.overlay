@@ -1,0 +1,155 @@
+/*
+ * Copyright (c) 2021 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+ */
+
+/*
+ * This file is used to enable a partition which is used through the flash API
+ * but which is in reality stored in RAM. This is done to load data from
+ * external flash to the network core. Since the network core cannot access
+ * the external flash directly, the data is buffered in RAM before being
+ * copied by the network core to the network core flash.
+ *
+ * The partition must be enabled by the application configuration to prevent
+ * bus faults when mcumgr tries to access simulated partition with network core
+ * image data.
+ */
+
+ #include <zephyr/dt-bindings/ipc_service/static_vrings.h>
+
+/ {
+	soc {
+		/* Add a flash controller which has the compatible
+		 * 'zephyr,sim-flash'. This will ensure that the flash
+		 * simulator can use it. None of the other properties in this
+		 * node is used for anything.
+		 */
+		nordic_ram_flash_controller: nordic_ram-flash-controller@0 {
+			compatible = "zephyr,sim-flash";
+			reg = <0x00000000 DT_SIZE_K(40)>;
+			#address-cells = <1>;
+			#size-cells = <1>;
+			erase-value = <0xff>;
+			label = "nordic_ram_flash_flash_controller";
+
+			/* This node label must match that used in the flash
+			 * simulator.
+			 */
+			flash_sim0: flash_sim@0 {
+				status = "okay";
+				compatible = "soc-nv-flash";
+				label = "simulated_flash";
+				erase-block-size = <4096>;
+				write-block-size = <4>;
+				reg = <0x00000000 DT_SIZE_K(256)>;
+
+				partitions {
+					compatible = "fixed-partitions";
+					#address-cells = <1>;
+					#size-cells = <1>;
+
+					/* This partition must be defined for
+					 * MCUboot to find the partition ID
+					 * of the primary slot for image 1,
+					 * which is stored in this partition.
+					 */
+					slot2_partition: partition@0 {
+						label = "image-2";
+						reg = <0x00000000 0x00000A000>;
+					};
+				};
+			};
+		};
+	};
+
+	chosen {
+		zephyr,console = &cdc_acm_uart0;
+		zephyr,shell-uart = &cdc_acm_uart0;
+		nordic,pm-ext-flash = &mx25r64;
+	};
+
+	pwmbuzzer {
+		compatible = "pwm-leds";
+		status = "okay";
+
+		buzzer: buzzer_pwm {
+			pwms = <&pwm1 0 PWM_HZ(100) PWM_POLARITY_NORMAL>;
+			label = "PWM_1";
+		};
+	};
+
+	aliases {
+		buzzer-pwm = &buzzer;
+	};
+};
+
+/{
+
+	output_gpios {
+ 
+	   compatible = "gpio-keys";
+ 
+	   outgpio0: outgpio_0 {
+ 
+		  gpios = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+ 
+		  label = "Output GPIO 0";
+ 
+	   };
+	   outgpio1: outgpio_1 {
+ 
+		gpios = <&gpio0 5 GPIO_ACTIVE_HIGH>;
+
+		label = "Output GPIO 1";
+
+	 	};
+		outgpio2: outgpio_2 {
+	
+			gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
+
+			label = "Output GPIO 2";
+
+		};
+ 
+	};
+ 
+	aliases {
+		outputgpio0 = &outgpio0;
+		outputgpio1 = &outgpio1;
+		outputgpio2 = &outgpio2;
+	};
+ };
+ 
+&ipc0 {
+    zephyr,priority = <0 PRIO_COOP>;
+};
+
+&zephyr_udc0 {
+	cdc_acm_uart0: cdc_acm_uart0 {
+		compatible = "zephyr,cdc-acm-uart";
+		label = "CDC_ACM_0";
+	};
+};
+
+&i2c1 {
+	bme688@76 {
+		compatible = "bosch,bme680";
+		label = "BME688";
+		reg = <0x76>;
+	};
+	bh1749: bh1749@38 {
+		compatible = "rohm,bh1749";
+		label = "BH1749";
+		reg = <0x38>;
+		int-gpios = <&gpio1 5 (GPIO_PULL_UP |GPIO_ACTIVE_LOW)>;
+	};
+};
+
+/* Disable unused peripherals to reduce power consumption */
+&pwm0 {
+	status = "disabled";
+};
+&pwm2 {
+	status = "disabled";
+};

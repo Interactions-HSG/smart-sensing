@@ -37,7 +37,7 @@ engagement(0).
         -+state(1);
         !sense.
 
-+!manage_power: energy_in_buffer(L) & state(S) & L >500 & S==1 & current_benefit(CB) & CB > 0
++!manage_power: energy_in_buffer(L) & L >500 & state(S) & S==1 & current_benefit(CB) & CB > 0
     <- //.print("Got energy, have benefit working");
         !sense.
 

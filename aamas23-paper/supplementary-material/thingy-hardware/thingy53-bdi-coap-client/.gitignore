@@ -1,0 +1,7 @@
+build/
+build_med/
+build_sed/
+build_analyze/
+build_low_power/
+.vscode/
+
