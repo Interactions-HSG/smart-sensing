@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="2fad4a65-a679-4951-a5e8-311abeace524" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/java_orgserver_coap_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/orgserver.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/java-orgserver-coap.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/.settings/org.eclipse.m2e.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/orgserver/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/target/classes/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/target/classes/META-INF/maven/smart-sensing/orgserver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/target/classes/META-INF/maven/smart-sensing/orgserver/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/target/classes/interactions/ics/unisg/ch/smartsensing/Launcher.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/target/classes/interactions/ics/unisg/ch/smartsensing/OrgServer$OEResource$GoalCommitment.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/target/classes/interactions/ics/unisg/ch/smartsensing/OrgServer$OEResource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/target/classes/interactions/ics/unisg/ch/smartsensing/OrgServer$OSResource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/target/classes/interactions/ics/unisg/ch/smartsensing/OrgServer$PubSubResource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/target/classes/interactions/ics/unisg/ch/smartsensing/OrgServer$TreeNode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/target/classes/interactions/ics/unisg/ch/smartsensing/OrgServer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orgserver/target/classes/logback.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/AGRServer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/Launcher.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/MoiseOrgServer$OEResource$GoalCommitment.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/MoiseOrgServer$OEResource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/MoiseOrgServer$OSResource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/MoiseOrgServer$PubSubResource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/MoiseOrgServer$TreeNode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/MoiseOrgServer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/TestClient.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/entities/FunctionalSpec.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/entities/Group.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/entities/GroupRole.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/entities/GroupRoleInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/entities/GroupRoleInfos.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/entities/MeasurementReceiver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/entities/PlayerInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/java-orgserver-coap/interactions/ics/unisg/ch/smartsensing/entities/RolePlayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../thingy-hardware/thingy53-bdi-coap-client/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../thingy-hardware/thingy53-bdi-coap-client/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../thingy-hardware/thingy53-bdi-coap-client/boards/thingy53.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../thingy-hardware/thingy53-bdi-coap-client/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../thingy-hardware/thingy53-bdi-coap-client/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../thingy-hardware/thingy53-bdi-coap-client/src/mas-abstractions/agent/ReactiveAgent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../thingy-hardware/thingy53-bdi-coap-client/src/mas-abstractions/agent/ReactiveAgent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../thingy-hardware/thingy53-bdi-coap-client/src/mas-abstractions/organization/GroupRole.h" beforeDir="false" afterPath="$PROJECT_DIR$/../thingy-hardware/thingy53-bdi-coap-client/src/mas-abstractions/organization/GroupRole.h" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="2i8ON7qLoTH9HNfepZc9IGC6kqh" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2fad4a65-a679-4951-a5e8-311abeace524" name="Changes" comment="" />
+      <created>1718868695951</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1718868695951</updated>
+    </task>
+    <servers />
+  </component>
+</project>

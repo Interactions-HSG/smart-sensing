@@ -15,6 +15,14 @@ otLinkModeConfig getCurrentMode(void)
 /**************************************************************************************************
   Switches from minimal (MED) to sleepy end device (SED) and vice versa.
 **************************************************************************************************/
+
+//typedef struct otLinkModeConfig
+//{
+//    bool mRxOnWhenIdle : 1; ///< 1, if the sender has its receiver on when not transmitting. 0, otherwise.
+//    bool mDeviceType : 1;   ///< 1, if the sender is an FTD. 0, otherwise.
+//    bool mNetworkData : 1;  ///< 1, if the sender requires the full Network Data. 0, otherwise.
+//}
+
 void setCurrentMode(otLinkModeConfig mode)
 {
 	otError error;
@@ -22,6 +30,7 @@ void setCurrentMode(otLinkModeConfig mode)
 
 	openthread_api_mutex_lock(context);
 	error = otThreadSetLinkMode(context->instance, mode);
+	error = otLinkSetPollPeriod(context->instance, 10000);
 	openthread_api_mutex_unlock(context);
 
 	if (error != OT_ERROR_NONE) {
@@ -29,12 +38,12 @@ void setCurrentMode(otLinkModeConfig mode)
 	} else {
 		otLinkModeConfig mode = getCurrentMode();
 		LOG_INF("Current mode is %d", mode.mRxOnWhenIdle);
-		mode_change_cb(mode.mRxOnWhenIdle);
+		mode_change_cb(mode);
 	}
 }
 
 
-void on_thread_state_changed(uint32_t flags, void *context)
+void on_thread_state_changed(uint32_t flags, void *context, void *user_data)
 {
     struct openthread_context *ot_context = context;
 	if (flags & OT_CHANGED_THREAD_ROLE) {
@@ -51,16 +60,21 @@ void on_thread_state_changed(uint32_t flags, void *context)
             LOG_INF("Thread Disconnected");
 			break;
 		}
+		otLinkModeConfig mode = getCurrentMode();
+		mode_change_cb(mode);
 	}
 }
+
+static struct openthread_state_changed_cb ot_state_chaged_cb = { .state_changed_cb = on_thread_state_changed };
 
 void startThread(thread_mode_change_cb_t callback)
 {
 	mode_change_cb = callback;
-    openthread_set_state_changed_cb(on_thread_state_changed);
+    //openthread_set_state_changed_cb(on_thread_state_changed);
+	openthread_state_changed_cb_register(openthread_get_default_context(), &ot_state_chaged_cb);
     LOG_INF("Calling openthread_start..");
 	openthread_start(openthread_get_default_context());
     LOG_INF("Calling openthread_start..done");
 	otLinkModeConfig mode = getCurrentMode();
-	mode_change_cb(mode.mRxOnWhenIdle);
+	mode_change_cb(mode);
 }

@@ -9,6 +9,6 @@ class ReactiveAgent
         double getEnergyInBuffer();
         double getEnergyCommitted();
         void delibrate();
-        double calculateBenefit(GroupRoleInfo* group, double buffer, double committed);
-        double calculateCost(GroupRoleInfo* group, double buffer, double committed);
+        double calculateBenefit(GroupRoleInfoCon* group, double buffer, double committed);
+        double calculateCost(GroupRoleInfoCon* group, double buffer, double committed);
 };

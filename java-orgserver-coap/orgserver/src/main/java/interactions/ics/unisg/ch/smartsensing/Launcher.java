@@ -39,7 +39,8 @@ public class Launcher {
 			AGRServer server = new AGRServer(udp, tcp, port);
 			//server.addEndpoints(udp, tcp, port);
 			server.start();
-			TestClient.testConnection(null);
+			TestClient.createDemoRole();
+			//TestClient.testConcurrentGets();
 
 		} catch (SocketException e) {
 			System.err.println("Failed to initialize server: " + e.getMessage());

@@ -1,0 +1,1041 @@
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 2
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"WriteUserSFlash.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.WriteUserSFlashRow,"ax",%progbits
+  18              		.align	2
+  19              		.global	WriteUserSFlashRow
+  20              		.code	16
+  21              		.thumb_func
+  22              		.type	WriteUserSFlashRow, %function
+  23              	WriteUserSFlashRow:
+  24              	.LFB37:
+  25              		.file 1 "WriteUserSFlash.c"
+   1:WriteUserSFlash.c **** /******************************************************************************
+   2:WriteUserSFlash.c **** * Project Name      : Solar BLE Sensor
+   3:WriteUserSFlash.c **** * File Name         : WriteUserSFlash.c
+   4:WriteUserSFlash.c **** * Version           : CYALKIT-E02 Sample Firmware, Version 1.2.00
+   5:WriteUserSFlash.c **** * Device Used       : CYBLE-022001-00
+   6:WriteUserSFlash.c **** * Software Used     : PSoC Creator 3.3 CP3
+   7:WriteUserSFlash.c **** * Compiler          : ARM GCC 4.9.3
+   8:WriteUserSFlash.c **** * Related Hardware  : Solar BLE Sensor
+   9:WriteUserSFlash.c **** *
+  10:WriteUserSFlash.c **** *******************************************************************************
+  11:WriteUserSFlash.c **** * Copyright (2016), Cypress Semiconductor Corporation. All Rights Reserved.
+  12:WriteUserSFlash.c **** *******************************************************************************
+  13:WriteUserSFlash.c **** * This software is owned by Cypress Semiconductor Corporation (Cypress)
+  14:WriteUserSFlash.c **** * and is protected by and subject to worldwide patent protection (United
+  15:WriteUserSFlash.c **** * States and foreign), United States copyright laws and international treaty
+  16:WriteUserSFlash.c **** * provisions. Cypress hereby grants to licensee a personal, non-exclusive,
+  17:WriteUserSFlash.c **** * non-transferable license to copy, use, modify, create derivative works of,
+  18:WriteUserSFlash.c **** * and compile the Cypress Source Code and derivative works for the sole
+  19:WriteUserSFlash.c **** * purpose of creating custom software in support of licensee product to be
+  20:WriteUserSFlash.c **** * used only in conjunction with a Cypress integrated circuit as specified in
+  21:WriteUserSFlash.c **** * the applicable agreement. Any reproduction, modification, translation,
+  22:WriteUserSFlash.c **** * compilation, or representation of this software except as specified above 
+  23:WriteUserSFlash.c **** * is prohibited without the express written permission of Cypress.
+  24:WriteUserSFlash.c **** *
+  25:WriteUserSFlash.c **** * Disclaimer: CYPRESS MAKES NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH 
+  26:WriteUserSFlash.c **** * REGARD TO THIS MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+  27:WriteUserSFlash.c **** * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  28:WriteUserSFlash.c **** * Cypress reserves the right to make changes without further notice to the 
+  29:WriteUserSFlash.c **** * materials described herein. Cypress does not assume any liability arising out 
+  30:WriteUserSFlash.c **** * of the application or use of any product or circuit described herein. Cypress 
+  31:WriteUserSFlash.c **** * does not authorize its products for use as critical components in life-support 
+  32:WriteUserSFlash.c **** * systems where a malfunction or failure may reasonably be expected to result in 
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 2
+
+
+  33:WriteUserSFlash.c **** * significant injury to the user. The inclusion of Cypress' product in a life-
+  34:WriteUserSFlash.c **** * support systems application implies that the manufacturer assumes all risk of 
+  35:WriteUserSFlash.c **** * such use and in doing so indemnifies Cypress against all charges. 
+  36:WriteUserSFlash.c **** *
+  37:WriteUserSFlash.c **** * Use of this Software may be limited by and subject to the applicable Cypress
+  38:WriteUserSFlash.c **** * software license agreement. 
+  39:WriteUserSFlash.c **** *******************************************************************************/
+  40:WriteUserSFlash.c **** 
+  41:WriteUserSFlash.c **** #include <Project.h>
+  42:WriteUserSFlash.c **** #include <WriteUserSFlash.h>
+  43:WriteUserSFlash.c **** 
+  44:WriteUserSFlash.c **** /*******************************************************************************
+  45:WriteUserSFlash.c **** * Function Name: WriteUserSFlashRow
+  46:WriteUserSFlash.c **** ********************************************************************************
+  47:WriteUserSFlash.c **** * Summary:
+  48:WriteUserSFlash.c **** *   This routine calls the PSoC 4 BLE device supervisory ROM APIs to update 
+  49:WriteUserSFlash.c **** *   the user configuration area of Supervisory Flash (SFlash).  
+  50:WriteUserSFlash.c **** *
+  51:WriteUserSFlash.c **** * Parameters:
+  52:WriteUserSFlash.c **** *   userRowNUmber - User config SFlash row number to which data is to be written
+  53:WriteUserSFlash.c **** *   dataPointer - Pointer to the data to be written. This API writes one row of 
+  54:WriteUserSFlash.c **** *                 user config SFlash row at a time.
+  55:WriteUserSFlash.c **** *
+  56:WriteUserSFlash.c **** * Return:
+  57:WriteUserSFlash.c **** *   uint32_t - state of the user config SFlash write operation.
+  58:WriteUserSFlash.c **** *******************************************************************************/
+  59:WriteUserSFlash.c **** #if defined (__GNUC__)
+  60:WriteUserSFlash.c **** #pragma GCC optimize ("O0")
+  61:WriteUserSFlash.c **** #endif /* End of #if defined (__GNUC__) */
+  62:WriteUserSFlash.c **** uint32_t WriteUserSFlashRow(uint8_t userRowNUmber, uint32_t *dataPointer)
+  63:WriteUserSFlash.c **** {
+  26              		.loc 1 63 0
+  27              		.cfi_startproc
+  28              	.LVL0:
+  29 0000 80B5     		push	{r7, lr}
+  30              		.cfi_def_cfa_offset 8
+  31              		.cfi_offset 7, -8
+  32              		.cfi_offset 14, -4
+  33 0002 ACB0     		sub	sp, sp, #176
+  34              		.cfi_def_cfa_offset 184
+  35 0004 00AF     		add	r7, sp, #0
+  36              		.cfi_def_cfa_register 7
+  37 0006 021C     		mov	r2, r0
+  38 0008 3960     		str	r1, [r7]
+  39 000a FB1D     		add	r3, r7, #7
+  40 000c 1A70     		strb	r2, [r3]
+  64:WriteUserSFlash.c ****     uint8_t localCount;
+  65:WriteUserSFlash.c ****     volatile uint32_t retValue=0;
+  41              		.loc 1 65 0
+  42 000e 0023     		mov	r3, #0
+  43 0010 A822     		mov	r2, #168
+  44 0012 BA18     		add	r2, r7, r2
+  45 0014 1360     		str	r3, [r2]
+  66:WriteUserSFlash.c ****     volatile uint32_t cmdDataBuffer[(CY_FLASH_SIZEOF_ROW/4) + 2];
+  67:WriteUserSFlash.c ****     volatile uint32_t reg1,reg2,reg3,reg4,reg5,reg6;
+  68:WriteUserSFlash.c ****     
+  69:WriteUserSFlash.c ****     /* Store the clock settings temporarily */
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 3
+
+
+  70:WriteUserSFlash.c ****     reg1 =  CY_GET_XTND_REG32((void CYFAR *)(CYREG_CLK_SELECT));
+  46              		.loc 1 70 0
+  47 0016 3A4B     		ldr	r3, .L5
+  48 0018 1B68     		ldr	r3, [r3]
+  49 001a FB61     		str	r3, [r7, #28]
+  71:WriteUserSFlash.c ****     reg2 =  CY_GET_XTND_REG32((void CYFAR *)(CYREG_CLK_IMO_CONFIG));
+  50              		.loc 1 71 0
+  51 001c 394B     		ldr	r3, .L5+4
+  52 001e 1B68     		ldr	r3, [r3]
+  53 0020 BB61     		str	r3, [r7, #24]
+  72:WriteUserSFlash.c ****     reg3 =  CY_GET_XTND_REG32((void CYFAR *)(CYREG_PWR_BG_TRIM4));
+  54              		.loc 1 72 0
+  55 0022 394B     		ldr	r3, .L5+8
+  56 0024 1B68     		ldr	r3, [r3]
+  57 0026 7B61     		str	r3, [r7, #20]
+  73:WriteUserSFlash.c ****     reg4 =  CY_GET_XTND_REG32((void CYFAR *)(CYREG_PWR_BG_TRIM5));
+  58              		.loc 1 73 0
+  59 0028 384B     		ldr	r3, .L5+12
+  60 002a 1B68     		ldr	r3, [r3]
+  61 002c 3B61     		str	r3, [r7, #16]
+  74:WriteUserSFlash.c ****     reg5 =  CY_GET_XTND_REG32((void CYFAR *)(CYREG_CLK_IMO_TRIM1));
+  62              		.loc 1 74 0
+  63 002e 384B     		ldr	r3, .L5+16
+  64 0030 1B68     		ldr	r3, [r3]
+  65 0032 FB60     		str	r3, [r7, #12]
+  75:WriteUserSFlash.c ****     reg6 =  CY_GET_XTND_REG32((void CYFAR *)(CYREG_CLK_IMO_TRIM2));
+  66              		.loc 1 75 0
+  67 0034 374B     		ldr	r3, .L5+20
+  68 0036 1B68     		ldr	r3, [r3]
+  69 0038 BB60     		str	r3, [r7, #8]
+  76:WriteUserSFlash.c ****     
+  77:WriteUserSFlash.c ****     /* Initialize the clock necessary for flash programming */
+  78:WriteUserSFlash.c ****     CY_SET_REG32(CYREG_CPUSS_SYSARG, 0x0000e8b6);
+  70              		.loc 1 78 0
+  71 003a 374B     		ldr	r3, .L5+24
+  72 003c 374A     		ldr	r2, .L5+28
+  73 003e 1A60     		str	r2, [r3]
+  79:WriteUserSFlash.c ****     CY_SET_REG32(CYREG_CPUSS_SYSREQ, 0x80000015);
+  74              		.loc 1 79 0
+  75 0040 374B     		ldr	r3, .L5+32
+  76 0042 384A     		ldr	r2, .L5+36
+  77 0044 1A60     		str	r2, [r3]
+  80:WriteUserSFlash.c ****     
+  81:WriteUserSFlash.c ****     /******* Initialize SRAM parameters for the LOAD FLASH command ******/
+  82:WriteUserSFlash.c ****     /* byte 3 (i.e. 00) is the Macro_select */
+  83:WriteUserSFlash.c ****     /* byte 2 (i.e. 00) is the Start addr of page latch */
+  84:WriteUserSFlash.c ****     /* byte 1 (i.e. d7) is the key 2  */
+  85:WriteUserSFlash.c ****     /* byte 0 (i.e. b6) is the key 1  */
+  86:WriteUserSFlash.c ****     cmdDataBuffer[0]=0x0000d7b6;
+  78              		.loc 1 86 0
+  79 0046 2023     		mov	r3, #32
+  80 0048 FB18     		add	r3, r7, r3
+  81 004a 374A     		ldr	r2, .L5+40
+  82 004c 1A60     		str	r2, [r3]
+  87:WriteUserSFlash.c ****     
+  88:WriteUserSFlash.c ****     /****** Initialize SRAM parameters for the LOAD FLASH command ******/
+  89:WriteUserSFlash.c ****     /* byte 3,2 and 1 are null */
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 4
+
+
+  90:WriteUserSFlash.c ****     /* byte 0 (i.e. 7F) is the number of bytes to be written */
+  91:WriteUserSFlash.c ****     cmdDataBuffer[1]=0x0000007F;     
+  83              		.loc 1 91 0
+  84 004e 2023     		mov	r3, #32
+  85 0050 FB18     		add	r3, r7, r3
+  86 0052 7F22     		mov	r2, #127
+  87 0054 5A60     		str	r2, [r3, #4]
+  92:WriteUserSFlash.c ****     
+  93:WriteUserSFlash.c ****     /* Initialize the SRAM buffer with data bytes */
+  94:WriteUserSFlash.c ****     for(localCount = 0; localCount < (CY_FLASH_SIZEOF_ROW/4); localCount++)    
+  88              		.loc 1 94 0
+  89 0056 AF23     		mov	r3, #175
+  90 0058 FB18     		add	r3, r7, r3
+  91 005a 0022     		mov	r2, #0
+  92 005c 1A70     		strb	r2, [r3]
+  93              	.LVL1:
+  94 005e 15E0     		b	.L2
+  95              	.LVL2:
+  96              	.L3:
+  95:WriteUserSFlash.c ****     {
+  96:WriteUserSFlash.c ****         cmdDataBuffer[localCount + 2] = dataPointer[localCount]; 
+  97              		.loc 1 96 0 discriminator 3
+  98 0060 AF23     		mov	r3, #175
+  99 0062 FB18     		add	r3, r7, r3
+ 100 0064 1B78     		ldrb	r3, [r3]
+ 101 0066 9A1C     		add	r2, r3, #2
+ 102 0068 AF23     		mov	r3, #175
+ 103 006a FB18     		add	r3, r7, r3
+ 104 006c 1B78     		ldrb	r3, [r3]
+ 105 006e 9B00     		lsl	r3, r3, #2
+ 106 0070 3968     		ldr	r1, [r7]
+ 107 0072 CB18     		add	r3, r1, r3
+ 108 0074 1968     		ldr	r1, [r3]
+ 109 0076 2023     		mov	r3, #32
+ 110 0078 FB18     		add	r3, r7, r3
+ 111 007a 9200     		lsl	r2, r2, #2
+ 112 007c D150     		str	r1, [r2, r3]
+  94:WriteUserSFlash.c ****     {
+ 113              		.loc 1 94 0 discriminator 3
+ 114 007e AF23     		mov	r3, #175
+ 115 0080 FB18     		add	r3, r7, r3
+ 116 0082 1A78     		ldrb	r2, [r3]
+ 117 0084 AF23     		mov	r3, #175
+ 118 0086 FB18     		add	r3, r7, r3
+ 119 0088 0132     		add	r2, r2, #1
+ 120 008a 1A70     		strb	r2, [r3]
+ 121              	.LVL3:
+ 122              	.L2:
+  94:WriteUserSFlash.c ****     {
+ 123              		.loc 1 94 0 is_stmt 0 discriminator 1
+ 124 008c AF23     		mov	r3, #175
+ 125 008e FB18     		add	r3, r7, r3
+ 126 0090 1B78     		ldrb	r3, [r3]
+ 127 0092 1F2B     		cmp	r3, #31
+ 128 0094 E4D9     		bls	.L3
+  97:WriteUserSFlash.c ****     }
+  98:WriteUserSFlash.c ****     
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 5
+
+
+  99:WriteUserSFlash.c ****     /* Write the following to registers to execute a LOAD FLASH bytes */
+ 100:WriteUserSFlash.c ****     CY_SET_REG32(CYREG_CPUSS_SYSARG, &cmdDataBuffer[0]);
+ 129              		.loc 1 100 0 is_stmt 1
+ 130 0096 204B     		ldr	r3, .L5+24
+ 131 0098 2022     		mov	r2, #32
+ 132 009a BA18     		add	r2, r7, r2
+ 133 009c 1A60     		str	r2, [r3]
+ 101:WriteUserSFlash.c ****     CY_SET_REG32(CYREG_CPUSS_SYSREQ, LOAD_FLASH);
+ 134              		.loc 1 101 0
+ 135 009e 204B     		ldr	r3, .L5+32
+ 136 00a0 224A     		ldr	r2, .L5+44
+ 137 00a2 1A60     		str	r2, [r3]
+ 102:WriteUserSFlash.c ****     
+ 103:WriteUserSFlash.c ****     /****** Initialize SRAM parameters for the WRITE ROW command ******/
+ 104:WriteUserSFlash.c ****     /* byte 3 & 2 are null */
+ 105:WriteUserSFlash.c ****     /* byte 1 (i.e. 0xeb) is the key 2  */
+ 106:WriteUserSFlash.c ****     /* byte 0 (i.e. 0xb6) is the key 1  */
+ 107:WriteUserSFlash.c ****     cmdDataBuffer[0] = 0x0000ebb6;
+ 138              		.loc 1 107 0
+ 139 00a4 2023     		mov	r3, #32
+ 140 00a6 FB18     		add	r3, r7, r3
+ 141 00a8 214A     		ldr	r2, .L5+48
+ 142 00aa 1A60     		str	r2, [r3]
+ 108:WriteUserSFlash.c ****     
+ 109:WriteUserSFlash.c ****     /* byte 7,6 and 5 are null */
+ 110:WriteUserSFlash.c ****     /* byte 4 is desired SFlash user row 
+ 111:WriteUserSFlash.c ****      * Allowed values 0 - row 4
+ 112:WriteUserSFlash.c ****                       1 - row 5 
+ 113:WriteUserSFlash.c ****                       2 - row 6
+ 114:WriteUserSFlash.c ****                       3 - row 7 */
+ 115:WriteUserSFlash.c ****     cmdDataBuffer[1] = (uint32_t) userRowNUmber;
+ 143              		.loc 1 115 0
+ 144 00ac FB1D     		add	r3, r7, #7
+ 145 00ae 1A78     		ldrb	r2, [r3]
+ 146 00b0 2023     		mov	r3, #32
+ 147 00b2 FB18     		add	r3, r7, r3
+ 148 00b4 5A60     		str	r2, [r3, #4]
+ 116:WriteUserSFlash.c ****     
+ 117:WriteUserSFlash.c ****     /* Write the following to registers to execute a WRITE USER SFlash ROW command */
+ 118:WriteUserSFlash.c ****     CY_SET_REG32(CYREG_CPUSS_SYSARG, &cmdDataBuffer[0]);
+ 149              		.loc 1 118 0
+ 150 00b6 184B     		ldr	r3, .L5+24
+ 151 00b8 2022     		mov	r2, #32
+ 152 00ba BA18     		add	r2, r7, r2
+ 153 00bc 1A60     		str	r2, [r3]
+ 119:WriteUserSFlash.c ****     CY_SET_REG32(CYREG_CPUSS_SYSREQ, WRITE_USER_SFLASH_ROW);
+ 154              		.loc 1 119 0
+ 155 00be 184B     		ldr	r3, .L5+32
+ 156 00c0 1C4A     		ldr	r2, .L5+52
+ 157 00c2 1A60     		str	r2, [r3]
+ 120:WriteUserSFlash.c ****     
+ 121:WriteUserSFlash.c ****     /* Read back SYSARG for the result. 0xA0000000 = SUCCESS; */
+ 122:WriteUserSFlash.c ****     retValue = CY_GET_REG32(CYREG_CPUSS_SYSARG);
+ 158              		.loc 1 122 0
+ 159 00c4 144B     		ldr	r3, .L5+24
+ 160 00c6 1B68     		ldr	r3, [r3]
+ 161 00c8 A822     		mov	r2, #168
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 6
+
+
+ 162 00ca BA18     		add	r2, r7, r2
+ 163 00cc 1360     		str	r3, [r2]
+ 123:WriteUserSFlash.c ****     
+ 124:WriteUserSFlash.c ****     /* Restore the clock settings after the flash programming is done */
+ 125:WriteUserSFlash.c ****     CY_SET_XTND_REG32((void CYFAR *)(CYREG_CLK_SELECT),reg1);
+ 164              		.loc 1 125 0
+ 165 00ce 0C4B     		ldr	r3, .L5
+ 166 00d0 FA69     		ldr	r2, [r7, #28]
+ 167 00d2 1A60     		str	r2, [r3]
+ 126:WriteUserSFlash.c ****     CY_SET_XTND_REG32((void CYFAR *)(CYREG_CLK_IMO_CONFIG),reg2);
+ 168              		.loc 1 126 0
+ 169 00d4 0B4B     		ldr	r3, .L5+4
+ 170 00d6 BA69     		ldr	r2, [r7, #24]
+ 171 00d8 1A60     		str	r2, [r3]
+ 127:WriteUserSFlash.c ****     CY_SET_XTND_REG32((void CYFAR *)(CYREG_PWR_BG_TRIM4),reg3);
+ 172              		.loc 1 127 0
+ 173 00da 0B4B     		ldr	r3, .L5+8
+ 174 00dc 7A69     		ldr	r2, [r7, #20]
+ 175 00de 1A60     		str	r2, [r3]
+ 128:WriteUserSFlash.c ****     CY_SET_XTND_REG32((void CYFAR *)(CYREG_PWR_BG_TRIM5),reg4);
+ 176              		.loc 1 128 0
+ 177 00e0 0A4B     		ldr	r3, .L5+12
+ 178 00e2 3A69     		ldr	r2, [r7, #16]
+ 179 00e4 1A60     		str	r2, [r3]
+ 129:WriteUserSFlash.c ****     CY_SET_XTND_REG32((void CYFAR *)(CYREG_CLK_IMO_TRIM1),reg5);
+ 180              		.loc 1 129 0
+ 181 00e6 0A4B     		ldr	r3, .L5+16
+ 182 00e8 FA68     		ldr	r2, [r7, #12]
+ 183 00ea 1A60     		str	r2, [r3]
+ 130:WriteUserSFlash.c ****     CY_SET_XTND_REG32((void CYFAR *)(CYREG_CLK_IMO_TRIM2),reg6);  
+ 184              		.loc 1 130 0
+ 185 00ec 094B     		ldr	r3, .L5+20
+ 186 00ee BA68     		ldr	r2, [r7, #8]
+ 187 00f0 1A60     		str	r2, [r3]
+ 131:WriteUserSFlash.c ****     
+ 132:WriteUserSFlash.c ****     return retValue;
+ 188              		.loc 1 132 0
+ 189 00f2 A823     		mov	r3, #168
+ 190 00f4 FB18     		add	r3, r7, r3
+ 191 00f6 1B68     		ldr	r3, [r3]
+ 133:WriteUserSFlash.c **** }
+ 192              		.loc 1 133 0
+ 193 00f8 181C     		mov	r0, r3
+ 194              	.LVL4:
+ 195 00fa BD46     		mov	sp, r7
+ 196              	.LVL5:
+ 197 00fc 2CB0     		add	sp, sp, #176
+ 198              	.LVL6:
+ 199              		@ sp needed
+ 200              	.LVL7:
+ 201 00fe 80BD     		pop	{r7, pc}
+ 202              	.L6:
+ 203              		.align	2
+ 204              	.L5:
+ 205 0100 00010B40 		.word	1074462976
+ 206 0104 08010B40 		.word	1074462984
+ 207 0108 1CFF0B40 		.word	1074528028
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 7
+
+
+ 208 010c 20FF0B40 		.word	1074528032
+ 209 0110 28FF0B40 		.word	1074528040
+ 210 0114 2CFF0B40 		.word	1074528044
+ 211 0118 08001040 		.word	1074790408
+ 212 011c B6E80000 		.word	59574
+ 213 0120 04001040 		.word	1074790404
+ 214 0124 15000080 		.word	-2147483627
+ 215 0128 B6D70000 		.word	55222
+ 216 012c 04000080 		.word	-2147483644
+ 217 0130 B6EB0000 		.word	60342
+ 218 0134 18000080 		.word	-2147483624
+ 219              		.cfi_endproc
+ 220              	.LFE37:
+ 221              		.size	WriteUserSFlashRow, .-WriteUserSFlashRow
+ 222              		.text
+ 223              	.Letext0:
+ 224              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9.
+ 225              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.0\\psoc creator\\import\\gnu\\arm\\4.9.
+ 226              		.file 4 "Generated_Source\\PSoC4/cytypes.h"
+ 227              		.section	.debug_info,"",%progbits
+ 228              	.Ldebug_info0:
+ 229 0000 AB010000 		.4byte	0x1ab
+ 230 0004 0400     		.2byte	0x4
+ 231 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 232 000a 04       		.byte	0x4
+ 233 000b 01       		.uleb128 0x1
+ 234 000c 53010000 		.4byte	.LASF30
+ 235 0010 01       		.byte	0x1
+ 236 0011 27020000 		.4byte	.LASF31
+ 237 0015 25000000 		.4byte	.LASF32
+ 238 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 239 001d 00000000 		.4byte	0
+ 240 0021 00000000 		.4byte	.Ldebug_line0
+ 241 0025 02       		.uleb128 0x2
+ 242 0026 01       		.byte	0x1
+ 243 0027 06       		.byte	0x6
+ 244 0028 50020000 		.4byte	.LASF0
+ 245 002c 03       		.uleb128 0x3
+ 246 002d 06000000 		.4byte	.LASF5
+ 247 0031 02       		.byte	0x2
+ 248 0032 1D       		.byte	0x1d
+ 249 0033 37000000 		.4byte	0x37
+ 250 0037 02       		.uleb128 0x2
+ 251 0038 01       		.byte	0x1
+ 252 0039 08       		.byte	0x8
+ 253 003a E6000000 		.4byte	.LASF1
+ 254 003e 02       		.uleb128 0x2
+ 255 003f 02       		.byte	0x2
+ 256 0040 05       		.byte	0x5
+ 257 0041 1D020000 		.4byte	.LASF2
+ 258 0045 02       		.uleb128 0x2
+ 259 0046 02       		.byte	0x2
+ 260 0047 07       		.byte	0x7
+ 261 0048 1E010000 		.4byte	.LASF3
+ 262 004c 02       		.uleb128 0x2
+ 263 004d 04       		.byte	0x4
+ 264 004e 05       		.byte	0x5
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 8
+
+
+ 265 004f 39020000 		.4byte	.LASF4
+ 266 0053 03       		.uleb128 0x3
+ 267 0054 41010000 		.4byte	.LASF6
+ 268 0058 02       		.byte	0x2
+ 269 0059 41       		.byte	0x41
+ 270 005a 5E000000 		.4byte	0x5e
+ 271 005e 02       		.uleb128 0x2
+ 272 005f 04       		.byte	0x4
+ 273 0060 07       		.byte	0x7
+ 274 0061 0C010000 		.4byte	.LASF7
+ 275 0065 02       		.uleb128 0x2
+ 276 0066 08       		.byte	0x8
+ 277 0067 05       		.byte	0x5
+ 278 0068 0F020000 		.4byte	.LASF8
+ 279 006c 02       		.uleb128 0x2
+ 280 006d 08       		.byte	0x8
+ 281 006e 07       		.byte	0x7
+ 282 006f C5000000 		.4byte	.LASF9
+ 283 0073 04       		.uleb128 0x4
+ 284 0074 04       		.byte	0x4
+ 285 0075 05       		.byte	0x5
+ 286 0076 696E7400 		.ascii	"int\000"
+ 287 007a 02       		.uleb128 0x2
+ 288 007b 04       		.byte	0x4
+ 289 007c 07       		.byte	0x7
+ 290 007d AD000000 		.4byte	.LASF10
+ 291 0081 03       		.uleb128 0x3
+ 292 0082 F9010000 		.4byte	.LASF11
+ 293 0086 03       		.byte	0x3
+ 294 0087 15       		.byte	0x15
+ 295 0088 2C000000 		.4byte	0x2c
+ 296 008c 03       		.uleb128 0x3
+ 297 008d 31010000 		.4byte	.LASF12
+ 298 0091 03       		.byte	0x3
+ 299 0092 2D       		.byte	0x2d
+ 300 0093 53000000 		.4byte	0x53
+ 301 0097 05       		.uleb128 0x5
+ 302 0098 4C010000 		.4byte	.LASF13
+ 303 009c 04       		.byte	0x4
+ 304 009d 9A01     		.2byte	0x19a
+ 305 009f 5E000000 		.4byte	0x5e
+ 306 00a3 02       		.uleb128 0x2
+ 307 00a4 04       		.byte	0x4
+ 308 00a5 04       		.byte	0x4
+ 309 00a6 BA000000 		.4byte	.LASF14
+ 310 00aa 02       		.uleb128 0x2
+ 311 00ab 08       		.byte	0x8
+ 312 00ac 04       		.byte	0x4
+ 313 00ad 3A010000 		.4byte	.LASF15
+ 314 00b1 02       		.uleb128 0x2
+ 315 00b2 01       		.byte	0x1
+ 316 00b3 08       		.byte	0x8
+ 317 00b4 F4010000 		.4byte	.LASF16
+ 318 00b8 05       		.uleb128 0x5
+ 319 00b9 00000000 		.4byte	.LASF17
+ 320 00bd 04       		.byte	0x4
+ 321 00be 4402     		.2byte	0x244
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 9
+
+
+ 322 00c0 C4000000 		.4byte	0xc4
+ 323 00c4 06       		.uleb128 0x6
+ 324 00c5 97000000 		.4byte	0x97
+ 325 00c9 02       		.uleb128 0x2
+ 326 00ca 04       		.byte	0x4
+ 327 00cb 07       		.byte	0x7
+ 328 00cc 06020000 		.4byte	.LASF18
+ 329 00d0 06       		.uleb128 0x6
+ 330 00d1 8C000000 		.4byte	0x8c
+ 331 00d5 07       		.uleb128 0x7
+ 332 00d6 F9000000 		.4byte	.LASF33
+ 333 00da 01       		.byte	0x1
+ 334 00db 3E       		.byte	0x3e
+ 335 00dc 8C000000 		.4byte	0x8c
+ 336 00e0 00000000 		.4byte	.LFB37
+ 337 00e4 38010000 		.4byte	.LFE37-.LFB37
+ 338 00e8 01       		.uleb128 0x1
+ 339 00e9 9C       		.byte	0x9c
+ 340 00ea 93010000 		.4byte	0x193
+ 341 00ee 08       		.uleb128 0x8
+ 342 00ef 42020000 		.4byte	.LASF19
+ 343 00f3 01       		.byte	0x1
+ 344 00f4 3E       		.byte	0x3e
+ 345 00f5 81000000 		.4byte	0x81
+ 346 00f9 00000000 		.4byte	.LLST0
+ 347 00fd 08       		.uleb128 0x8
+ 348 00fe 19000000 		.4byte	.LASF20
+ 349 0102 01       		.byte	0x1
+ 350 0103 3E       		.byte	0x3e
+ 351 0104 93010000 		.4byte	0x193
+ 352 0108 21000000 		.4byte	.LLST1
+ 353 010c 09       		.uleb128 0x9
+ 354 010d 5C020000 		.4byte	.LASF21
+ 355 0111 01       		.byte	0x1
+ 356 0112 40       		.byte	0x40
+ 357 0113 81000000 		.4byte	0x81
+ 358 0117 4D000000 		.4byte	.LLST2
+ 359 011b 0A       		.uleb128 0xa
+ 360 011c 10000000 		.4byte	.LASF22
+ 361 0120 01       		.byte	0x1
+ 362 0121 41       		.byte	0x41
+ 363 0122 D0000000 		.4byte	0xd0
+ 364 0126 02       		.uleb128 0x2
+ 365 0127 91       		.byte	0x91
+ 366 0128 70       		.sleb128 -16
+ 367 0129 0A       		.uleb128 0xa
+ 368 012a E1010000 		.4byte	.LASF23
+ 369 012e 01       		.byte	0x1
+ 370 012f 42       		.byte	0x42
+ 371 0130 A9010000 		.4byte	0x1a9
+ 372 0134 03       		.uleb128 0x3
+ 373 0135 91       		.byte	0x91
+ 374 0136 E87E     		.sleb128 -152
+ 375 0138 0A       		.uleb128 0xa
+ 376 0139 C0000000 		.4byte	.LASF24
+ 377 013d 01       		.byte	0x1
+ 378 013e 43       		.byte	0x43
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 10
+
+
+ 379 013f D0000000 		.4byte	0xd0
+ 380 0143 03       		.uleb128 0x3
+ 381 0144 91       		.byte	0x91
+ 382 0145 E47E     		.sleb128 -156
+ 383 0147 0A       		.uleb128 0xa
+ 384 0148 EF010000 		.4byte	.LASF25
+ 385 014c 01       		.byte	0x1
+ 386 014d 43       		.byte	0x43
+ 387 014e D0000000 		.4byte	0xd0
+ 388 0152 03       		.uleb128 0x3
+ 389 0153 91       		.byte	0x91
+ 390 0154 E07E     		.sleb128 -160
+ 391 0156 0A       		.uleb128 0xa
+ 392 0157 DC000000 		.4byte	.LASF26
+ 393 015b 01       		.byte	0x1
+ 394 015c 43       		.byte	0x43
+ 395 015d D0000000 		.4byte	0xd0
+ 396 0161 03       		.uleb128 0x3
+ 397 0162 91       		.byte	0x91
+ 398 0163 DC7E     		.sleb128 -164
+ 399 0165 0A       		.uleb128 0xa
+ 400 0166 E1000000 		.4byte	.LASF27
+ 401 016a 01       		.byte	0x1
+ 402 016b 43       		.byte	0x43
+ 403 016c D0000000 		.4byte	0xd0
+ 404 0170 03       		.uleb128 0x3
+ 405 0171 91       		.byte	0x91
+ 406 0172 D87E     		.sleb128 -168
+ 407 0174 0A       		.uleb128 0xa
+ 408 0175 01020000 		.4byte	.LASF28
+ 409 0179 01       		.byte	0x1
+ 410 017a 43       		.byte	0x43
+ 411 017b D0000000 		.4byte	0xd0
+ 412 017f 03       		.uleb128 0x3
+ 413 0180 91       		.byte	0x91
+ 414 0181 D47E     		.sleb128 -172
+ 415 0183 0A       		.uleb128 0xa
+ 416 0184 F4000000 		.4byte	.LASF29
+ 417 0188 01       		.byte	0x1
+ 418 0189 43       		.byte	0x43
+ 419 018a D0000000 		.4byte	0xd0
+ 420 018e 03       		.uleb128 0x3
+ 421 018f 91       		.byte	0x91
+ 422 0190 D07E     		.sleb128 -176
+ 423 0192 00       		.byte	0
+ 424 0193 0B       		.uleb128 0xb
+ 425 0194 04       		.byte	0x4
+ 426 0195 8C000000 		.4byte	0x8c
+ 427 0199 0C       		.uleb128 0xc
+ 428 019a 8C000000 		.4byte	0x8c
+ 429 019e A9010000 		.4byte	0x1a9
+ 430 01a2 0D       		.uleb128 0xd
+ 431 01a3 C9000000 		.4byte	0xc9
+ 432 01a7 21       		.byte	0x21
+ 433 01a8 00       		.byte	0
+ 434 01a9 06       		.uleb128 0x6
+ 435 01aa 99010000 		.4byte	0x199
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 11
+
+
+ 436 01ae 00       		.byte	0
+ 437              		.section	.debug_abbrev,"",%progbits
+ 438              	.Ldebug_abbrev0:
+ 439 0000 01       		.uleb128 0x1
+ 440 0001 11       		.uleb128 0x11
+ 441 0002 01       		.byte	0x1
+ 442 0003 25       		.uleb128 0x25
+ 443 0004 0E       		.uleb128 0xe
+ 444 0005 13       		.uleb128 0x13
+ 445 0006 0B       		.uleb128 0xb
+ 446 0007 03       		.uleb128 0x3
+ 447 0008 0E       		.uleb128 0xe
+ 448 0009 1B       		.uleb128 0x1b
+ 449 000a 0E       		.uleb128 0xe
+ 450 000b 55       		.uleb128 0x55
+ 451 000c 17       		.uleb128 0x17
+ 452 000d 11       		.uleb128 0x11
+ 453 000e 01       		.uleb128 0x1
+ 454 000f 10       		.uleb128 0x10
+ 455 0010 17       		.uleb128 0x17
+ 456 0011 00       		.byte	0
+ 457 0012 00       		.byte	0
+ 458 0013 02       		.uleb128 0x2
+ 459 0014 24       		.uleb128 0x24
+ 460 0015 00       		.byte	0
+ 461 0016 0B       		.uleb128 0xb
+ 462 0017 0B       		.uleb128 0xb
+ 463 0018 3E       		.uleb128 0x3e
+ 464 0019 0B       		.uleb128 0xb
+ 465 001a 03       		.uleb128 0x3
+ 466 001b 0E       		.uleb128 0xe
+ 467 001c 00       		.byte	0
+ 468 001d 00       		.byte	0
+ 469 001e 03       		.uleb128 0x3
+ 470 001f 16       		.uleb128 0x16
+ 471 0020 00       		.byte	0
+ 472 0021 03       		.uleb128 0x3
+ 473 0022 0E       		.uleb128 0xe
+ 474 0023 3A       		.uleb128 0x3a
+ 475 0024 0B       		.uleb128 0xb
+ 476 0025 3B       		.uleb128 0x3b
+ 477 0026 0B       		.uleb128 0xb
+ 478 0027 49       		.uleb128 0x49
+ 479 0028 13       		.uleb128 0x13
+ 480 0029 00       		.byte	0
+ 481 002a 00       		.byte	0
+ 482 002b 04       		.uleb128 0x4
+ 483 002c 24       		.uleb128 0x24
+ 484 002d 00       		.byte	0
+ 485 002e 0B       		.uleb128 0xb
+ 486 002f 0B       		.uleb128 0xb
+ 487 0030 3E       		.uleb128 0x3e
+ 488 0031 0B       		.uleb128 0xb
+ 489 0032 03       		.uleb128 0x3
+ 490 0033 08       		.uleb128 0x8
+ 491 0034 00       		.byte	0
+ 492 0035 00       		.byte	0
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 12
+
+
+ 493 0036 05       		.uleb128 0x5
+ 494 0037 16       		.uleb128 0x16
+ 495 0038 00       		.byte	0
+ 496 0039 03       		.uleb128 0x3
+ 497 003a 0E       		.uleb128 0xe
+ 498 003b 3A       		.uleb128 0x3a
+ 499 003c 0B       		.uleb128 0xb
+ 500 003d 3B       		.uleb128 0x3b
+ 501 003e 05       		.uleb128 0x5
+ 502 003f 49       		.uleb128 0x49
+ 503 0040 13       		.uleb128 0x13
+ 504 0041 00       		.byte	0
+ 505 0042 00       		.byte	0
+ 506 0043 06       		.uleb128 0x6
+ 507 0044 35       		.uleb128 0x35
+ 508 0045 00       		.byte	0
+ 509 0046 49       		.uleb128 0x49
+ 510 0047 13       		.uleb128 0x13
+ 511 0048 00       		.byte	0
+ 512 0049 00       		.byte	0
+ 513 004a 07       		.uleb128 0x7
+ 514 004b 2E       		.uleb128 0x2e
+ 515 004c 01       		.byte	0x1
+ 516 004d 3F       		.uleb128 0x3f
+ 517 004e 19       		.uleb128 0x19
+ 518 004f 03       		.uleb128 0x3
+ 519 0050 0E       		.uleb128 0xe
+ 520 0051 3A       		.uleb128 0x3a
+ 521 0052 0B       		.uleb128 0xb
+ 522 0053 3B       		.uleb128 0x3b
+ 523 0054 0B       		.uleb128 0xb
+ 524 0055 27       		.uleb128 0x27
+ 525 0056 19       		.uleb128 0x19
+ 526 0057 49       		.uleb128 0x49
+ 527 0058 13       		.uleb128 0x13
+ 528 0059 11       		.uleb128 0x11
+ 529 005a 01       		.uleb128 0x1
+ 530 005b 12       		.uleb128 0x12
+ 531 005c 06       		.uleb128 0x6
+ 532 005d 40       		.uleb128 0x40
+ 533 005e 18       		.uleb128 0x18
+ 534 005f 9742     		.uleb128 0x2117
+ 535 0061 19       		.uleb128 0x19
+ 536 0062 01       		.uleb128 0x1
+ 537 0063 13       		.uleb128 0x13
+ 538 0064 00       		.byte	0
+ 539 0065 00       		.byte	0
+ 540 0066 08       		.uleb128 0x8
+ 541 0067 05       		.uleb128 0x5
+ 542 0068 00       		.byte	0
+ 543 0069 03       		.uleb128 0x3
+ 544 006a 0E       		.uleb128 0xe
+ 545 006b 3A       		.uleb128 0x3a
+ 546 006c 0B       		.uleb128 0xb
+ 547 006d 3B       		.uleb128 0x3b
+ 548 006e 0B       		.uleb128 0xb
+ 549 006f 49       		.uleb128 0x49
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 13
+
+
+ 550 0070 13       		.uleb128 0x13
+ 551 0071 02       		.uleb128 0x2
+ 552 0072 17       		.uleb128 0x17
+ 553 0073 00       		.byte	0
+ 554 0074 00       		.byte	0
+ 555 0075 09       		.uleb128 0x9
+ 556 0076 34       		.uleb128 0x34
+ 557 0077 00       		.byte	0
+ 558 0078 03       		.uleb128 0x3
+ 559 0079 0E       		.uleb128 0xe
+ 560 007a 3A       		.uleb128 0x3a
+ 561 007b 0B       		.uleb128 0xb
+ 562 007c 3B       		.uleb128 0x3b
+ 563 007d 0B       		.uleb128 0xb
+ 564 007e 49       		.uleb128 0x49
+ 565 007f 13       		.uleb128 0x13
+ 566 0080 02       		.uleb128 0x2
+ 567 0081 17       		.uleb128 0x17
+ 568 0082 00       		.byte	0
+ 569 0083 00       		.byte	0
+ 570 0084 0A       		.uleb128 0xa
+ 571 0085 34       		.uleb128 0x34
+ 572 0086 00       		.byte	0
+ 573 0087 03       		.uleb128 0x3
+ 574 0088 0E       		.uleb128 0xe
+ 575 0089 3A       		.uleb128 0x3a
+ 576 008a 0B       		.uleb128 0xb
+ 577 008b 3B       		.uleb128 0x3b
+ 578 008c 0B       		.uleb128 0xb
+ 579 008d 49       		.uleb128 0x49
+ 580 008e 13       		.uleb128 0x13
+ 581 008f 02       		.uleb128 0x2
+ 582 0090 18       		.uleb128 0x18
+ 583 0091 00       		.byte	0
+ 584 0092 00       		.byte	0
+ 585 0093 0B       		.uleb128 0xb
+ 586 0094 0F       		.uleb128 0xf
+ 587 0095 00       		.byte	0
+ 588 0096 0B       		.uleb128 0xb
+ 589 0097 0B       		.uleb128 0xb
+ 590 0098 49       		.uleb128 0x49
+ 591 0099 13       		.uleb128 0x13
+ 592 009a 00       		.byte	0
+ 593 009b 00       		.byte	0
+ 594 009c 0C       		.uleb128 0xc
+ 595 009d 01       		.uleb128 0x1
+ 596 009e 01       		.byte	0x1
+ 597 009f 49       		.uleb128 0x49
+ 598 00a0 13       		.uleb128 0x13
+ 599 00a1 01       		.uleb128 0x1
+ 600 00a2 13       		.uleb128 0x13
+ 601 00a3 00       		.byte	0
+ 602 00a4 00       		.byte	0
+ 603 00a5 0D       		.uleb128 0xd
+ 604 00a6 21       		.uleb128 0x21
+ 605 00a7 00       		.byte	0
+ 606 00a8 49       		.uleb128 0x49
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 14
+
+
+ 607 00a9 13       		.uleb128 0x13
+ 608 00aa 2F       		.uleb128 0x2f
+ 609 00ab 0B       		.uleb128 0xb
+ 610 00ac 00       		.byte	0
+ 611 00ad 00       		.byte	0
+ 612 00ae 00       		.byte	0
+ 613              		.section	.debug_loc,"",%progbits
+ 614              	.Ldebug_loc0:
+ 615              	.LLST0:
+ 616 0000 00000000 		.4byte	.LVL0
+ 617 0004 FA000000 		.4byte	.LVL4
+ 618 0008 0100     		.2byte	0x1
+ 619 000a 50       		.byte	0x50
+ 620 000b FA000000 		.4byte	.LVL4
+ 621 000f 38010000 		.4byte	.LFE37
+ 622 0013 0400     		.2byte	0x4
+ 623 0015 F3       		.byte	0xf3
+ 624 0016 01       		.uleb128 0x1
+ 625 0017 50       		.byte	0x50
+ 626 0018 9F       		.byte	0x9f
+ 627 0019 00000000 		.4byte	0
+ 628 001d 00000000 		.4byte	0
+ 629              	.LLST1:
+ 630 0021 00000000 		.4byte	.LVL0
+ 631 0025 60000000 		.4byte	.LVL2
+ 632 0029 0100     		.2byte	0x1
+ 633 002b 51       		.byte	0x51
+ 634 002c 60000000 		.4byte	.LVL2
+ 635 0030 FE000000 		.4byte	.LVL6
+ 636 0034 0200     		.2byte	0x2
+ 637 0036 7D       		.byte	0x7d
+ 638 0037 00       		.sleb128 0
+ 639 0038 FE000000 		.4byte	.LVL6
+ 640 003c 38010000 		.4byte	.LFE37
+ 641 0040 0300     		.2byte	0x3
+ 642 0042 7D       		.byte	0x7d
+ 643 0043 D07E     		.sleb128 -176
+ 644 0045 00000000 		.4byte	0
+ 645 0049 00000000 		.4byte	0
+ 646              	.LLST2:
+ 647 004d 5E000000 		.4byte	.LVL1
+ 648 0051 FC000000 		.4byte	.LVL5
+ 649 0055 0300     		.2byte	0x3
+ 650 0057 7D       		.byte	0x7d
+ 651 0058 AF01     		.sleb128 175
+ 652 005a FC000000 		.4byte	.LVL5
+ 653 005e FE000000 		.4byte	.LVL7
+ 654 0062 0300     		.2byte	0x3
+ 655 0064 77       		.byte	0x77
+ 656 0065 AF01     		.sleb128 175
+ 657 0067 FE000000 		.4byte	.LVL7
+ 658 006b 38010000 		.4byte	.LFE37
+ 659 006f 0200     		.2byte	0x2
+ 660 0071 91       		.byte	0x91
+ 661 0072 77       		.sleb128 -9
+ 662 0073 00000000 		.4byte	0
+ 663 0077 00000000 		.4byte	0
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 15
+
+
+ 664              		.section	.debug_aranges,"",%progbits
+ 665 0000 1C000000 		.4byte	0x1c
+ 666 0004 0200     		.2byte	0x2
+ 667 0006 00000000 		.4byte	.Ldebug_info0
+ 668 000a 04       		.byte	0x4
+ 669 000b 00       		.byte	0
+ 670 000c 0000     		.2byte	0
+ 671 000e 0000     		.2byte	0
+ 672 0010 00000000 		.4byte	.LFB37
+ 673 0014 38010000 		.4byte	.LFE37-.LFB37
+ 674 0018 00000000 		.4byte	0
+ 675 001c 00000000 		.4byte	0
+ 676              		.section	.debug_ranges,"",%progbits
+ 677              	.Ldebug_ranges0:
+ 678 0000 00000000 		.4byte	.LFB37
+ 679 0004 38010000 		.4byte	.LFE37
+ 680 0008 00000000 		.4byte	0
+ 681 000c 00000000 		.4byte	0
+ 682              		.section	.debug_line,"",%progbits
+ 683              	.Ldebug_line0:
+ 684 0000 85010000 		.section	.debug_str,"MS",%progbits,1
+ 684      02004401 
+ 684      00000201 
+ 684      FB0E0D00 
+ 684      01010101 
+ 685              	.LASF17:
+ 686 0000 72656733 		.ascii	"reg32\000"
+ 686      3200
+ 687              	.LASF5:
+ 688 0006 5F5F7569 		.ascii	"__uint8_t\000"
+ 688      6E74385F 
+ 688      7400
+ 689              	.LASF22:
+ 690 0010 72657456 		.ascii	"retValue\000"
+ 690      616C7565 
+ 690      00
+ 691              	.LASF20:
+ 692 0019 64617461 		.ascii	"dataPointer\000"
+ 692      506F696E 
+ 692      74657200 
+ 693              	.LASF32:
+ 694 0025 433A5C50 		.ascii	"C:\\Program Files (x86)\\Cypress\\CYALKIT-E02 Solar"
+ 694      726F6772 
+ 694      616D2046 
+ 694      696C6573 
+ 694      20287838 
+ 695 0055 2D506F77 		.ascii	"-Powered BLE Sensor Beacon RDK\\1.0\\Firmware\\BLE\\"
+ 695      65726564 
+ 695      20424C45 
+ 695      2053656E 
+ 695      736F7220 
+ 696 0085 536F6C61 		.ascii	"Solar_BLE_Sensor\\Solar_BLE_Sensor.cydsn\000"
+ 696      725F424C 
+ 696      455F5365 
+ 696      6E736F72 
+ 696      5C536F6C 
+ 697              	.LASF10:
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 16
+
+
+ 698 00ad 756E7369 		.ascii	"unsigned int\000"
+ 698      676E6564 
+ 698      20696E74 
+ 698      00
+ 699              	.LASF14:
+ 700 00ba 666C6F61 		.ascii	"float\000"
+ 700      7400
+ 701              	.LASF24:
+ 702 00c0 72656731 		.ascii	"reg1\000"
+ 702      00
+ 703              	.LASF9:
+ 704 00c5 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 704      206C6F6E 
+ 704      6720756E 
+ 704      7369676E 
+ 704      65642069 
+ 705              	.LASF26:
+ 706 00dc 72656733 		.ascii	"reg3\000"
+ 706      00
+ 707              	.LASF27:
+ 708 00e1 72656734 		.ascii	"reg4\000"
+ 708      00
+ 709              	.LASF1:
+ 710 00e6 756E7369 		.ascii	"unsigned char\000"
+ 710      676E6564 
+ 710      20636861 
+ 710      7200
+ 711              	.LASF29:
+ 712 00f4 72656736 		.ascii	"reg6\000"
+ 712      00
+ 713              	.LASF33:
+ 714 00f9 57726974 		.ascii	"WriteUserSFlashRow\000"
+ 714      65557365 
+ 714      7253466C 
+ 714      61736852 
+ 714      6F7700
+ 715              	.LASF7:
+ 716 010c 6C6F6E67 		.ascii	"long unsigned int\000"
+ 716      20756E73 
+ 716      69676E65 
+ 716      6420696E 
+ 716      7400
+ 717              	.LASF3:
+ 718 011e 73686F72 		.ascii	"short unsigned int\000"
+ 718      7420756E 
+ 718      7369676E 
+ 718      65642069 
+ 718      6E7400
+ 719              	.LASF12:
+ 720 0131 75696E74 		.ascii	"uint32_t\000"
+ 720      33325F74 
+ 720      00
+ 721              	.LASF15:
+ 722 013a 646F7562 		.ascii	"double\000"
+ 722      6C6500
+ 723              	.LASF6:
+ 724 0141 5F5F7569 		.ascii	"__uint32_t\000"
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 17
+
+
+ 724      6E743332 
+ 724      5F7400
+ 725              	.LASF13:
+ 726 014c 75696E74 		.ascii	"uint32\000"
+ 726      333200
+ 727              	.LASF30:
+ 728 0153 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 728      4320342E 
+ 728      392E3320 
+ 728      32303135 
+ 728      30333033 
+ 729 0186 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 729      20726576 
+ 729      6973696F 
+ 729      6E203232 
+ 729      31323230 
+ 730 01b9 33202D66 		.ascii	"3 -ffunction-sections -ffat-lto-objects\000"
+ 730      66756E63 
+ 730      74696F6E 
+ 730      2D736563 
+ 730      74696F6E 
+ 731              	.LASF23:
+ 732 01e1 636D6444 		.ascii	"cmdDataBuffer\000"
+ 732      61746142 
+ 732      75666665 
+ 732      7200
+ 733              	.LASF25:
+ 734 01ef 72656732 		.ascii	"reg2\000"
+ 734      00
+ 735              	.LASF16:
+ 736 01f4 63686172 		.ascii	"char\000"
+ 736      00
+ 737              	.LASF11:
+ 738 01f9 75696E74 		.ascii	"uint8_t\000"
+ 738      385F7400 
+ 739              	.LASF28:
+ 740 0201 72656735 		.ascii	"reg5\000"
+ 740      00
+ 741              	.LASF18:
+ 742 0206 73697A65 		.ascii	"sizetype\000"
+ 742      74797065 
+ 742      00
+ 743              	.LASF8:
+ 744 020f 6C6F6E67 		.ascii	"long long int\000"
+ 744      206C6F6E 
+ 744      6720696E 
+ 744      7400
+ 745              	.LASF2:
+ 746 021d 73686F72 		.ascii	"short int\000"
+ 746      7420696E 
+ 746      7400
+ 747              	.LASF31:
+ 748 0227 57726974 		.ascii	"WriteUserSFlash.c\000"
+ 748      65557365 
+ 748      7253466C 
+ 748      6173682E 
+ 748      6300
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cc3uBaCD.s 			page 18
+
+
+ 749              	.LASF4:
+ 750 0239 6C6F6E67 		.ascii	"long int\000"
+ 750      20696E74 
+ 750      00
+ 751              	.LASF19:
+ 752 0242 75736572 		.ascii	"userRowNUmber\000"
+ 752      526F774E 
+ 752      556D6265 
+ 752      7200
+ 753              	.LASF0:
+ 754 0250 7369676E 		.ascii	"signed char\000"
+ 754      65642063 
+ 754      68617200 
+ 755              	.LASF21:
+ 756 025c 6C6F6361 		.ascii	"localCount\000"
+ 756      6C436F75 
+ 756      6E7400
+ 757              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

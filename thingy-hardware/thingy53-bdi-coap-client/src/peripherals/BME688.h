@@ -25,7 +25,7 @@
 
 extern "C" {
   #include "peripherals/sensors.h"
-  #include "peripherals/battery.h"
+  //#include "peripherals/battery.h"
   #include "peripherals/gpio.h"
 }
 

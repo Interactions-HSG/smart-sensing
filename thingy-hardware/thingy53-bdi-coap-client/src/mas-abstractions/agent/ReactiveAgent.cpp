@@ -1,15 +1,15 @@
 #include "mas-abstractions/agent/ReactiveAgent.h"
-#include "peripherals/battery.h"
+//#include "peripherals/battery.h"
 
-#define MIN_ENERGY 5.0
+#define MIN_AVAILABLE_ENERGY 5.0
 
 void ReactiveAgent::run(){
-    Organization::refresh();
-    advertise("room-1");
+    //Organization::refresh();
+    //advertise("room-1");
 }
 
 double ReactiveAgent::getEnergyInBuffer(){
-    return (battery_sample() - 3000) / 1200.0f;
+    return 100;// (battery_sample() - 3000) / 1200.0f;
 }
 
 double ReactiveAgent::getEnergyCommitted(){
@@ -21,34 +21,33 @@ double ReactiveAgent::getEnergyCommitted(){
     return commited;
 }
 
-double ReactiveAgent::calculateCost(GroupRoleInfo* group, double buffer, double committed){
-    double e_m = group->functionalSpecification.measurementDuration * 0.15;
+double ReactiveAgent::calculateCost(GroupRoleInfoCon* group, double buffer, double committed){
+    double e_m = group->fs.md * 0.15;
     double e_a = buffer - committed;
     double cost = e_m / e_a;
     return cost;
 }
 
-double ReactiveAgent::calculateBenefit(GroupRoleInfo* group, double buffer, double committed){
-    double reward = group->reward;
+double ReactiveAgent::calculateBenefit(GroupRoleInfoCon* group, double buffer, double committed){
+    double reward = group->rew;
     double cost = calculateCost(group, buffer, committed);
     double benefit = reward - cost;
-    return 0.0;
+    return benefit;
 }
 
 void ReactiveAgent::delibrate(){
     //Sum up energy required for current roles
     double e_c = getEnergyCommitted();
     double e_b = getEnergyInBuffer();
-
     //Spare energy? Get available roles
-    if(e_b - e_c > MIN_ENERGY) //Considering 5J as minimum usable
+    if(e_b - e_c > MIN_AVAILABLE_ENERGY)
     {
-        std::list<GroupRoleInfo*> availableRoles = Organization::getAvailableRoles();
-        for(GroupRoleInfo* gr : availableRoles)
+        std::list<GroupRoleInfoCon*> availableRoles = Organization::getAvailableRoles();
+        for(GroupRoleInfoCon* gr : availableRoles)
         {
             if(calculateBenefit(gr, e_b, e_c) > 0){
-                Organization::joinRole(gr->id);
-                break; //TODO: We can join multiple roles, but keeping it simple..for now.
+                Organization::joinRole(gr->id, 100);
+                break; 
             }
         }
     }

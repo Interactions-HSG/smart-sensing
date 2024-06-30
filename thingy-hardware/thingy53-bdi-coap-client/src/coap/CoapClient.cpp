@@ -31,7 +31,8 @@ void CoapClient::coap_response_handler(void *p_context,
 	ARG_UNUSED(p_message);
 	ARG_UNUSED(p_context);
 
-uint16_t received_size;
+	uint16_t received_size;
+	gpio_output_set(8,1);
 
 	if (aResult == OT_ERROR_NONE) {
 		LOG_INF("%i: Received response successfully.\n", 0);

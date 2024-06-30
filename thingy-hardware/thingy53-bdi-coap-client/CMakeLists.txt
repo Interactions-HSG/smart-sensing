@@ -14,14 +14,12 @@ project(bdi-coap-client)
 
 
 FILE(GLOB APP_SOURCES src/main.cpp
-         src/peripherals/sensors.c
-         src/peripherals/BME688.cpp
          src/coap/CoapClient.cpp
          src/mas-abstractions/organization/Organization.cpp
          src/mas-abstractions/agent/ReactiveAgent.cpp
          src/thread/thread_helper.c
          src/peripherals/gpio.c
-         src/peripherals/battery.c)
+         src/low_power.c)
 
 #FILE(GLOB EMB_BDI_AGENT_SOURCES embedded-bdi/lib/agent/*.cpp)
 #FILE(GLOB EMB_BDI_BDI_SOURCES embedded-bdi/lib/bdi/*.cpp)
@@ -40,12 +38,12 @@ target_include_directories(app PRIVATE src interface)
 
 
 # Preinitialization related to Thingy:53 DFU
-target_sources_ifdef(CONFIG_BOARD_THINGY53_NRF5340_CPUAPP app PRIVATE
-  boards/thingy53.c
-)
-target_sources_ifdef(CONFIG_BOARD_THINGY53_NRF5340_CPUAPP_NS app PRIVATE
-  boards/thingy53.c
-)
+#target_sources_ifdef(CONFIG_BOARD_THINGY53_NRF5340_CPUAPP app PRIVATE
+#  boards/thingy53.c
+#)
+#target_sources_ifdef(CONFIG_BOARD_THINGY53_NRF5340_CPUAPP_NS app PRIVATE
+#  boards/thingy53.c
+#)
 
 # NORDIC SDK APP END
 

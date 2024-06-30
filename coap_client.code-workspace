@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": "thingy-hardware/coap_client"
+		},
+		{
+			"name": "system_off",
+			"path": "../../../Frameworks/ncs/v2.6.1/zephyr/samples/boards/nrf/system_off"
+		}
+	],
+	"settings": {
+		"nrf-connect.applications": [],
+		"nrf-connect.debugging.bindings": {
+			"${workspaceFolder}/build": "Launch build"
+		}
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"type": "nrf-connect",
+				"request": "launch",
+				"name": "Launch build",
+				"config": "${workspaceFolder}/build",
+				"runToEntryPoint": "main"
+			}
+		]
+	}
+}

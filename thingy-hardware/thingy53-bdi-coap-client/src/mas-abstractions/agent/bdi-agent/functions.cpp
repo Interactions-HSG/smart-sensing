@@ -19,7 +19,7 @@
 
 extern "C" {
   #include "coap_client_utils.h"
-  #include "sensors.h"
+ // #include "sensors.h"
 }
 
 LOG_MODULE_REGISTER(functions, CONFIG_COAP_CLIENT_LOG_LEVEL);

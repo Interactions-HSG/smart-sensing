@@ -17,5 +17,6 @@ extern struct gpio_dt_spec out2;
   Initializes GPIOs as outputs.
 **************************************************************************************************/
 int gpio_output_init(void);
+void gpio_output_set(int pin, int state);
 
 #endif /* GPIO_H_ */

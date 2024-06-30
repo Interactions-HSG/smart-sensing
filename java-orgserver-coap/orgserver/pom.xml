@@ -34,7 +34,9 @@
 		    <groupId>com.google.code.gson</groupId>
 		    <artifactId>gson</artifactId>
 		    <version>2.10</version>
-		</dependency>	
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jacamo/moise -->
+
 	</dependencies>
 
 	<build>
@@ -43,7 +45,15 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<!-- inherit configuration from parent POM -->
 			</plugin>
-		</plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+        </plugins>
 	</build>
 
 	<groupId>smart-sensing</groupId>

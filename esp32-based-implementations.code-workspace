@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"path": "esp32-hardware/xiao-esp32s3-low-energy"
+		},
+		{
+			"name": "esp32-embedded-bdi-agent",
+			"path": "../esp32-embedded-bdi-agent"
+		},
+		{
+			"name": "xiao-nrf52-low-energy-agent",
+			"path": "xiao-nrf52-low-energy-agent"
+		},
+		{
+			"name": "240618-175823-adafruit_feather_nrf52840",
+			"path": "C:/Users/ramanatg/Documents/PlatformIO/Projects/240618-175823-adafruit_feather_nrf52840"
+		},
+		{
+			"name": "thingy53-bdi-coap-client",
+			"path": "thingy-hardware/thingy53-bdi-coap-client"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"img_mgmt.h": "c"
+		}
+	}
+}

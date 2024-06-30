@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="java-orgserver-coap">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/java-orgserver-coap.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

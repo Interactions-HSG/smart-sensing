@@ -2,32 +2,85 @@ package interactions.ics.unisg.ch.smartsensing;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gson.Gson;
-import interactions.ics.unisg.ch.smartsensing.entities.FunctionalSpec;
-import interactions.ics.unisg.ch.smartsensing.entities.GroupRole;
-import interactions.ics.unisg.ch.smartsensing.entities.GroupRoleInfo;
-import interactions.ics.unisg.ch.smartsensing.entities.RolePlayer;
-import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.CoapHandler;
-import org.eclipse.californium.core.CoapObserveRelation;
-import org.eclipse.californium.core.CoapResponse;
+import interactions.ics.unisg.ch.smartsensing.entities.*;
+import org.eclipse.californium.core.*;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.elements.exception.ConnectorException;
 
-public class TestClient {
+public class TestClient extends Thread {
 
-    public static void testConnection(String[] args){
+    static long avg_response_time = 0;
+    static long samples = 0;
 
+    CoapClient client = new CoapClient("coap://10.0.1.10:5683/room1");
+    public void run() {
+        //System.out.println("This code is running in a thread");
+        String response = null;
+        try {
+            Date start = new Date();
+            response = client.get().getResponseText();
+            Date now = new Date();
+            long elapsed = now.getTime() -  start.getTime();
+
+            avg_response_time = (avg_response_time * samples + elapsed)/(samples+1);
+            samples++;
+            //System.out.println("Get group info: " + response);
+            System.out.println(avg_response_time);
+        }catch (Exception e){}
+    }
+
+    public static void testConcurrentGets(){
+        ArrayList<TestClient> clients = new ArrayList<>();
+        for(int i=0; i<1; i++){
+            TestClient client = new TestClient();
+            clients.add(client);
+        }
+        for(TestClient c : clients){
+            c.start();
+        }
+    }
+
+    public static void addDemoPlayer(){
+        CoapClient client = new CoapClient("coap://localhost:5683/room1/rl-1");
+        System.out.println("Add demo player");
+        Gson gson = new Gson();
+        PlayerInfo pi = new PlayerInfo();
+        pi.id = "sen-test";
+        pi.taskAllocation = 50;
+        try {
+            String response = client.post(gson.toJson(pi), MediaTypeRegistry.APPLICATION_JSON).getCode().toString();
+            System.out.println("Response: " + response);
+        } catch (ConnectorException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void removeDemoPlayer(){
+        CoapClient client = new CoapClient("coap://localhost:5683/room1/rl-1/sen-test");
+        System.out.println("Remove demo player");
+        try {
+            String response = client.delete().getCode().toString();
+            System.out.println("Response: " + response);
+        } catch (ConnectorException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void createDemoRole(){
         CoapClient client = new CoapClient("coap://localhost:5683/room1");
-
         System.out.println("SYNCHRONOUS");
         Gson gson = new Gson();
         // synchronous
         String response = null;
         try {
-
             //Query role player
             //client.setURI("coap://10.0.1.8:5683/room1/gr_comfort_sensing/ag1");
             //response = client.get().getResponseText();
@@ -36,34 +89,27 @@ public class TestClient {
             response = client.get().getResponseText();
             System.out.println("Get group info: " + response);
 
-            //Create a new GroupRole
+            //Create a test GroupRole
             GroupRoleInfo grinfo = new GroupRoleInfo();
             FunctionalSpec fspec = new FunctionalSpec();
             fspec.hasQuantityKind = 0;
-            fspec.measurementInterval = 5000;
-            fspec.updateInterval = 60000;
-            fspec.measurementDuration = 5; //in minutes
-            grinfo.id = "gr_test_role";
+            fspec.measurementInterval = 1;//in minutes
+            fspec.updateInterval = 5;//in minutes
+            fspec.measurementDuration = 600; //in minutes
+            grinfo.id = "rl-1";
             grinfo.maxAgents = 2;
             grinfo.minAllocation = 50;
             grinfo.reward = 3;
             grinfo.functionalSpecification = fspec;
             grinfo.isActive = false;
-            grinfo.isActiveSince = (new Date()).getTime();
-            grinfo.creatorId = "test";
+            grinfo.isActiveSince = 0;// (new Date()).getTime();
+            grinfo.creatorId = "ag-1";
             response = client.post(gson.toJson(grinfo), MediaTypeRegistry.APPLICATION_JSON).getResponseText();
-            System.out.println("Create new group role: " + response);
+            System.out.println("Created new demo role: " + response);
 
             //Add a role player
             /*
-            RolePlayer.PlayerInfo pi = new RolePlayer.PlayerInfo();
-            pi.id = "ag1";
-            pi.taskAllocation = 50;
-            response = client.post(gson.toJson(pi), MediaTypeRegistry.APPLICATION_JSON).getCode().toString();
-            System.out.println("Create new agent in  gr_comfort_sensing: " + response);
 
-            response = client.get().getResponseText();
-            System.out.println("Get gr_comfort_sensing: " + response);
 */
             //Query role player
             //client.setURI("coap://localhost:5683/room1/gr_comfort_sensing/ag1");

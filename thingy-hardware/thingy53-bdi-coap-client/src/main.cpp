@@ -8,13 +8,25 @@
 #include <ram_pwrdn.h>
 #include <zephyr/pm/device.h>
 #include <zephyr/pm/pm.h>
+//#include <zephyr/drivers/gpio.h>
+#include <zephyr/sys/poweroff.h>
+#include <ram_pwrdn.h>
 
 #include "main.h"
 #include "mas-abstractions/organization/Organization.h"
 #include "mas-abstractions/agent/ReactiveAgent.h"
 
+#define CONFIG_THINGY_LOW_POWER
+//#define CONFIG_THINGY_USE_SENSOR
+#if defined(CONFIG_THINGY_LOW_POWER)
+#include "low_power.h"
+#endif
+
 
 LOG_MODULE_REGISTER(main, CONFIG_COAP_CLIENT_LOG_LEVEL);
+
+//#define GPIO0_NODE DT_NODELABEL(gpio0)
+//#define PIN 9
 
 /**************************************************************************************************
   Agent ID string.
@@ -42,12 +54,13 @@ int32_t agent_period = DEFAULT_AGENT_PERIOD;
 /**************************************************************************************************
   CoAP Variables.
 **************************************************************************************************/
-
+#ifdef CONFIG_THINGY_USE_SENSOR
 BME688* m_p_bme_sensor;
+#endif
 #ifdef USE_EMB_BDI
 	Agent* m_p_sensor_agent;
 #else
-ReactiveAgent* m_p_sensor_agent;
+	ReactiveAgent* m_p_sensor_agent;
 #endif
 /**************************************************************************************************
   Thread Declarations.
@@ -87,7 +100,14 @@ K_THREAD_DEFINE(transmission_thread_id, TRANSMISSION_STACKSIZE, transmission_thr
 /**************************************************************************************************
   Toggles MED and SED mode when enabled in build.
 **************************************************************************************************/
-static void on_mtd_mode_toggle(uint32_t med)
+//typedef struct otLinkModeConfig
+//{
+//    bool mRxOnWhenIdle : 1; ///< 1, if the sender has its receiver on when not transmitting. 0, otherwise.
+//    bool mDeviceType : 1;   ///< 1, if the sender is an FTD. 0, otherwise.
+//    bool mNetworkData : 1;  ///< 1, if the sender requires the full Network Data. 0, otherwise.
+//}
+
+static void on_mtd_mode_toggle(/*uint32_t med*/otLinkModeConfig mode)
 {
 #if IS_ENABLED(CONFIG_PM_DEVICE)
 	const struct device *cons = DEVICE_DT_GET(DT_CHOSEN(zephyr_console));
@@ -95,16 +115,17 @@ static void on_mtd_mode_toggle(uint32_t med)
 	if (!device_is_ready(cons)) {
 		return;
 	}
+	uint32_t rxon = mode.mRxOnWhenIdle;
+	uint32_t ftd = mode.mDeviceType;
 	dk_set_led_off(BLUE_LED);
 	dk_set_led_off(RED_LED);
 	dk_set_led_off(GREEN_LED);
-	//is_med = med == 1 ? true : false;
-	if (med) {
-		pm_device_action_run(cons, PM_DEVICE_ACTION_RESUME);
-		dk_set_led_on(GREEN_LED);
-	} else {
-		pm_device_action_run(cons, PM_DEVICE_ACTION_SUSPEND);
+	if (rxon || ftd) {
+		// pm_device_action_run(cons, PM_DEVICE_ACTION_RESUME);
 		dk_set_led_on(RED_LED);
+	} else {
+		// pm_device_action_run(cons, PM_DEVICE_ACTION_SUSPEND);
+		dk_set_led_on(GREEN_LED);
 	}
 #endif
 	
@@ -122,13 +143,15 @@ static void on_button_changed(uint32_t button_state, uint32_t has_changed)
 		dk_set_led_off(RED_LED);
 		dk_set_led_off(GREEN_LED);
 
-		dk_set_led_on(GREEN_LED);
+		
 		//LOG_INF("Creating organization entity object %d", 2);
 		if(in_role){
-			Organization::leaveRole("gr_test_role");
+			Organization::leaveRole("rl-1");
+			dk_set_led_on(RED_LED);
 			in_role = false;
 		}else{
-			Organization::joinRole("gr_test_role");
+			Organization::joinRole("rl-1", 100);
+			dk_set_led_on(GREEN_LED);
 			in_role = true;
 		}
 		//Organization::sendMeasurement("gr_test_role", 12.1);
@@ -154,7 +177,7 @@ void sensing_thread_cb(void)
 		/* Sleep as long as no role is assigned */
 		//LOG_INF("%i: Sensing Thread...\n", log_iterator++);
 		/* Read BME688 enviromental sensor */		
-
+		#ifdef CONFIG_THINGY_USE_SENSOR
 		m_p_bme_sensor->measure();
 
 		/* Release transmission when buffer is full */
@@ -162,6 +185,7 @@ void sensing_thread_cb(void)
 		{ 
 			k_sem_give(&sensor_sem);
 		}
+		#endif
 		/* sleep */
 		//k_sleep(1000 /*roles[current_role].getMeasurementPeriod()*/);
 	}
@@ -177,10 +201,12 @@ void transmission_thread_cb(void)
 	while(true){
 		/* Transmit to Server */
 		k_sem_take(&sensor_sem, K_FOREVER); //Add timeout to prevent deadlock...
-		LOG_INF("%i: Transmit sensor data:\n---> %s\n", log_iterator++, m_p_bme_sensor->getPayload() .c_str());
+		//LOG_INF("%i: Transmit sensor data:\n---> %s\n", log_iterator++, m_p_bme_sensor->getPayload() .c_str());
 
 		/* Reset buffer */
+		#ifdef CONFIG_THINGY_USE_SENSOR
 		m_p_bme_sensor->clearBuffer();
+		#endif
 		/* sleep */
 		k_sleep(K_FOREVER);
 	}
@@ -210,7 +236,6 @@ int main(void)
 	LOG_INF("%i: Start Thingy:53 BDI CoAP Client...\n", log_iterator++);
 
 	int ret;
-
 	#if USE_GPIO_OUTPUT
 		/* Initialize GPIOs */
 		ret = gpio_output_init();
@@ -223,12 +248,14 @@ int main(void)
 		gpio_pin_set_dt(&out2, 0);
 	#endif /* USE_GPIO_OUTPUT */
 
-	struct otInstance *openthread = openthread_get_default_instance();
-	struct net_if * net = net_if_get_default();
+
+
+	//struct otInstance *openthread = openthread_get_default_instance();
+	//struct net_if * net = net_if_get_default();
 
 	/* Enabled if built as sleepy end device */
 	if (IS_ENABLED(CONFIG_RAM_POWER_DOWN_LIBRARY)) {
-		power_down_unused_ram();
+		//power_down_unused_ram();
 	}
 
 	/* Initialize buttons */
@@ -246,44 +273,49 @@ int main(void)
 	}
 
 	/* Initialize Sensor object*/
+	#ifdef CONFIG_THINGY_USE_SENSOR
 	m_p_bme_sensor = new BME688(agent_id);
+	#endif
 	m_p_sensor_agent = new ReactiveAgent();
 	/* Initialize battery measurement */
-	ret = battery_measure_enable(true);
-	if (ret) {
-		LOG_ERR("Failed initialize battery measurement (error: %d)", ret);
-		return 0;
-	}
+	//ret = battery_measure_enable(true);
+	//if (ret) {
+	//	LOG_ERR("Failed initialize battery measurement (error: %d)", ret);
+	//	return 0;
+	//}
 
 	LOG_INF("Creating CoAP channel %d",1);
 	//LOG_INF("CoAP channel initialized. Response=%d", resp);
-	startThread(on_mtd_mode_toggle);
-	k_msleep(2000);
-	otLinkModeConfig mode = getCurrentMode();
-	mode.mRxOnWhenIdle = 0;
-	mode.mDeviceType = 0;
-	mode.mNetworkData = 0;
-	setCurrentMode(mode);
-	k_msleep(2000);
-	CoapClient::initialize();
-	LOG_INF("Creating organization entity object %d", 2);
-	
+	startThread(on_mtd_mode_toggle);	
+	k_sleep(K_MSEC(2000));
 
-	//otThreadSetEnabled(openthread,false);
-	//net_if_down(net);
 	dk_set_led_off(BLUE_LED);
 	dk_set_led_off(RED_LED);
 	dk_set_led_off(GREEN_LED);
-	//nrf_radio_power_set(NRF_RADIO,false);
+
+	
+	CoapClient::initialize();
+	dk_set_led_on(BLUE_LED);
+	k_sleep(K_MSEC(2000));
+	dk_set_led_off(BLUE_LED);
+	dk_set_led_off(RED_LED);
+	dk_set_led_off(GREEN_LED);
+
+#if defined(CONFIG_THINGY_LOW_POWER)
+	low_power_enable();
+#endif
 
 	while(true){
-		dk_set_led_on(GREEN_LED);
+		dk_set_led_on(BLUE_LED);
+		k_sleep(K_MSEC(500));
 		dk_set_led_off(BLUE_LED);
-		k_sleep(K_MSEC(2000));
+		dk_set_led_off(RED_LED);
 		dk_set_led_off(GREEN_LED);
+			
+		gpio_output_set(9,1); //Trace to mark energy measurement start	
 		Organization::refresh();
-		m_p_sensor_agent->run();
-		//int ret = sys_pm_ctrl_set_state(SYS_POWER_STATE_SLEEP_1);
-		k_sleep(K_MSEC(8000));
+		//m_p_sensor_agent->run();S
+		k_sleep(K_MSEC(10000));
 	}
+	
 }

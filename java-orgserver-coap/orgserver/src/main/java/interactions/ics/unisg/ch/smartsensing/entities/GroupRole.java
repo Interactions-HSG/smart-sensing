@@ -28,7 +28,7 @@ public class GroupRole extends CoapResource {
     @Override
     public void handleGET(CoapExchange exchange) {
         // respond to the request
-        System.out.printf("GroupRole:Get request for %s \n", this.getName());
+        System.out.printf("GroupRole:Get request for %s from %s\n", this.getName(), exchange.getSourceAddress());
         if(exchange.getQueryParameter("players") != null){
             List<PlayerInfo> players = new ArrayList<>();
             for(Resource r : this.getChildren()){
@@ -58,7 +58,7 @@ public class GroupRole extends CoapResource {
     @Override
     public void handlePUT(CoapExchange exchange) {
         String data = exchange.getRequestText();
-        System.out.printf("GroupRole:Update request for %s wiht data %s \n", this.getName(), data);
+        System.out.printf("GroupRole:Update request for %s with data %s from %s\n", this.getName(), data,exchange.getSourceAddress());
         //System.out.println("Received update:" + data);
         specification = gson.fromJson(data, GroupRoleInfo.class);
         exchange.respond(CoAP.ResponseCode.CHANGED);
@@ -71,7 +71,7 @@ public class GroupRole extends CoapResource {
     final Object lock = new Object();
     @Override
     public void handlePOST(CoapExchange exchange) {
-        System.out.printf("GroupRole: Received POST for %s with data %s\n", this.getName(), exchange.getRequestText());
+        System.out.printf("GroupRole: Received POST for %s with data %s from %s\n", this.getName(), exchange.getRequestText(), exchange.getSourceAddress());
         synchronized (lock) {
             if (this.getChildren().size() >= specification.maxAgents || specification.currentAllocation >= 100) {
                 exchange.respond(CoAP.ResponseCode.FORBIDDEN);
@@ -90,7 +90,7 @@ public class GroupRole extends CoapResource {
 
     @Override
     public void handleDELETE(CoapExchange exchange) {
-        System.out.printf("GroupRole:Delete request for %s \n", this.getName());
+        System.out.printf("GroupRole:Delete request for %s from %s \n", this.getName(), exchange.getSourceAddress());
         if(this.getChildren().size() == 0){
             this.getParent().delete(this);
             exchange.respond(CoAP.ResponseCode.DELETED);

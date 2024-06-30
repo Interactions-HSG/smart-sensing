@@ -16,6 +16,12 @@
 #include <openthread/thread.h>
 #include <openthread/coap.h>
 #include "mas-abstractions/organization/Organization.h"
+extern "C" {
+  //#include "peripherals/sensors.h"
+  //#include "peripherals/battery.h"
+  #include "peripherals/gpio.h"
+  #include "thread/thread_helper.h"
+}
 
 
 /**************************************************************************************************

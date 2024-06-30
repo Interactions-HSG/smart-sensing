@@ -45,3 +45,8 @@ int gpio_output_init(void)
 	return 0;
 }
 
+void gpio_output_set(int pin, int state)
+{
+	 gpio_pin_set(out0.port, pin, state);
+}
+

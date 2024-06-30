@@ -43,8 +43,9 @@
 #include <coap_server_client_interface.h>
 
 extern "C" {
-  #include "peripherals/sensors.h"
-  #include "peripherals/battery.h"
+  //#include "peripherals/sensors.h"
+  //#include "peripherals/battery.h"
+  #include "low_power.h"
   #include "peripherals/gpio.h"
   #include "thread/thread_helper.h"
 }
