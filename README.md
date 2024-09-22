@@ -37,3 +37,11 @@ There is a whole lot of instructions for this. But here are the key steps:
 6. The Thingy should appear under Connected Devices in the NRFConnect panel. Note: the thingy should be powered up using USB. Flash (Actions->Flash) or Debug.
 
 Steps 1..6 are easier said than done. This is why embedded developers are a sad lot. But once you have it running, it is rock solid.
+
+Here is how your desk should look like:
+
+![mess](images/the-mess-on-the-desk.jfif)
+
+The debug connector:
+
+![debug](images/debug-connection%20.jfif)
