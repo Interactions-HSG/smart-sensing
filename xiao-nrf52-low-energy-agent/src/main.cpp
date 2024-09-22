@@ -1,52 +1,77 @@
-#include <Arduino.h>
-#include <agent.h>
-#include "configuration.h"
-#include "functions.h"
-
-#define PIN_DEBUG_SIGNAL 10
+//#define USE_BDI
+#define USE_PROCEDURAL
+#define PIN_DEBUG_SIGNAL_0 D10
+#define PIN_DEBUG_SIGNAL_1 D9
+#define PIN_WAKEUP D8
+#define PIN_DONE D3
+#define PIN_DFU_MODE_SET D2
 #define PIN_BATTERY_VOLTAGE A0
-#define PIN_SENSOR A1
+#define PIN_DISABLE_LOW_POWER A1
+#define PIN_SHT41_POWER D2
+#define DFU_DBL_RESET_DELAY             500
 
-AgentSettings agent_settings;
-BeliefBase * beliefs = agent_settings.get_belief_base();
-EventBase * events = agent_settings.get_event_base();
-PlanBase * plans = agent_settings.get_plan_base();
-IntentionBase * intentions = agent_settings.get_intention_base();
-Agent agent(beliefs, events, plans, intentions);
+#include <Arduino.h>
+//#include "SdFat.h"
+//#include "Adafruit_SPIFlash.h"
+#include "nrf_nvic.h"
 
 
+#if defined(CUSTOM_CS) && defined(CUSTOM_SPI)
+  Adafruit_FlashTransport_SPI flashTransport(CUSTOM_CS, CUSTOM_SPI);
+#elif defined(ARDUINO_ARCH_ESP32)
+  Adafruit_FlashTransport_ESP32 flashTransport;
+#else
+  #if defined(EXTERNAL_FLASH_USE_QSPI)
+    //Adafruit_FlashTransport_QSPI flashTransport;
+  #elif defined(EXTERNAL_FLASH_USE_SPI)
+    Adafruit_FlashTransport_SPI flashTransport(EXTERNAL_FLASH_USE_CS, EXTERNAL_FLASH_USE_SPI);
+  #else
+    #error No QSPI/SPI flash are defined on your board variant.h !
+  #endif
+#endif
+
+//Adafruit_SPIFlash flash(&flashTransport);
+
+void deepSleep(void);
 
 void setup() {
-
-  pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(PIN_DEBUG_SIGNAL, OUTPUT);
-  pinMode(PIN_BATTERY_VOLTAGE, INPUT);
-  pinMode(PIN_SENSOR, INPUT);
-}
-
-void evaluate(){
-  bool energy_ok = update_energy_buffer_high(true);
-  if(energy_ok || true){
-    action_read_sensor();
-    action_transmit_data();
-    action_sleep();
-  }else{
-    action_sleep();
+  pinMode(PIN_DEBUG_SIGNAL_0, OUTPUT);
+  digitalWrite(PIN_DEBUG_SIGNAL_0, HIGH);
+  pinMode(PIN_DEBUG_SIGNAL_1, OUTPUT);
+  pinMode(PIN_DISABLE_LOW_POWER, INPUT);
+  pinMode(PIN_WAKEUP, INPUT);
+  digitalWrite(PIN_DEBUG_SIGNAL_1, HIGH);
+  //flash.begin();
+  delay(100);
+  digitalWrite(PIN_DEBUG_SIGNAL_0, LOW);
+  digitalWrite(PIN_DEBUG_SIGNAL_1, LOW);
+  if(digitalRead(PIN_DISABLE_LOW_POWER) != HIGH){
+    //suspendLoop();
+    deepSleep();
   }
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
 
-  digitalWrite(PIN_DEBUG_SIGNAL, HIGH);
-  //agent.run();
-  evaluate();
-  delay(500);
-  digitalWrite(PIN_DEBUG_SIGNAL, LOW);
-  delay(500);
-  digitalWrite(LED_BUILTIN, LOW);
-  delay(100);
-  digitalWrite(LED_BUILTIN, HIGH);  
-  delay(2000);
+void deepSleep(){
+  if(digitalRead(PIN_DISABLE_LOW_POWER) == HIGH){
+    return;
+  }
+  //flashTransport.runCommand(0xB9);
+  //flash.end();
+  // 
+  //waitForEvent();
+  //digitalWrite(PIN_SHT41_POWER, LOW);
+  //reset_shtx();
+  NRF_POWER->GPREGRET = 0x6D;
+  //systemOff(PIN_WAKEUP, HIGH);
+  //sd_power_gpregret_set(0, 0x6D);
+  systemOff(PIN_WAKEUP, HIGH);
+  //sd_power_system_off();
+  //waitForEvent();
+}
+
+void loop() {
+  deepSleep();
+  delay(10000);
 }
 

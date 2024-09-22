@@ -1,0 +1,7 @@
+C:\Program Files (x86)\Cypress\CYALKIT-E02 Solar-Powered BLE Sensor Beacon RDK\1.0\Firmware\BLE\Solar_BLE_Sensor\Solar_BLE_Sensor.cydsn\Solar_BLE_Sensor.cyprj|b1a5f23a-de82-4de1-ab44-e0c77ac1ba75
+C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|8f6994e1-4397-4eda-8b70-32f1a06fa8b4
+C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|a1149403-2901-4c5a-84a2-f013c55b4a0a
+C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|7e0caee9-0b0e-4129-998f-a5133b86244c
+C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|ccad6f76-960e-4f53-b040-bf0fff738b4e
+C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\dev\psoc4\PSoC4AnalogDevice\psoc4arch.cydsn\psoc4arch.cyprj|a2bba182-59e1-4131-bfdc-c2bb3fad68a5
+C:\Program Files (x86)\Cypress\PSoC Creator\4.0\PSoC Creator\psoc\content\default\CyReferenceLibrary\CyReferenceLibrary.cylib\CyReferenceLibrary.cyprj|34a6d21d-5ec5-4b91-b860-7eac9ef04609

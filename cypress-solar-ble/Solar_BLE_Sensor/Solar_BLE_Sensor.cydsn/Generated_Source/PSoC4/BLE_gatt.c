@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE_gatt.c
-* \version 3.10
+* \version 3.30
 * 
 * \brief
 *  This file contains the source code for the GATT API of the BLE Component.
@@ -78,19 +78,19 @@ CYBLE_STATE_T cyBle_state;
         0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u,
         0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u }, 
         {{
-            0x00u, 0x00u, 
+            0x00u, 0x00u,
         },
         {
-            0x00u, 0x00u, 
+            0x00u, 0x00u,
         },
         {
-            0x00u, 0x00u, 
+            0x00u, 0x00u,
         },
         {
-            0x00u, 0x00u, 
+            0x00u, 0x00u,
         },
         {
-            0x00u, 0x00u, 
+            0x00u, 0x00u,
         }}, 
         0x02u, /* CYBLE_GATT_DB_CCCD_COUNT */ 
         0x05u, /* CYBLE_GAP_MAX_BONDED_DEVICE */ 
@@ -110,45 +110,45 @@ CYBLE_STATE_T cyBle_state;
     
     static uint8 cyBle_attValues[0x5Au] = {
     /* Device Name */
-    (uint8)'S', (uint8)'o', (uint8)'l', (uint8)'a', (uint8)'r', (uint8)' ', (uint8)'B', (uint8)'L', (uint8)'E', (uint8)' ',
-(uint8)'S', (uint8)'e', (uint8)'n', (uint8)'s', (uint8)'o', (uint8)'r', 
+    (uint8)'S', (uint8)'o', (uint8)'l', (uint8)'a', (uint8)'r', (uint8)' ', (uint8)'B', (uint8)'L', (uint8)'E',
+    (uint8)' ', (uint8)'S', (uint8)'e', (uint8)'n', (uint8)'s', (uint8)'o', (uint8)'r',
 
     /* Appearance */
-    0x00u, 0x00u, 
+    0x00u, 0x00u,
 
     /* Peripheral Preferred Connection Parameters */
-    0x06u, 0x00u, 0x28u, 0x00u, 0x00u, 0x00u, 0xE8u, 0x03u, 
+    0x06u, 0x00u, 0x28u, 0x00u, 0x00u, 0x00u, 0xE8u, 0x03u,
 
     /* Service Changed */
-    0x00u, 0x00u, 0x00u, 0x00u, 
+    0x00u, 0x00u, 0x00u, 0x00u,
 
     /* Lock State */
-    0x00u, 
+    0x00u,
 
     /* Lock */
-    0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 
+    0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u,
 
     /* Unlock */
-    0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 
+    0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u,
 
     /* URI Data */
-    0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u,
-0x00u, 
+    0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u,
+    0x00u, 0x00u,
 
     /* URI Flags */
-    0x00u, 
+    0x00u,
 
     /* Advertised Tx Power Levels */
-    0x00u, 0x00u, 0x00u, 0x00u, 
+    0x00u, 0x00u, 0x00u, 0x00u,
 
     /* Tx Power Mode */
-    0x01u, 
+    0x01u,
 
     /* Beacon Period */
-    0x2Cu, 0x01u, 
+    0x2Cu, 0x01u,
 
     /* Reset */
-    0x00u, 
+    0x00u,
 
 };
 #if(CYBLE_GATT_DB_CCCD_COUNT != 0u)
@@ -207,35 +207,35 @@ CYBLE_GATTS_ATT_GEN_VAL_LEN_T cyBle_attValuesLen[CYBLE_GATT_DB_ATT_VAL_COUNT] = 
 
 const CYBLE_GATTS_DB_T cyBle_gattDB[0x1Eu] = {
     { 0x0001u, 0x2800u /* Primary service                     */, 0x00000001u /*        */, 0x0007u, {{0x1800u, NULL}}                           },
-    { 0x0002u, 0x2803u /* Characteristic                      */, 0x00000201u /* rd     */, 0x0003u, {{0x2A00u, NULL}}                           },
-    { 0x0003u, 0x2A00u /* Device Name                         */, 0x00000201u /* rd     */, 0x0003u, {{0x0010u, (void *)&cyBle_attValuesLen[0]}} },
-    { 0x0004u, 0x2803u /* Characteristic                      */, 0x00000201u /* rd     */, 0x0005u, {{0x2A01u, NULL}}                           },
-    { 0x0005u, 0x2A01u /* Appearance                          */, 0x00000201u /* rd     */, 0x0005u, {{0x0002u, (void *)&cyBle_attValuesLen[1]}} },
-    { 0x0006u, 0x2803u /* Characteristic                      */, 0x00000201u /* rd     */, 0x0007u, {{0x2A04u, NULL}}                           },
-    { 0x0007u, 0x2A04u /* Peripheral Preferred Connection Par */, 0x00000201u /* rd     */, 0x0007u, {{0x0008u, (void *)&cyBle_attValuesLen[2]}} },
+    { 0x0002u, 0x2803u /* Characteristic                      */, 0x00020001u /* rd     */, 0x0003u, {{0x2A00u, NULL}}                           },
+    { 0x0003u, 0x2A00u /* Device Name                         */, 0x01020001u /* rd     */, 0x0003u, {{0x0010u, (void *)&cyBle_attValuesLen[0]}} },
+    { 0x0004u, 0x2803u /* Characteristic                      */, 0x00020001u /* rd     */, 0x0005u, {{0x2A01u, NULL}}                           },
+    { 0x0005u, 0x2A01u /* Appearance                          */, 0x01020001u /* rd     */, 0x0005u, {{0x0002u, (void *)&cyBle_attValuesLen[1]}} },
+    { 0x0006u, 0x2803u /* Characteristic                      */, 0x00020001u /* rd     */, 0x0007u, {{0x2A04u, NULL}}                           },
+    { 0x0007u, 0x2A04u /* Peripheral Preferred Connection Par */, 0x01020001u /* rd     */, 0x0007u, {{0x0008u, (void *)&cyBle_attValuesLen[2]}} },
     { 0x0008u, 0x2800u /* Primary service                     */, 0x00000001u /*        */, 0x000Bu, {{0x1801u, NULL}}                           },
-    { 0x0009u, 0x2803u /* Characteristic                      */, 0x00002201u /* rd,ind */, 0x000Bu, {{0x2A05u, NULL}}                           },
-    { 0x000Au, 0x2A05u /* Service Changed                     */, 0x00002201u /* rd,ind */, 0x000Bu, {{0x0004u, (void *)&cyBle_attValuesLen[3]}} },
-    { 0x000Bu, 0x2902u /* Client Characteristic Configuration */, 0x00000A04u /* rd,wr  */, 0x000Bu, {{0x0002u, (void *)&cyBle_attValuesLen[4]}} },
-    { 0x000Cu, 0x2800u /* Primary service                     */, 0x00080001u /*        */, 0x001Eu, {{0x0010u, (void *)&cyBle_attValuesLen[5]}} },
-    { 0x000Du, 0x2803u /* Characteristic                      */, 0x00000201u /* rd     */, 0x000Eu, {{0x0010u, (void *)&cyBle_attValuesLen[6]}} },
-    { 0x000Eu, 0x2081u /* Lock State                          */, 0x00090201u /* rd     */, 0x000Eu, {{0x0001u, (void *)&cyBle_attValuesLen[7]}} },
-    { 0x000Fu, 0x2803u /* Characteristic                      */, 0x00000801u /* wr     */, 0x0010u, {{0x0010u, (void *)&cyBle_attValuesLen[8]}} },
-    { 0x0010u, 0x2082u /* Lock                                */, 0x00090802u /* wr     */, 0x0010u, {{0x0010u, (void *)&cyBle_attValuesLen[9]}} },
-    { 0x0011u, 0x2803u /* Characteristic                      */, 0x00000801u /* wr     */, 0x0012u, {{0x0010u, (void *)&cyBle_attValuesLen[10]}} },
-    { 0x0012u, 0x2083u /* Unlock                              */, 0x00090802u /* wr     */, 0x0012u, {{0x0010u, (void *)&cyBle_attValuesLen[11]}} },
-    { 0x0013u, 0x2803u /* Characteristic                      */, 0x00000A01u /* rd,wr  */, 0x0014u, {{0x0010u, (void *)&cyBle_attValuesLen[12]}} },
-    { 0x0014u, 0x2084u /* URI Data                            */, 0x00090A04u /* rd,wr  */, 0x0014u, {{0x0012u, (void *)&cyBle_attValuesLen[13]}} },
-    { 0x0015u, 0x2803u /* Characteristic                      */, 0x00000A01u /* rd,wr  */, 0x0016u, {{0x0010u, (void *)&cyBle_attValuesLen[14]}} },
-    { 0x0016u, 0x2085u /* URI Flags                           */, 0x00090A04u /* rd,wr  */, 0x0016u, {{0x0001u, (void *)&cyBle_attValuesLen[15]}} },
-    { 0x0017u, 0x2803u /* Characteristic                      */, 0x00000A01u /* rd,wr  */, 0x0018u, {{0x0010u, (void *)&cyBle_attValuesLen[16]}} },
-    { 0x0018u, 0x2086u /* Advertised Tx Power Levels          */, 0x00090A04u /* rd,wr  */, 0x0018u, {{0x0004u, (void *)&cyBle_attValuesLen[17]}} },
-    { 0x0019u, 0x2803u /* Characteristic                      */, 0x00000A01u /* rd,wr  */, 0x001Au, {{0x0010u, (void *)&cyBle_attValuesLen[18]}} },
-    { 0x001Au, 0x2087u /* Tx Power Mode                       */, 0x00090A04u /* rd,wr  */, 0x001Au, {{0x0001u, (void *)&cyBle_attValuesLen[19]}} },
-    { 0x001Bu, 0x2803u /* Characteristic                      */, 0x00000A01u /* rd,wr  */, 0x001Cu, {{0x0010u, (void *)&cyBle_attValuesLen[20]}} },
-    { 0x001Cu, 0x2088u /* Beacon Period                       */, 0x00090A04u /* rd,wr  */, 0x001Cu, {{0x0002u, (void *)&cyBle_attValuesLen[21]}} },
-    { 0x001Du, 0x2803u /* Characteristic                      */, 0x00000801u /* wr     */, 0x001Eu, {{0x0010u, (void *)&cyBle_attValuesLen[22]}} },
-    { 0x001Eu, 0x2089u /* Reset                               */, 0x00090802u /* wr     */, 0x001Eu, {{0x0001u, (void *)&cyBle_attValuesLen[23]}} },
+    { 0x0009u, 0x2803u /* Characteristic                      */, 0x00220001u /* rd,ind */, 0x000Bu, {{0x2A05u, NULL}}                           },
+    { 0x000Au, 0x2A05u /* Service Changed                     */, 0x01220001u /* rd,ind */, 0x000Bu, {{0x0004u, (void *)&cyBle_attValuesLen[3]}} },
+    { 0x000Bu, 0x2902u /* Client Characteristic Configuration */, 0x010A0101u /* rd,wr  */, 0x000Bu, {{0x0002u, (void *)&cyBle_attValuesLen[4]}} },
+    { 0x000Cu, 0x2800u /* Primary service                     */, 0x08000001u /*        */, 0x001Eu, {{0x0010u, (void *)&cyBle_attValuesLen[5]}} },
+    { 0x000Du, 0x2803u /* Characteristic                      */, 0x00020001u /* rd     */, 0x000Eu, {{0x0010u, (void *)&cyBle_attValuesLen[6]}} },
+    { 0x000Eu, 0x2081u /* Lock State                          */, 0x09020001u /* rd     */, 0x000Eu, {{0x0001u, (void *)&cyBle_attValuesLen[7]}} },
+    { 0x000Fu, 0x2803u /* Characteristic                      */, 0x00080001u /* wr     */, 0x0010u, {{0x0010u, (void *)&cyBle_attValuesLen[8]}} },
+    { 0x0010u, 0x2082u /* Lock                                */, 0x09080100u /* wr     */, 0x0010u, {{0x0010u, (void *)&cyBle_attValuesLen[9]}} },
+    { 0x0011u, 0x2803u /* Characteristic                      */, 0x00080001u /* wr     */, 0x0012u, {{0x0010u, (void *)&cyBle_attValuesLen[10]}} },
+    { 0x0012u, 0x2083u /* Unlock                              */, 0x09080100u /* wr     */, 0x0012u, {{0x0010u, (void *)&cyBle_attValuesLen[11]}} },
+    { 0x0013u, 0x2803u /* Characteristic                      */, 0x000A0001u /* rd,wr  */, 0x0014u, {{0x0010u, (void *)&cyBle_attValuesLen[12]}} },
+    { 0x0014u, 0x2084u /* URI Data                            */, 0x090A0101u /* rd,wr  */, 0x0014u, {{0x0012u, (void *)&cyBle_attValuesLen[13]}} },
+    { 0x0015u, 0x2803u /* Characteristic                      */, 0x000A0001u /* rd,wr  */, 0x0016u, {{0x0010u, (void *)&cyBle_attValuesLen[14]}} },
+    { 0x0016u, 0x2085u /* URI Flags                           */, 0x090A0101u /* rd,wr  */, 0x0016u, {{0x0001u, (void *)&cyBle_attValuesLen[15]}} },
+    { 0x0017u, 0x2803u /* Characteristic                      */, 0x000A0001u /* rd,wr  */, 0x0018u, {{0x0010u, (void *)&cyBle_attValuesLen[16]}} },
+    { 0x0018u, 0x2086u /* Advertised Tx Power Levels          */, 0x090A0101u /* rd,wr  */, 0x0018u, {{0x0004u, (void *)&cyBle_attValuesLen[17]}} },
+    { 0x0019u, 0x2803u /* Characteristic                      */, 0x000A0001u /* rd,wr  */, 0x001Au, {{0x0010u, (void *)&cyBle_attValuesLen[18]}} },
+    { 0x001Au, 0x2087u /* Tx Power Mode                       */, 0x090A0101u /* rd,wr  */, 0x001Au, {{0x0001u, (void *)&cyBle_attValuesLen[19]}} },
+    { 0x001Bu, 0x2803u /* Characteristic                      */, 0x000A0001u /* rd,wr  */, 0x001Cu, {{0x0010u, (void *)&cyBle_attValuesLen[20]}} },
+    { 0x001Cu, 0x2088u /* Beacon Period                       */, 0x090A0101u /* rd,wr  */, 0x001Cu, {{0x0002u, (void *)&cyBle_attValuesLen[21]}} },
+    { 0x001Du, 0x2803u /* Characteristic                      */, 0x00080001u /* wr     */, 0x001Eu, {{0x0010u, (void *)&cyBle_attValuesLen[22]}} },
+    { 0x001Eu, 0x2089u /* Reset                               */, 0x09080100u /* wr     */, 0x001Eu, {{0x0001u, (void *)&cyBle_attValuesLen[23]}} },
 };
 
 
@@ -273,7 +273,7 @@ CYBLE_API_RESULT_T CyBle_GattsReInitGattDb(void)
 {
     CYBLE_API_RESULT_T apiResult;
     
-    if(CYBLE_STATE_DISCONNECTED == CyBle_GetState())
+    if(CyBle_GetState() == CYBLE_STATE_DISCONNECTED)
     {
         apiResult = CyBle_GattsDbRegister(cyBle_gattDB, CYBLE_GATT_DB_INDEX_COUNT, CYBLE_GATT_DB_MAX_VALUE_LEN);
     }
@@ -314,7 +314,7 @@ CYBLE_GATT_ERR_CODE_T CyBle_GattsWriteEventHandler(CYBLE_GATTS_WRITE_REQ_PARAM_T
         gattErr = CyBle_GattsWriteAttributeValue(&eventParam->handleValPair, 0u, 
                         &eventParam->connHandle, CYBLE_GATT_DB_PEER_INITIATED);
         
-        if(CYBLE_GATT_ERR_NONE == gattErr)
+        if(gattErr == CYBLE_GATT_ERR_NONE)
         {
             if(CYBLE_IS_INDICATION_ENABLED_IN_PTR(eventParam->handleValPair.value.val))
             {
@@ -407,7 +407,7 @@ CYBLE_API_RESULT_T CyBle_GattcStartDiscovery(CYBLE_CONN_HANDLE_T connHandle)
         
         apiResult = CyBle_GattcDiscoverAllPrimaryServices(connHandle);
 
-        if(CYBLE_ERROR_OK == apiResult)
+        if(apiResult == CYBLE_ERROR_OK)
         {
             CyBle_SetClientState(CYBLE_CLIENT_STATE_SRVC_DISCOVERING);
             cyBle_eventHandlerFlag |= CYBLE_AUTO_DISCOVERY;
@@ -499,7 +499,7 @@ CYBLE_API_RESULT_T CyBle_GattcStartPartialDiscovery(CYBLE_CONN_HANDLE_T connHand
 
         apiResult = CyBle_GattcDiscoverPrimaryServices(connHandle, &cyBle_gattcDiscoveryRange);
 
-        if(CYBLE_ERROR_OK == apiResult)
+        if(apiResult == CYBLE_ERROR_OK)
         {
             CyBle_SetClientState(CYBLE_CLIENT_STATE_SRVC_DISCOVERING);
             cyBle_eventHandlerFlag |= CYBLE_AUTO_DISCOVERY;

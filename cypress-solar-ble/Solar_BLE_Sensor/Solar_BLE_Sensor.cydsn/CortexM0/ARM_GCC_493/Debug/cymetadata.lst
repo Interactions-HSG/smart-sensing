@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 1
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccfJpu7q.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 1
   51              		.file 1 "Generated_Source\\PSoC4\\cymetadata.c"
   52              		.file 2 "Generated_Source\\PSoC4\\cytypes.h"
   53              		.section	.debug_info,"",%progbits
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 2
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccfJpu7q.s 			page 2
 
 
   54              	.Ldebug_info0:
@@ -67,43 +67,43 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 1
   57 0006 00000000 		.4byte	.Ldebug_abbrev0
   58 000a 04       		.byte	0x4
   59 000b 01       		.uleb128 0x1
-  60 000c 0C010000 		.4byte	.LASF16
+  60 000c E4000000 		.4byte	.LASF16
   61 0010 01       		.byte	0x1
-  62 0011 BC000000 		.4byte	.LASF17
-  63 0015 14000000 		.4byte	.LASF18
+  62 0011 34000000 		.4byte	.LASF17
+  63 0015 84000000 		.4byte	.LASF18
   64 0019 00000000 		.4byte	.Ldebug_line0
   65 001d 02       		.uleb128 0x2
   66 001e 01       		.byte	0x1
   67 001f 06       		.byte	0x6
-  68 0020 08020000 		.4byte	.LASF0
+  68 0020 E0010000 		.4byte	.LASF0
   69 0024 02       		.uleb128 0x2
   70 0025 01       		.byte	0x1
   71 0026 08       		.byte	0x8
-  72 0027 AE000000 		.4byte	.LASF1
+  72 0027 26000000 		.4byte	.LASF1
   73 002b 02       		.uleb128 0x2
   74 002c 02       		.byte	0x2
   75 002d 05       		.byte	0x5
-  76 002e EF010000 		.4byte	.LASF2
+  76 002e C7010000 		.4byte	.LASF2
   77 0032 02       		.uleb128 0x2
   78 0033 02       		.byte	0x2
   79 0034 07       		.byte	0x7
-  80 0035 F2000000 		.4byte	.LASF3
+  80 0035 6A000000 		.4byte	.LASF3
   81 0039 02       		.uleb128 0x2
   82 003a 04       		.byte	0x4
   83 003b 05       		.byte	0x5
-  84 003c FF010000 		.4byte	.LASF4
+  84 003c D7010000 		.4byte	.LASF4
   85 0040 02       		.uleb128 0x2
   86 0041 04       		.byte	0x4
   87 0042 07       		.byte	0x7
-  88 0043 E0000000 		.4byte	.LASF5
+  88 0043 58000000 		.4byte	.LASF5
   89 0047 02       		.uleb128 0x2
   90 0048 08       		.byte	0x8
   91 0049 05       		.byte	0x5
-  92 004a DC010000 		.4byte	.LASF6
+  92 004a B4010000 		.4byte	.LASF6
   93 004e 02       		.uleb128 0x2
   94 004f 08       		.byte	0x8
   95 0050 07       		.byte	0x7
-  96 0051 A7010000 		.4byte	.LASF7
+  96 0051 7F010000 		.4byte	.LASF7
   97 0055 03       		.uleb128 0x3
   98 0056 04       		.byte	0x4
   99 0057 05       		.byte	0x5
@@ -111,27 +111,27 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 1
  101 005c 02       		.uleb128 0x2
  102 005d 04       		.byte	0x4
  103 005e 07       		.byte	0x7
- 104 005f 9A010000 		.4byte	.LASF8
+ 104 005f 72010000 		.4byte	.LASF8
  105 0063 04       		.uleb128 0x4
- 106 0064 F9010000 		.4byte	.LASF19
+ 106 0064 D1010000 		.4byte	.LASF19
  107 0068 02       		.byte	0x2
- 108 0069 9801     		.2byte	0x198
+ 108 0069 B901     		.2byte	0x1b9
  109 006b 24000000 		.4byte	0x24
  110 006f 02       		.uleb128 0x2
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 3
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccfJpu7q.s 			page 3
 
 
  111 0070 04       		.byte	0x4
  112 0071 04       		.byte	0x4
- 113 0072 A8000000 		.4byte	.LASF9
+ 113 0072 20000000 		.4byte	.LASF9
  114 0076 02       		.uleb128 0x2
  115 0077 08       		.byte	0x8
  116 0078 04       		.byte	0x4
- 117 0079 05010000 		.4byte	.LASF10
+ 117 0079 7D000000 		.4byte	.LASF10
  118 007d 02       		.uleb128 0x2
  119 007e 01       		.byte	0x1
  120 007f 08       		.byte	0x8
- 121 0080 EA010000 		.4byte	.LASF11
+ 121 0080 C2010000 		.4byte	.LASF11
  122 0084 05       		.uleb128 0x5
  123 0085 63000000 		.4byte	0x63
  124 0089 94000000 		.4byte	0x94
@@ -142,9 +142,9 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 1
  129 0094 02       		.uleb128 0x2
  130 0095 04       		.byte	0x4
  131 0096 07       		.byte	0x7
- 132 0097 D3010000 		.4byte	.LASF12
+ 132 0097 AB010000 		.4byte	.LASF12
  133 009b 07       		.uleb128 0x7
- 134 009c BE010000 		.4byte	.LASF13
+ 134 009c 96010000 		.4byte	.LASF13
  135 00a0 01       		.byte	0x1
  136 00a1 1F       		.byte	0x1f
  137 00a2 AC000000 		.4byte	0xac
@@ -161,7 +161,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 1
  148 00bf 0B       		.byte	0xb
  149 00c0 00       		.byte	0
  150 00c1 07       		.uleb128 0x7
- 151 00c2 9C000000 		.4byte	.LASF14
+ 151 00c2 14000000 		.4byte	.LASF14
  152 00c6 01       		.byte	0x1
  153 00c7 3C       		.byte	0x3c
  154 00c8 D2000000 		.4byte	0xd2
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 1
  165 00e5 00       		.byte	0
  166 00e6 00       		.byte	0
  167 00e7 07       		.uleb128 0x7
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 4
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccfJpu7q.s 			page 4
 
 
  168 00e8 00000000 		.4byte	.LASF15
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 1
  222 002a 3A       		.uleb128 0x3a
  223 002b 0B       		.uleb128 0xb
  224 002c 3B       		.uleb128 0x3b
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 5
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccfJpu7q.s 			page 5
 
 
  225 002d 05       		.uleb128 0x5
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 1
  279 000c 0000     		.2byte	0
  280 000e 0000     		.2byte	0
  281 0010 00000000 		.4byte	0
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 6
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccfJpu7q.s 			page 6
 
 
  282 0014 00000000 		.4byte	0
@@ -315,119 +315,114 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 1
  287      63686970 
  287      70726F74 
  287      65637400 
- 288              	.LASF18:
- 289 0014 433A5C50 		.ascii	"C:\\Program Files (x86)\\Cypress\\CYALKIT-E02 Solar"
- 289      726F6772 
- 289      616D2046 
- 289      696C6573 
- 289      20287838 
- 290 0044 2D506F77 		.ascii	"-Powered BLE Sensor Beacon RDK\\1.0\\Firmware\\BLE\\"
- 290      65726564 
- 290      20424C45 
- 290      2053656E 
- 290      736F7220 
- 291 0074 536F6C61 		.ascii	"Solar_BLE_Sensor\\Solar_BLE_Sensor.cydsn\000"
- 291      725F424C 
- 291      455F5365 
- 291      6E736F72 
- 291      5C536F6C 
- 292              	.LASF14:
- 293 009c 63795F6D 		.ascii	"cy_metadata\000"
- 293      65746164 
- 293      61746100 
- 294              	.LASF9:
- 295 00a8 666C6F61 		.ascii	"float\000"
- 295      7400
- 296              	.LASF1:
- 297 00ae 756E7369 		.ascii	"unsigned char\000"
- 297      676E6564 
- 297      20636861 
- 297      7200
- 298              	.LASF17:
- 299 00bc 47656E65 		.ascii	"Generated_Source\\PSoC4\\cymetadata.c\000"
- 299      72617465 
- 299      645F536F 
- 299      75726365 
- 299      5C50536F 
- 300              	.LASF5:
- 301 00e0 6C6F6E67 		.ascii	"long unsigned int\000"
- 301      20756E73 
- 301      69676E65 
- 301      6420696E 
- 301      7400
- 302              	.LASF3:
- 303 00f2 73686F72 		.ascii	"short unsigned int\000"
- 303      7420756E 
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 7
+ 288              	.LASF14:
+ 289 0014 63795F6D 		.ascii	"cy_metadata\000"
+ 289      65746164 
+ 289      61746100 
+ 290              	.LASF9:
+ 291 0020 666C6F61 		.ascii	"float\000"
+ 291      7400
+ 292              	.LASF1:
+ 293 0026 756E7369 		.ascii	"unsigned char\000"
+ 293      676E6564 
+ 293      20636861 
+ 293      7200
+ 294              	.LASF17:
+ 295 0034 47656E65 		.ascii	"Generated_Source\\PSoC4\\cymetadata.c\000"
+ 295      72617465 
+ 295      645F536F 
+ 295      75726365 
+ 295      5C50536F 
+ 296              	.LASF5:
+ 297 0058 6C6F6E67 		.ascii	"long unsigned int\000"
+ 297      20756E73 
+ 297      69676E65 
+ 297      6420696E 
+ 297      7400
+ 298              	.LASF3:
+ 299 006a 73686F72 		.ascii	"short unsigned int\000"
+ 299      7420756E 
+ 299      7369676E 
+ 299      65642069 
+ 299      6E7400
+ 300              	.LASF10:
+ 301 007d 646F7562 		.ascii	"double\000"
+ 301      6C6500
+ 302              	.LASF18:
+ 303 0084 443A5C52 		.ascii	"D:\\Research\\GitHubRepos\\smart-sensing\\cypress-s"
+ 303      65736561 
+ 303      7263685C 
+ 303      47697448 
+ 303      75625265 
+ 304 00b3 6F6C6172 		.ascii	"olar-ble\\Solar_BLE_Sensor\\Solar_BLE_Sensor.cydsn\000"
+ 304      2D626C65 
+ 304      5C536F6C 
+ 304      61725F42 
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccfJpu7q.s 			page 7
 
 
- 303      7369676E 
- 303      65642069 
- 303      6E7400
- 304              	.LASF10:
- 305 0105 646F7562 		.ascii	"double\000"
- 305      6C6500
- 306              	.LASF16:
- 307 010c 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
- 307      4320342E 
- 307      392E3320 
- 307      32303135 
- 307      30333033 
- 308 013f 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
- 308      20726576 
- 308      6973696F 
- 308      6E203232 
- 308      31323230 
- 309 0172 33202D66 		.ascii	"3 -ffunction-sections -ffat-lto-objects\000"
- 309      66756E63 
- 309      74696F6E 
- 309      2D736563 
- 309      74696F6E 
- 310              	.LASF8:
- 311 019a 756E7369 		.ascii	"unsigned int\000"
- 311      676E6564 
- 311      20696E74 
- 311      00
- 312              	.LASF7:
- 313 01a7 6C6F6E67 		.ascii	"long long unsigned int\000"
- 313      206C6F6E 
- 313      6720756E 
- 313      7369676E 
- 313      65642069 
- 314              	.LASF13:
- 315 01be 63795F6D 		.ascii	"cy_meta_flashprotect\000"
- 315      6574615F 
- 315      666C6173 
- 315      6870726F 
- 315      74656374 
- 316              	.LASF12:
- 317 01d3 73697A65 		.ascii	"sizetype\000"
- 317      74797065 
- 317      00
- 318              	.LASF6:
- 319 01dc 6C6F6E67 		.ascii	"long long int\000"
- 319      206C6F6E 
- 319      6720696E 
- 319      7400
- 320              	.LASF11:
- 321 01ea 63686172 		.ascii	"char\000"
- 321      00
- 322              	.LASF2:
- 323 01ef 73686F72 		.ascii	"short int\000"
- 323      7420696E 
- 323      7400
- 324              	.LASF19:
- 325 01f9 75696E74 		.ascii	"uint8\000"
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccWX8jex.s 			page 8
+ 304      4C455F53 
+ 305              	.LASF16:
+ 306 00e4 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 306      4320342E 
+ 306      392E3320 
+ 306      32303135 
+ 306      30333033 
+ 307 0117 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 307      20726576 
+ 307      6973696F 
+ 307      6E203232 
+ 307      31323230 
+ 308 014a 33202D66 		.ascii	"3 -ffunction-sections -ffat-lto-objects\000"
+ 308      66756E63 
+ 308      74696F6E 
+ 308      2D736563 
+ 308      74696F6E 
+ 309              	.LASF8:
+ 310 0172 756E7369 		.ascii	"unsigned int\000"
+ 310      676E6564 
+ 310      20696E74 
+ 310      00
+ 311              	.LASF7:
+ 312 017f 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 312      206C6F6E 
+ 312      6720756E 
+ 312      7369676E 
+ 312      65642069 
+ 313              	.LASF13:
+ 314 0196 63795F6D 		.ascii	"cy_meta_flashprotect\000"
+ 314      6574615F 
+ 314      666C6173 
+ 314      6870726F 
+ 314      74656374 
+ 315              	.LASF12:
+ 316 01ab 73697A65 		.ascii	"sizetype\000"
+ 316      74797065 
+ 316      00
+ 317              	.LASF6:
+ 318 01b4 6C6F6E67 		.ascii	"long long int\000"
+ 318      206C6F6E 
+ 318      6720696E 
+ 318      7400
+ 319              	.LASF11:
+ 320 01c2 63686172 		.ascii	"char\000"
+ 320      00
+ 321              	.LASF2:
+ 322 01c7 73686F72 		.ascii	"short int\000"
+ 322      7420696E 
+ 322      7400
+ 323              	.LASF19:
+ 324 01d1 75696E74 		.ascii	"uint8\000"
+ 324      3800
+ 325              	.LASF4:
+ 326 01d7 6C6F6E67 		.ascii	"long int\000"
+ 326      20696E74 
+ 326      00
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccfJpu7q.s 			page 8
 
 
- 325      3800
- 326              	.LASF4:
- 327 01ff 6C6F6E67 		.ascii	"long int\000"
- 327      20696E74 
- 327      00
- 328              	.LASF0:
- 329 0208 7369676E 		.ascii	"signed char\000"
- 329      65642063 
- 329      68617200 
- 330              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br
+ 327              	.LASF0:
+ 328 01e0 7369676E 		.ascii	"signed char\000"
+ 328      65642063 
+ 328      68617200 
+ 329              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

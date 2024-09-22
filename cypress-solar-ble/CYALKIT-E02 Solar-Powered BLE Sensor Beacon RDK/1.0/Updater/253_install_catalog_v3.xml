@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Catalog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="catalogschema.xsd">
+  <CatalogVersion CurrentVersion="21.101.253.6" Format="0" MinimumVersion="21.101.253.6"/>
+<PrerequisiteInfo>
+</PrerequisiteInfo>
+    <VenderInfo Name="Cypress">
+      <Description>
+	The Cypress BLE-Beacon, which is a Windows application, provides an easy-to-use 3D graphical user interface (GUI) to recognize the sensor data from solar BLE sensor.&lt;P&gt;
+     </Description>
+    </VenderInfo>
+  <ProductInfo Name="Cypress BLE-Beacon">{0D63EB52-9EC8-4DDD-BB5C-48CA858A6ED5}</ProductInfo>
+    <Licenses>
+      <License Name="eula" URL="eula.htm"/>
+    </Licenses>
+  <Releases>
+    <Release Name="Cypress BLE-Beacon 1.2" date="2017-05-02T12:28:53" ID="11" URL=""/>
+  </Releases>
+  <Package Name="Cypress BLE-Beacon" Typical="true" PackageID="0" Mandatory="true">
+    <Description>
+	The Cypress BLE-Beacon, which is a Windows application, provides an easy-to-use 3D graphical user interface (GUI) to recognize the sensor data from solar BLE sensor.&lt;P&gt;
+	&lt;P&gt;
+    </Description>
+    <LicenseRequirement Name="eula" />
+    <Version Name="Cypress BLE-Beacon 1.2" Number="1.2.0.11" URL="Cypress BLE-Beacon.msi" Size="31612928">
+      <ChangeLog>Version 1.2 Build 11 &lt;P&gt;Built on Tue May  2 12:28:53 2017</ChangeLog>
+      <release>11</release>
+    </Version>
+  </Package>
+</Catalog>

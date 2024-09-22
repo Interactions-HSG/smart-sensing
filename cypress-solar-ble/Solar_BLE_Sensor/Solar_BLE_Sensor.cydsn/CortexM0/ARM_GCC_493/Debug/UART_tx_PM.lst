@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccHe9GDz.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
   30:Generated_Source\PSoC4/UART_tx_PM.c **** *
   31:Generated_Source\PSoC4/UART_tx_PM.c **** * <b>Note</b> This function is available in PSoC 4 only.
   32:Generated_Source\PSoC4/UART_tx_PM.c **** *
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 2
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccHe9GDz.s 			page 2
 
 
   33:Generated_Source\PSoC4/UART_tx_PM.c **** * \return 
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
   50              		.thumb_func
   51              		.type	UART_tx_Wakeup, %function
   52              	UART_tx_Wakeup:
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 3
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccHe9GDz.s 			page 3
 
 
   53              	.LFB1:
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
   72              	.LFE1:
   73              		.size	UART_tx_Wakeup, .-UART_tx_Wakeup
   74              		.bss
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 4
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccHe9GDz.s 			page 4
 
 
   75              		.align	2
@@ -200,48 +200,48 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
   89 0006 00000000 		.4byte	.Ldebug_abbrev0
   90 000a 04       		.byte	0x4
   91 000b 01       		.uleb128 0x1
-  92 000c 02010000 		.4byte	.LASF20
+  92 000c DA000000 		.4byte	.LASF20
   93 0010 01       		.byte	0x1
-  94 0011 D0000000 		.4byte	.LASF21
-  95 0015 0F000000 		.4byte	.LASF22
+  94 0011 48000000 		.4byte	.LASF21
+  95 0015 73000000 		.4byte	.LASF22
   96 0019 00000000 		.4byte	.Ldebug_ranges0+0
   97 001d 00000000 		.4byte	0
   98 0021 00000000 		.4byte	.Ldebug_line0
   99 0025 02       		.uleb128 0x2
  100 0026 01       		.byte	0x1
  101 0027 06       		.byte	0x6
- 102 0028 1E020000 		.4byte	.LASF0
+ 102 0028 F6010000 		.4byte	.LASF0
  103 002c 02       		.uleb128 0x2
  104 002d 01       		.byte	0x1
  105 002e 08       		.byte	0x8
- 106 002f 9D000000 		.4byte	.LASF1
+ 106 002f 15000000 		.4byte	.LASF1
  107 0033 02       		.uleb128 0x2
  108 0034 02       		.byte	0x2
  109 0035 05       		.byte	0x5
- 110 0036 DF010000 		.4byte	.LASF2
+ 110 0036 B7010000 		.4byte	.LASF2
  111 003a 02       		.uleb128 0x2
  112 003b 02       		.byte	0x2
  113 003c 07       		.byte	0x7
- 114 003d BD000000 		.4byte	.LASF3
+ 114 003d 35000000 		.4byte	.LASF3
  115 0041 02       		.uleb128 0x2
  116 0042 04       		.byte	0x4
  117 0043 05       		.byte	0x5
- 118 0044 F1010000 		.4byte	.LASF4
+ 118 0044 C9010000 		.4byte	.LASF4
  119 0048 02       		.uleb128 0x2
  120 0049 04       		.byte	0x4
  121 004a 07       		.byte	0x7
- 122 004b AB000000 		.4byte	.LASF5
+ 122 004b 23000000 		.4byte	.LASF5
  123 004f 02       		.uleb128 0x2
  124 0050 08       		.byte	0x8
  125 0051 05       		.byte	0x5
- 126 0052 BD010000 		.4byte	.LASF6
+ 126 0052 95010000 		.4byte	.LASF6
  127 0056 02       		.uleb128 0x2
  128 0057 08       		.byte	0x8
  129 0058 07       		.byte	0x7
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 5
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccHe9GDz.s 			page 5
 
 
- 130 0059 9D010000 		.4byte	.LASF7
+ 130 0059 75010000 		.4byte	.LASF7
  131 005d 03       		.uleb128 0x3
  132 005e 04       		.byte	0x4
  133 005f 05       		.byte	0x5
@@ -249,28 +249,28 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
  135 0064 02       		.uleb128 0x2
  136 0065 04       		.byte	0x4
  137 0066 07       		.byte	0x7
- 138 0067 90010000 		.4byte	.LASF8
+ 138 0067 68010000 		.4byte	.LASF8
  139 006b 04       		.uleb128 0x4
- 140 006c FB000000 		.4byte	.LASF12
+ 140 006c D3000000 		.4byte	.LASF12
  141 0070 02       		.byte	0x2
- 142 0071 9A01     		.2byte	0x19a
+ 142 0071 BB01     		.2byte	0x1bb
  143 0073 48000000 		.4byte	0x48
  144 0077 02       		.uleb128 0x2
  145 0078 04       		.byte	0x4
  146 0079 04       		.byte	0x4
- 147 007a 97000000 		.4byte	.LASF9
+ 147 007a 0F000000 		.4byte	.LASF9
  148 007e 02       		.uleb128 0x2
  149 007f 08       		.byte	0x8
  150 0080 04       		.byte	0x4
- 151 0081 F4000000 		.4byte	.LASF10
+ 151 0081 6C000000 		.4byte	.LASF10
  152 0085 02       		.uleb128 0x2
  153 0086 01       		.byte	0x1
  154 0087 08       		.byte	0x8
- 155 0088 CB010000 		.4byte	.LASF11
+ 155 0088 A3010000 		.4byte	.LASF11
  156 008c 04       		.uleb128 0x4
  157 008d 00000000 		.4byte	.LASF13
  158 0091 02       		.byte	0x2
- 159 0092 4402     		.2byte	0x244
+ 159 0092 6502     		.2byte	0x265
  160 0094 98000000 		.4byte	0x98
  161 0098 05       		.uleb128 0x5
  162 0099 6B000000 		.4byte	0x6b
@@ -280,13 +280,13 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
  166 00a0 21       		.byte	0x21
  167 00a1 CA000000 		.4byte	0xca
  168 00a5 07       		.uleb128 0x7
- 169 00a6 E9010000 		.4byte	.LASF14
+ 169 00a6 C1010000 		.4byte	.LASF14
  170 00aa 03       		.byte	0x3
  171 00ab 23       		.byte	0x23
  172 00ac 6B000000 		.4byte	0x6b
  173 00b0 00       		.byte	0
  174 00b1 07       		.uleb128 0x7
- 175 00b2 B4010000 		.4byte	.LASF15
+ 175 00b2 8C010000 		.4byte	.LASF15
  176 00b6 03       		.byte	0x3
  177 00b7 24       		.byte	0x24
  178 00b8 6B000000 		.4byte	0x6b
@@ -298,16 +298,16 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
  184 00c4 6B000000 		.4byte	0x6b
  185 00c8 08       		.byte	0x8
  186 00c9 00       		.byte	0
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 6
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccHe9GDz.s 			page 6
 
 
  187 00ca 08       		.uleb128 0x8
- 188 00cb FA010000 		.4byte	.LASF17
+ 188 00cb D2010000 		.4byte	.LASF17
  189 00cf 03       		.byte	0x3
  190 00d0 26       		.byte	0x26
  191 00d1 9D000000 		.4byte	0x9d
  192 00d5 09       		.uleb128 0x9
- 193 00d6 10020000 		.4byte	.LASF18
+ 193 00d6 E8010000 		.4byte	.LASF18
  194 00da 01       		.byte	0x1
  195 00db 2C       		.byte	0x2c
  196 00dc 00000000 		.4byte	.LFB0
@@ -315,7 +315,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
  198 00e4 01       		.uleb128 0x1
  199 00e5 9C       		.byte	0x9c
  200 00e6 09       		.uleb128 0x9
- 201 00e7 2A020000 		.4byte	.LASF19
+ 201 00e7 02020000 		.4byte	.LASF19
  202 00eb 01       		.byte	0x1
  203 00ec 50       		.byte	0x50
  204 00ed 00000000 		.4byte	.LFB1
@@ -323,7 +323,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
  206 00f5 01       		.uleb128 0x1
  207 00f6 9C       		.byte	0x9c
  208 00f7 0A       		.uleb128 0xa
- 209 00f8 D0010000 		.4byte	.LASF23
+ 209 00f8 A8010000 		.4byte	.LASF23
  210 00fc 01       		.byte	0x1
  211 00fd 14       		.byte	0x14
  212 00fe CA000000 		.4byte	0xca
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
  241 0016 0B       		.uleb128 0xb
  242 0017 0B       		.uleb128 0xb
  243 0018 3E       		.uleb128 0x3e
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 7
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccHe9GDz.s 			page 7
 
 
  244 0019 0B       		.uleb128 0xb
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
  298 004f 3A       		.uleb128 0x3a
  299 0050 0B       		.uleb128 0xb
  300 0051 3B       		.uleb128 0x3b
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 8
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccHe9GDz.s 			page 8
 
 
  301 0052 0B       		.uleb128 0xb
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
  355 0089 02       		.uleb128 0x2
  356 008a 18       		.uleb128 0x18
  357 008b 00       		.byte	0
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 9
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccHe9GDz.s 			page 9
 
 
  358 008c 00       		.byte	0
@@ -519,133 +519,128 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 1
  388 0006 75736253 		.ascii	"usbState\000"
  388      74617465 
  388      00
- 389              	.LASF22:
- 390 000f 433A5C50 		.ascii	"C:\\Program Files (x86)\\Cypress\\CYALKIT-E02 Solar"
- 390      726F6772 
- 390      616D2046 
- 390      696C6573 
- 390      20287838 
- 391 003f 2D506F77 		.ascii	"-Powered BLE Sensor Beacon RDK\\1.0\\Firmware\\BLE\\"
- 391      65726564 
- 391      20424C45 
- 391      2053656E 
- 391      736F7220 
- 392 006f 536F6C61 		.ascii	"Solar_BLE_Sensor\\Solar_BLE_Sensor.cydsn\000"
- 392      725F424C 
- 392      455F5365 
- 392      6E736F72 
- 392      5C536F6C 
- 393              	.LASF9:
- 394 0097 666C6F61 		.ascii	"float\000"
+ 389              	.LASF9:
+ 390 000f 666C6F61 		.ascii	"float\000"
+ 390      7400
+ 391              	.LASF1:
+ 392 0015 756E7369 		.ascii	"unsigned char\000"
+ 392      676E6564 
+ 392      20636861 
+ 392      7200
+ 393              	.LASF5:
+ 394 0023 6C6F6E67 		.ascii	"long unsigned int\000"
+ 394      20756E73 
+ 394      69676E65 
+ 394      6420696E 
  394      7400
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 10
+ 395              	.LASF3:
+ 396 0035 73686F72 		.ascii	"short unsigned int\000"
+ 396      7420756E 
+ 396      7369676E 
+ 396      65642069 
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccHe9GDz.s 			page 10
 
 
- 395              	.LASF1:
- 396 009d 756E7369 		.ascii	"unsigned char\000"
- 396      676E6564 
- 396      20636861 
- 396      7200
- 397              	.LASF5:
- 398 00ab 6C6F6E67 		.ascii	"long unsigned int\000"
- 398      20756E73 
- 398      69676E65 
- 398      6420696E 
- 398      7400
- 399              	.LASF3:
- 400 00bd 73686F72 		.ascii	"short unsigned int\000"
- 400      7420756E 
- 400      7369676E 
- 400      65642069 
- 400      6E7400
- 401              	.LASF21:
- 402 00d0 47656E65 		.ascii	"Generated_Source\\PSoC4\\UART_tx_PM.c\000"
- 402      72617465 
- 402      645F536F 
- 402      75726365 
- 402      5C50536F 
- 403              	.LASF10:
- 404 00f4 646F7562 		.ascii	"double\000"
- 404      6C6500
- 405              	.LASF12:
- 406 00fb 75696E74 		.ascii	"uint32\000"
- 406      333200
- 407              	.LASF20:
- 408 0102 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
- 408      4320342E 
- 408      392E3320 
- 408      32303135 
- 408      30333033 
- 409 0135 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
- 409      20726576 
- 409      6973696F 
- 409      6E203232 
- 409      31323230 
- 410 0168 33202D66 		.ascii	"3 -ffunction-sections -ffat-lto-objects\000"
- 410      66756E63 
- 410      74696F6E 
- 410      2D736563 
- 410      74696F6E 
- 411              	.LASF8:
- 412 0190 756E7369 		.ascii	"unsigned int\000"
- 412      676E6564 
- 412      20696E74 
- 412      00
- 413              	.LASF7:
- 414 019d 6C6F6E67 		.ascii	"long long unsigned int\000"
- 414      206C6F6E 
- 414      6720756E 
- 414      7369676E 
- 414      65642069 
- 415              	.LASF15:
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccuV7aSh.s 			page 11
+ 396      6E7400
+ 397              	.LASF21:
+ 398 0048 47656E65 		.ascii	"Generated_Source\\PSoC4\\UART_tx_PM.c\000"
+ 398      72617465 
+ 398      645F536F 
+ 398      75726365 
+ 398      5C50536F 
+ 399              	.LASF10:
+ 400 006c 646F7562 		.ascii	"double\000"
+ 400      6C6500
+ 401              	.LASF22:
+ 402 0073 443A5C52 		.ascii	"D:\\Research\\GitHubRepos\\smart-sensing\\cypress-s"
+ 402      65736561 
+ 402      7263685C 
+ 402      47697448 
+ 402      75625265 
+ 403 00a2 6F6C6172 		.ascii	"olar-ble\\Solar_BLE_Sensor\\Solar_BLE_Sensor.cydsn\000"
+ 403      2D626C65 
+ 403      5C536F6C 
+ 403      61725F42 
+ 403      4C455F53 
+ 404              	.LASF12:
+ 405 00d3 75696E74 		.ascii	"uint32\000"
+ 405      333200
+ 406              	.LASF20:
+ 407 00da 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 407      4320342E 
+ 407      392E3320 
+ 407      32303135 
+ 407      30333033 
+ 408 010d 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 408      20726576 
+ 408      6973696F 
+ 408      6E203232 
+ 408      31323230 
+ 409 0140 33202D66 		.ascii	"3 -ffunction-sections -ffat-lto-objects\000"
+ 409      66756E63 
+ 409      74696F6E 
+ 409      2D736563 
+ 409      74696F6E 
+ 410              	.LASF8:
+ 411 0168 756E7369 		.ascii	"unsigned int\000"
+ 411      676E6564 
+ 411      20696E74 
+ 411      00
+ 412              	.LASF7:
+ 413 0175 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 413      206C6F6E 
+ 413      6720756E 
+ 413      7369676E 
+ 413      65642069 
+ 414              	.LASF15:
+ 415 018c 73696F53 		.ascii	"sioState\000"
+ 415      74617465 
+ 415      00
+ 416              	.LASF6:
+ 417 0195 6C6F6E67 		.ascii	"long long int\000"
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\ccHe9GDz.s 			page 11
 
 
- 416 01b4 73696F53 		.ascii	"sioState\000"
- 416      74617465 
- 416      00
- 417              	.LASF6:
- 418 01bd 6C6F6E67 		.ascii	"long long int\000"
- 418      206C6F6E 
- 418      6720696E 
- 418      7400
- 419              	.LASF11:
- 420 01cb 63686172 		.ascii	"char\000"
- 420      00
- 421              	.LASF23:
- 422 01d0 55415254 		.ascii	"UART_tx_backup\000"
- 422      5F74785F 
- 422      6261636B 
- 422      757000
- 423              	.LASF2:
- 424 01df 73686F72 		.ascii	"short int\000"
- 424      7420696E 
- 424      7400
- 425              	.LASF14:
- 426 01e9 70635374 		.ascii	"pcState\000"
- 426      61746500 
- 427              	.LASF4:
- 428 01f1 6C6F6E67 		.ascii	"long int\000"
- 428      20696E74 
- 428      00
- 429              	.LASF17:
- 430 01fa 55415254 		.ascii	"UART_tx_BACKUP_STRUCT\000"
- 430      5F74785F 
- 430      4241434B 
- 430      55505F53 
- 430      54525543 
- 431              	.LASF18:
- 432 0210 55415254 		.ascii	"UART_tx_Sleep\000"
- 432      5F74785F 
- 432      536C6565 
- 432      7000
- 433              	.LASF0:
- 434 021e 7369676E 		.ascii	"signed char\000"
- 434      65642063 
- 434      68617200 
- 435              	.LASF19:
- 436 022a 55415254 		.ascii	"UART_tx_Wakeup\000"
- 436      5F74785F 
- 436      57616B65 
- 436      757000
- 437              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br
+ 417      206C6F6E 
+ 417      6720696E 
+ 417      7400
+ 418              	.LASF11:
+ 419 01a3 63686172 		.ascii	"char\000"
+ 419      00
+ 420              	.LASF23:
+ 421 01a8 55415254 		.ascii	"UART_tx_backup\000"
+ 421      5F74785F 
+ 421      6261636B 
+ 421      757000
+ 422              	.LASF2:
+ 423 01b7 73686F72 		.ascii	"short int\000"
+ 423      7420696E 
+ 423      7400
+ 424              	.LASF14:
+ 425 01c1 70635374 		.ascii	"pcState\000"
+ 425      61746500 
+ 426              	.LASF4:
+ 427 01c9 6C6F6E67 		.ascii	"long int\000"
+ 427      20696E74 
+ 427      00
+ 428              	.LASF17:
+ 429 01d2 55415254 		.ascii	"UART_tx_BACKUP_STRUCT\000"
+ 429      5F74785F 
+ 429      4241434B 
+ 429      55505F53 
+ 429      54525543 
+ 430              	.LASF18:
+ 431 01e8 55415254 		.ascii	"UART_tx_Sleep\000"
+ 431      5F74785F 
+ 431      536C6565 
+ 431      7000
+ 432              	.LASF0:
+ 433 01f6 7369676E 		.ascii	"signed char\000"
+ 433      65642063 
+ 433      68617200 
+ 434              	.LASF19:
+ 435 0202 55415254 		.ascii	"UART_tx_Wakeup\000"
+ 435      5F74785F 
+ 435      57616B65 
+ 435      757000
+ 436              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

@@ -1,0 +1,9 @@
+Last Modified Date & Time: 07/06/2024 11:51:33
+
+Solar_BLE_Sensor: TopDesign.cysch
+	BLE [v3.10] to [v3.30]
+
+Solar_BLE_Sensor: Solar_BLE_Sensor.cydwr
+	cy_boot [v5.40] to [v5.50]
+
+

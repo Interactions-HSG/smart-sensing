@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file CYBLE_custom.c
-* \version 3.10
+* \version 3.30
 * 
 * \brief
 *  Contains the source code for the Custom Service.

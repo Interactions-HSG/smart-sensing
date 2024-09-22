@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 1
 
 
    1              		.cpu cortex-m0
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
   30:Generated_Source\PSoC4/cyfitter_cfg.c ****     #define CY_CFG_UNUSED __attribute__ ((unused))
   31:Generated_Source\PSoC4/cyfitter_cfg.c ****     #ifndef CY_CFG_SECTION
   32:Generated_Source\PSoC4/cyfitter_cfg.c ****         #define CY_CFG_SECTION __attribute__ ((section(".psocinit")))
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 2
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 2
 
 
   33:Generated_Source\PSoC4/cyfitter_cfg.c ****     #endif
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
   87:Generated_Source\PSoC4/cyfitter_cfg.c **** 
   88:Generated_Source\PSoC4/cyfitter_cfg.c **** 
   89:Generated_Source\PSoC4/cyfitter_cfg.c **** #ifdef CY_NEED_CYCLOCKSTARTUPERROR
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 3
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 3
 
 
   90:Generated_Source\PSoC4/cyfitter_cfg.c **** /*******************************************************************************
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  144:Generated_Source\PSoC4/cyfitter_cfg.c **** *
  145:Generated_Source\PSoC4/cyfitter_cfg.c **** * Parameters:
  146:Generated_Source\PSoC4/cyfitter_cfg.c **** *   void
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 4
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 4
 
 
  147:Generated_Source\PSoC4/cyfitter_cfg.c **** *
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  201:Generated_Source\PSoC4/cyfitter_cfg.c **** 
  202:Generated_Source\PSoC4/cyfitter_cfg.c **** 
  203:Generated_Source\PSoC4/cyfitter_cfg.c **** /*******************************************************************************
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 5
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 5
 
 
  204:Generated_Source\PSoC4/cyfitter_cfg.c **** * Function Name: AnalogSetDefault
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  248:Generated_Source\PSoC4/cyfitter_cfg.c **** 	/* Disable interrupts by default. Let user enable if/when they want. */
  249:Generated_Source\PSoC4/cyfitter_cfg.c **** 	CyGlobalIntDisable;
   36              		.loc 1 249 0
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 6
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 6
 
 
   37              	@ 249 "Generated_Source\PSoC4\cyfitter_cfg.c" 1
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  253:Generated_Source\PSoC4/cyfitter_cfg.c **** 	{
  254:Generated_Source\PSoC4/cyfitter_cfg.c **** 
  255:Generated_Source\PSoC4/cyfitter_cfg.c **** 		CYPACKED typedef struct {
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 7
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 7
 
 
  256:Generated_Source\PSoC4/cyfitter_cfg.c **** 			void CYFAR *address;
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
   97              		.loc 1 277 0
   98 0030 1160     		str	r1, [r2]
  280:Generated_Source\PSoC4/cyfitter_cfg.c **** 
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 8
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 8
 
 
   99              		.loc 1 280 0
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  124              	.LBB34:
  286:Generated_Source\PSoC4/cyfitter_cfg.c **** 
  125              		.loc 1 286 0
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 9
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 9
 
 
  126 0040 1360     		str	r3, [r2]
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  301:Generated_Source\PSoC4/cyfitter_cfg.c **** 	CY_SET_XTND_REG32((void CYFAR *)(CYREG_GPIO_PRT1_PC), 0x00031000u);
  168              		.loc 1 301 0
  169 006e 1360     		str	r3, [r2]
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 10
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 10
 
 
  302:Generated_Source\PSoC4/cyfitter_cfg.c **** 	CY_SET_XTND_REG32((void CYFAR *)(CYREG_GPIO_PRT1_PC2), 0x00000020u);
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  210 00a0 0B43     		orr	r3, r1
  211 00a2 1360     		str	r3, [r2]
  167:Generated_Source\PSoC4/cyfitter_cfg.c **** 	/*Set XTAL(ECO) divider*/
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 11
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 11
 
 
  212              		.loc 1 167 0
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  183:Generated_Source\PSoC4/cyfitter_cfg.c **** 
  253              		.loc 1 183 0
  254 00da 8022     		mov	r2, #128
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 12
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 12
 
 
  255 00dc 294B     		ldr	r3, .L2+124
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  300 0118 00050240 		.word	1073874176
  301 011c 01700F40 		.word	1074753537
  302 0120 00000240 		.word	1073872896
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 13
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 13
 
 
  303 0124 08000440 		.word	1074003976
@@ -768,17 +768,17 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  347 0006 00000000 		.4byte	.Ldebug_abbrev0
  348 000a 04       		.byte	0x4
  349 000b 01       		.uleb128 0x1
- 350 000c 46010000 		.4byte	.LASF28
+ 350 000c 1E010000 		.4byte	.LASF28
  351 0010 01       		.byte	0x1
- 352 0011 78020000 		.4byte	.LASF29
- 353 0015 39000000 		.4byte	.LASF30
+ 352 0011 50020000 		.4byte	.LASF29
+ 353 0015 9A000000 		.4byte	.LASF30
  354 0019 80000000 		.4byte	.Ldebug_ranges0+0x80
  355 001d 00000000 		.4byte	0
  356 0021 00000000 		.4byte	.Ldebug_line0
  357 0025 02       		.uleb128 0x2
  358 0026 04       		.byte	0x4
  359 0027 05       		.byte	0x5
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 14
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 14
 
 
  360 0028 696E7400 		.ascii	"int\000"
@@ -790,96 +790,96 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  366 0037 04       		.uleb128 0x4
  367 0038 04       		.byte	0x4
  368 0039 07       		.byte	0x7
- 369 003a D4010000 		.4byte	.LASF0
+ 369 003a AC010000 		.4byte	.LASF0
  370 003e 04       		.uleb128 0x4
  371 003f 01       		.byte	0x1
  372 0040 06       		.byte	0x6
- 373 0041 6C020000 		.4byte	.LASF1
+ 373 0041 44020000 		.4byte	.LASF1
  374 0045 04       		.uleb128 0x4
  375 0046 01       		.byte	0x1
  376 0047 08       		.byte	0x8
- 377 0048 06010000 		.4byte	.LASF2
+ 377 0048 7E000000 		.4byte	.LASF2
  378 004c 04       		.uleb128 0x4
  379 004d 02       		.byte	0x2
  380 004e 05       		.byte	0x5
- 381 004f 44020000 		.4byte	.LASF3
+ 381 004f 1C020000 		.4byte	.LASF3
  382 0053 04       		.uleb128 0x4
  383 0054 02       		.byte	0x2
  384 0055 07       		.byte	0x7
- 385 0056 C1000000 		.4byte	.LASF4
+ 385 0056 39000000 		.4byte	.LASF4
  386 005a 04       		.uleb128 0x4
  387 005b 04       		.byte	0x4
  388 005c 05       		.byte	0x5
- 389 005d 63020000 		.4byte	.LASF5
+ 389 005d 3B020000 		.4byte	.LASF5
  390 0061 04       		.uleb128 0x4
  391 0062 04       		.byte	0x4
  392 0063 07       		.byte	0x7
- 393 0064 E4000000 		.4byte	.LASF6
+ 393 0064 5C000000 		.4byte	.LASF6
  394 0068 04       		.uleb128 0x4
  395 0069 08       		.byte	0x8
  396 006a 05       		.byte	0x5
- 397 006b 16020000 		.4byte	.LASF7
+ 397 006b EE010000 		.4byte	.LASF7
  398 006f 04       		.uleb128 0x4
  399 0070 08       		.byte	0x8
  400 0071 07       		.byte	0x7
- 401 0072 E9010000 		.4byte	.LASF8
+ 401 0072 C1010000 		.4byte	.LASF8
  402 0076 04       		.uleb128 0x4
  403 0077 04       		.byte	0x4
  404 0078 07       		.byte	0x7
- 405 0079 0D020000 		.4byte	.LASF9
+ 405 0079 E5010000 		.4byte	.LASF9
  406 007d 05       		.uleb128 0x5
  407 007e 04       		.byte	0x4
  408 007f 04       		.uleb128 0x4
  409 0080 01       		.byte	0x1
  410 0081 08       		.byte	0x8
- 411 0082 2E020000 		.4byte	.LASF10
+ 411 0082 06020000 		.4byte	.LASF10
  412 0086 06       		.uleb128 0x6
- 413 0087 F6000000 		.4byte	.LASF12
+ 413 0087 6E000000 		.4byte	.LASF12
  414 008b 03       		.byte	0x3
- 415 008c 9801     		.2byte	0x198
+ 415 008c B901     		.2byte	0x1b9
  416 008e 45000000 		.4byte	0x45
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 15
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 15
 
 
  417 0092 06       		.uleb128 0x6
- 418 0093 2F010000 		.4byte	.LASF13
+ 418 0093 07010000 		.4byte	.LASF13
  419 0097 03       		.byte	0x3
- 420 0098 9901     		.2byte	0x199
+ 420 0098 BA01     		.2byte	0x1ba
  421 009a 53000000 		.4byte	0x53
  422 009e 06       		.uleb128 0x6
- 423 009f 3F010000 		.4byte	.LASF14
+ 423 009f 17010000 		.4byte	.LASF14
  424 00a3 03       		.byte	0x3
- 425 00a4 9A01     		.2byte	0x19a
+ 425 00a4 BB01     		.2byte	0x1bb
  426 00a6 61000000 		.4byte	0x61
  427 00aa 04       		.uleb128 0x4
  428 00ab 04       		.byte	0x4
  429 00ac 04       		.byte	0x4
- 430 00ad D4000000 		.4byte	.LASF15
+ 430 00ad 4C000000 		.4byte	.LASF15
  431 00b1 04       		.uleb128 0x4
  432 00b2 08       		.byte	0x8
  433 00b3 04       		.byte	0x4
- 434 00b4 1B010000 		.4byte	.LASF16
+ 434 00b4 93000000 		.4byte	.LASF16
  435 00b8 06       		.uleb128 0x6
- 436 00b9 36010000 		.4byte	.LASF17
+ 436 00b9 0E010000 		.4byte	.LASF17
  437 00bd 03       		.byte	0x3
- 438 00be 3A02     		.2byte	0x23a
+ 438 00be 5B02     		.2byte	0x25b
  439 00c0 61000000 		.4byte	0x61
  440 00c4 06       		.uleb128 0x6
- 441 00c5 DF000000 		.4byte	.LASF18
+ 441 00c5 57000000 		.4byte	.LASF18
  442 00c9 03       		.byte	0x3
- 443 00ca 4202     		.2byte	0x242
+ 443 00ca 6302     		.2byte	0x263
  444 00cc D0000000 		.4byte	0xd0
  445 00d0 07       		.uleb128 0x7
  446 00d1 86000000 		.4byte	0x86
  447 00d5 06       		.uleb128 0x6
  448 00d6 00000000 		.4byte	.LASF19
  449 00da 03       		.byte	0x3
- 450 00db 4402     		.2byte	0x244
+ 450 00db 6502     		.2byte	0x265
  451 00dd E1000000 		.4byte	0xe1
  452 00e1 07       		.uleb128 0x7
  453 00e2 9E000000 		.4byte	0x9e
  454 00e6 08       		.uleb128 0x8
- 455 00e7 FC000000 		.4byte	.LASF31
+ 455 00e7 74000000 		.4byte	.LASF31
  456 00eb 01       		.byte	0x1
  457 00ec 3C       		.byte	0x3c
  458 00ed 01       		.byte	0x1
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  471 0105 0A       		.uleb128 0xa
  472 0106 0D000000 		.4byte	.LASF20
  473 010a 01       		.byte	0x1
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 16
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 16
 
 
  474 010b DB       		.byte	0xdb
@@ -909,7 +909,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  479 0113 9A       		.byte	0x9a
  480 0114 01       		.byte	0x1
  481 0115 0B       		.uleb128 0xb
- 482 0116 22010000 		.4byte	.LASF32
+ 482 0116 FA000000 		.4byte	.LASF32
  483 011a 01       		.byte	0x1
  484 011b F6       		.byte	0xf6
  485 011c 00000000 		.4byte	.LFB7
@@ -926,20 +926,20 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  496 0136 FF       		.byte	0xff
  497 0137 56010000 		.4byte	0x156
  498 013b 0E       		.uleb128 0xe
- 499 013c E1010000 		.4byte	.LASF22
+ 499 013c B9010000 		.4byte	.LASF22
  500 0140 01       		.byte	0x1
  501 0141 0001     		.2byte	0x100
  502 0143 7D000000 		.4byte	0x7d
  503 0147 00       		.byte	0
  504 0148 0E       		.uleb128 0xe
- 505 0149 DA000000 		.4byte	.LASF23
+ 505 0149 52000000 		.4byte	.LASF23
  506 014d 01       		.byte	0x1
  507 014e 0101     		.2byte	0x101
  508 0150 92000000 		.4byte	0x92
  509 0154 04       		.byte	0x4
  510 0155 00       		.byte	0
  511 0156 06       		.uleb128 0x6
- 512 0157 00020000 		.4byte	.LASF24
+ 512 0157 D8010000 		.4byte	.LASF24
  513 015b 01       		.byte	0x1
  514 015c 0201     		.2byte	0x102
  515 015e 33010000 		.4byte	0x133
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  528 017e 0C       		.byte	0xc
  529 017f 00       		.byte	0
  530 0180 30       		.byte	0x30
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 17
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 17
 
 
  531 0181 0F       		.byte	0xf
@@ -1018,7 +1018,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  585 01f1 01       		.uleb128 0x1
  586 01f2 51       		.byte	0x51
  587 01f3 02       		.uleb128 0x2
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 18
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 18
 
 
  588 01f4 74       		.byte	0x74
@@ -1078,7 +1078,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  642 0252 5E020000 		.4byte	0x25e
  643 0256 1A       		.uleb128 0x1a
  644 0257 01       		.uleb128 0x1
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 19
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 19
 
 
  645 0258 50       		.byte	0x50
@@ -1105,7 +1105,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  666 027e 3D01     		.2byte	0x13d
  667 0280 00       		.byte	0
  668 0281 1E       		.uleb128 0x1e
- 669 0282 14010000 		.4byte	.LASF26
+ 669 0282 8C000000 		.4byte	.LASF26
  670 0286 7D000000 		.4byte	0x7d
  671 028a 9E020000 		.4byte	0x29e
  672 028e 1F       		.uleb128 0x1f
@@ -1116,7 +1116,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  677 0299 76000000 		.4byte	0x76
  678 029d 00       		.byte	0
  679 029e 20       		.uleb128 0x20
- 680 029f 4E020000 		.4byte	.LASF27
+ 680 029f 26020000 		.4byte	.LASF27
  681 02a3 04       		.byte	0x4
  682 02a4 6C       		.byte	0x6c
  683 02a5 AF020000 		.4byte	0x2af
@@ -1124,21 +1124,21 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  685 02aa 9E000000 		.4byte	0x9e
  686 02ae 00       		.byte	0
  687 02af 21       		.uleb128 0x21
- 688 02b0 33020000 		.4byte	.LASF33
+ 688 02b0 0B020000 		.4byte	.LASF33
  689 02b4 04       		.byte	0x4
- 690 02b5 82       		.byte	0x82
+ 690 02b5 84       		.byte	0x84
  691 02b6 B8000000 		.4byte	0xb8
  692 02ba C4020000 		.4byte	0x2c4
  693 02be 1F       		.uleb128 0x1f
  694 02bf 9E000000 		.4byte	0x9e
  695 02c3 00       		.byte	0
  696 02c4 22       		.uleb128 0x22
- 697 02c5 24020000 		.4byte	.LASF34
+ 697 02c5 FC010000 		.4byte	.LASF34
  698 02c9 04       		.byte	0x4
- 699 02ca D8       		.byte	0xd8
+ 699 02ca DA       		.byte	0xda
  700 02cb 1F       		.uleb128 0x1f
  701 02cc 92000000 		.4byte	0x92
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 20
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 20
 
 
  702 02d0 00       		.byte	0
@@ -1198,7 +1198,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  756 0032 03       		.uleb128 0x3
  757 0033 0E       		.uleb128 0xe
  758 0034 00       		.byte	0
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 21
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 21
 
 
  759 0035 00       		.byte	0
@@ -1258,7 +1258,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  813 006b 49       		.uleb128 0x49
  814 006c 13       		.uleb128 0x13
  815 006d 00       		.byte	0
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 22
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 22
 
 
  816 006e 00       		.byte	0
@@ -1318,7 +1318,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  870 00a5 0B       		.uleb128 0xb
  871 00a6 3A       		.uleb128 0x3a
  872 00a7 0B       		.uleb128 0xb
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 23
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 23
 
 
  873 00a8 3B       		.uleb128 0x3b
@@ -1378,7 +1378,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  927 00de 12       		.uleb128 0x12
  928 00df 26       		.uleb128 0x26
  929 00e0 00       		.byte	0
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 24
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 24
 
 
  930 00e1 49       		.uleb128 0x49
@@ -1438,7 +1438,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  984 0117 13       		.uleb128 0x13
  985 0118 1C       		.uleb128 0x1c
  986 0119 05       		.uleb128 0x5
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 25
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 25
 
 
  987 011a 00       		.byte	0
@@ -1498,7 +1498,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  1041 0157 13       		.uleb128 0x13
  1042 0158 00       		.byte	0
  1043 0159 00       		.byte	0
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 26
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 26
 
 
  1044 015a 1D       		.uleb128 0x1d
@@ -1558,7 +1558,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  1098 0190 3C       		.uleb128 0x3c
  1099 0191 19       		.uleb128 0x19
  1100 0192 01       		.uleb128 0x1
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 27
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 27
 
 
  1101 0193 13       		.uleb128 0x13
@@ -1618,7 +1618,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  1155 0017 9F       		.byte	0x9f
  1156 0018 22000000 		.4byte	.LVL2
  1157 001c A4010000 		.4byte	.LFE7
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 28
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 28
 
 
  1158 0020 0200     		.2byte	0x2
@@ -1678,7 +1678,7 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  1212 0014 34000000 		.4byte	.LBE27
  1213 0018 36000000 		.4byte	.LBB28
  1214 001c 3A000000 		.4byte	.LBE28
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 29
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 29
 
 
  1215 0020 3C000000 		.4byte	.LBB33
@@ -1737,164 +1737,159 @@ ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 1
  1255 002e 436C6F63 		.ascii	"ClockSetup\000"
  1255      6B536574 
  1255      757000
- 1256              	.LASF30:
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 30
+ 1256              	.LASF4:
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 30
 
 
- 1257 0039 433A5C50 		.ascii	"C:\\Program Files (x86)\\Cypress\\CYALKIT-E02 Solar"
- 1257      726F6772 
- 1257      616D2046 
- 1257      696C6573 
- 1257      20287838 
- 1258 0069 2D506F77 		.ascii	"-Powered BLE Sensor Beacon RDK\\1.0\\Firmware\\BLE\\"
- 1258      65726564 
- 1258      20424C45 
- 1258      2053656E 
- 1258      736F7220 
- 1259 0099 536F6C61 		.ascii	"Solar_BLE_Sensor\\Solar_BLE_Sensor.cydsn\000"
- 1259      725F424C 
- 1259      455F5365 
- 1259      6E736F72 
- 1259      5C536F6C 
- 1260              	.LASF4:
- 1261 00c1 73686F72 		.ascii	"short unsigned int\000"
- 1261      7420756E 
- 1261      7369676E 
- 1261      65642069 
- 1261      6E7400
- 1262              	.LASF15:
- 1263 00d4 666C6F61 		.ascii	"float\000"
- 1263      7400
- 1264              	.LASF23:
- 1265 00da 73697A65 		.ascii	"size\000"
- 1265      00
- 1266              	.LASF18:
- 1267 00df 72656738 		.ascii	"reg8\000"
- 1267      00
- 1268              	.LASF6:
- 1269 00e4 6C6F6E67 		.ascii	"long unsigned int\000"
- 1269      20756E73 
- 1269      69676E65 
- 1269      6420696E 
- 1269      7400
- 1270              	.LASF12:
- 1271 00f6 75696E74 		.ascii	"uint8\000"
- 1271      3800
- 1272              	.LASF31:
- 1273 00fc 43594D45 		.ascii	"CYMEMZERO\000"
- 1273      4D5A4552 
- 1273      4F00
- 1274              	.LASF2:
- 1275 0106 756E7369 		.ascii	"unsigned char\000"
- 1275      676E6564 
- 1275      20636861 
- 1275      7200
- 1276              	.LASF26:
- 1277 0114 6D656D73 		.ascii	"memset\000"
- 1277      657400
- 1278              	.LASF16:
- 1279 011b 646F7562 		.ascii	"double\000"
- 1279      6C6500
- 1280              	.LASF32:
- 1281 0122 63796669 		.ascii	"cyfitter_cfg\000"
- 1281      74746572 
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 31
+ 1257 0039 73686F72 		.ascii	"short unsigned int\000"
+ 1257      7420756E 
+ 1257      7369676E 
+ 1257      65642069 
+ 1257      6E7400
+ 1258              	.LASF15:
+ 1259 004c 666C6F61 		.ascii	"float\000"
+ 1259      7400
+ 1260              	.LASF23:
+ 1261 0052 73697A65 		.ascii	"size\000"
+ 1261      00
+ 1262              	.LASF18:
+ 1263 0057 72656738 		.ascii	"reg8\000"
+ 1263      00
+ 1264              	.LASF6:
+ 1265 005c 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1265      20756E73 
+ 1265      69676E65 
+ 1265      6420696E 
+ 1265      7400
+ 1266              	.LASF12:
+ 1267 006e 75696E74 		.ascii	"uint8\000"
+ 1267      3800
+ 1268              	.LASF31:
+ 1269 0074 43594D45 		.ascii	"CYMEMZERO\000"
+ 1269      4D5A4552 
+ 1269      4F00
+ 1270              	.LASF2:
+ 1271 007e 756E7369 		.ascii	"unsigned char\000"
+ 1271      676E6564 
+ 1271      20636861 
+ 1271      7200
+ 1272              	.LASF26:
+ 1273 008c 6D656D73 		.ascii	"memset\000"
+ 1273      657400
+ 1274              	.LASF16:
+ 1275 0093 646F7562 		.ascii	"double\000"
+ 1275      6C6500
+ 1276              	.LASF30:
+ 1277 009a 443A5C52 		.ascii	"D:\\Research\\GitHubRepos\\smart-sensing\\cypress-s"
+ 1277      65736561 
+ 1277      7263685C 
+ 1277      47697448 
+ 1277      75625265 
+ 1278 00c9 6F6C6172 		.ascii	"olar-ble\\Solar_BLE_Sensor\\Solar_BLE_Sensor.cydsn\000"
+ 1278      2D626C65 
+ 1278      5C536F6C 
+ 1278      61725F42 
+ 1278      4C455F53 
+ 1279              	.LASF32:
+ 1280 00fa 63796669 		.ascii	"cyfitter_cfg\000"
+ 1280      74746572 
+ 1280      5F636667 
+ 1280      00
+ 1281              	.LASF13:
+ 1282 0107 75696E74 		.ascii	"uint16\000"
+ 1282      313600
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 31
 
 
- 1281      5F636667 
- 1281      00
- 1282              	.LASF13:
- 1283 012f 75696E74 		.ascii	"uint16\000"
- 1283      313600
- 1284              	.LASF17:
- 1285 0136 63797374 		.ascii	"cystatus\000"
- 1285      61747573 
- 1285      00
- 1286              	.LASF14:
- 1287 013f 75696E74 		.ascii	"uint32\000"
- 1287      333200
- 1288              	.LASF28:
- 1289 0146 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
- 1289      4320342E 
- 1289      392E3320 
- 1289      32303135 
- 1289      30333033 
- 1290 0179 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
- 1290      20726576 
- 1290      6973696F 
- 1290      6E203232 
- 1290      31323230 
- 1291 01ac 33202D66 		.ascii	"3 -ffunction-sections -ffat-lto-objects\000"
- 1291      66756E63 
- 1291      74696F6E 
- 1291      2D736563 
- 1291      74696F6E 
- 1292              	.LASF0:
- 1293 01d4 756E7369 		.ascii	"unsigned int\000"
- 1293      676E6564 
- 1293      20696E74 
- 1293      00
- 1294              	.LASF22:
- 1295 01e1 61646472 		.ascii	"address\000"
- 1295      65737300 
- 1296              	.LASF8:
- 1297 01e9 6C6F6E67 		.ascii	"long long unsigned int\000"
- 1297      206C6F6E 
- 1297      6720756E 
- 1297      7369676E 
- 1297      65642069 
- 1298              	.LASF24:
- 1299 0200 6366675F 		.ascii	"cfg_memset_t\000"
- 1299      6D656D73 
- 1299      65745F74 
- 1299      00
- 1300              	.LASF9:
- 1301 020d 73697A65 		.ascii	"sizetype\000"
- 1301      74797065 
- 1301      00
- 1302              	.LASF7:
- 1303 0216 6C6F6E67 		.ascii	"long long int\000"
- 1303      206C6F6E 
- 1303      6720696E 
- 1303      7400
- 1304              	.LASF34:
-ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cciHvGVa.s 			page 32
+ 1283              	.LASF17:
+ 1284 010e 63797374 		.ascii	"cystatus\000"
+ 1284      61747573 
+ 1284      00
+ 1285              	.LASF14:
+ 1286 0117 75696E74 		.ascii	"uint32\000"
+ 1286      333200
+ 1287              	.LASF28:
+ 1288 011e 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 1288      4320342E 
+ 1288      392E3320 
+ 1288      32303135 
+ 1288      30333033 
+ 1289 0151 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 1289      20726576 
+ 1289      6973696F 
+ 1289      6E203232 
+ 1289      31323230 
+ 1290 0184 33202D66 		.ascii	"3 -ffunction-sections -ffat-lto-objects\000"
+ 1290      66756E63 
+ 1290      74696F6E 
+ 1290      2D736563 
+ 1290      74696F6E 
+ 1291              	.LASF0:
+ 1292 01ac 756E7369 		.ascii	"unsigned int\000"
+ 1292      676E6564 
+ 1292      20696E74 
+ 1292      00
+ 1293              	.LASF22:
+ 1294 01b9 61646472 		.ascii	"address\000"
+ 1294      65737300 
+ 1295              	.LASF8:
+ 1296 01c1 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1296      206C6F6E 
+ 1296      6720756E 
+ 1296      7369676E 
+ 1296      65642069 
+ 1297              	.LASF24:
+ 1298 01d8 6366675F 		.ascii	"cfg_memset_t\000"
+ 1298      6D656D73 
+ 1298      65745F74 
+ 1298      00
+ 1299              	.LASF9:
+ 1300 01e5 73697A65 		.ascii	"sizetype\000"
+ 1300      74797065 
+ 1300      00
+ 1301              	.LASF7:
+ 1302 01ee 6C6F6E67 		.ascii	"long long int\000"
+ 1302      206C6F6E 
+ 1302      6720696E 
+ 1302      7400
+ 1303              	.LASF34:
+ 1304 01fc 43794465 		.ascii	"CyDelayUs\000"
+ 1304      6C617955 
+ 1304      7300
+ 1305              	.LASF10:
+ 1306 0206 63686172 		.ascii	"char\000"
+ARM GAS  C:\Users\ramanatg\AppData\Local\Temp\cctsyePg.s 			page 32
 
 
- 1305 0224 43794465 		.ascii	"CyDelayUs\000"
- 1305      6C617955 
- 1305      7300
- 1306              	.LASF10:
- 1307 022e 63686172 		.ascii	"char\000"
- 1307      00
- 1308              	.LASF33:
- 1309 0233 43795379 		.ascii	"CySysClkEcoStart\000"
- 1309      73436C6B 
- 1309      45636F53 
- 1309      74617274 
- 1309      00
- 1310              	.LASF3:
- 1311 0244 73686F72 		.ascii	"short int\000"
- 1311      7420696E 
- 1311      7400
- 1312              	.LASF27:
- 1313 024e 43795379 		.ascii	"CySysClkWriteImoFreq\000"
- 1313      73436C6B 
- 1313      57726974 
- 1313      65496D6F 
- 1313      46726571 
- 1314              	.LASF5:
- 1315 0263 6C6F6E67 		.ascii	"long int\000"
- 1315      20696E74 
- 1315      00
- 1316              	.LASF1:
- 1317 026c 7369676E 		.ascii	"signed char\000"
- 1317      65642063 
- 1317      68617200 
- 1318              	.LASF29:
- 1319 0278 47656E65 		.ascii	"Generated_Source\\PSoC4\\cyfitter_cfg.c\000"
- 1319      72617465 
- 1319      645F536F 
- 1319      75726365 
- 1319      5C50536F 
- 1320              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br
+ 1306      00
+ 1307              	.LASF33:
+ 1308 020b 43795379 		.ascii	"CySysClkEcoStart\000"
+ 1308      73436C6B 
+ 1308      45636F53 
+ 1308      74617274 
+ 1308      00
+ 1309              	.LASF3:
+ 1310 021c 73686F72 		.ascii	"short int\000"
+ 1310      7420696E 
+ 1310      7400
+ 1311              	.LASF27:
+ 1312 0226 43795379 		.ascii	"CySysClkWriteImoFreq\000"
+ 1312      73436C6B 
+ 1312      57726974 
+ 1312      65496D6F 
+ 1312      46726571 
+ 1313              	.LASF5:
+ 1314 023b 6C6F6E67 		.ascii	"long int\000"
+ 1314      20696E74 
+ 1314      00
+ 1315              	.LASF1:
+ 1316 0244 7369676E 		.ascii	"signed char\000"
+ 1316      65642063 
+ 1316      68617200 
+ 1317              	.LASF29:
+ 1318 0250 47656E65 		.ascii	"Generated_Source\\PSoC4\\cyfitter_cfg.c\000"
+ 1318      72617465 
+ 1318      645F536F 
+ 1318      75726365 
+ 1318      5C50536F 
+ 1319              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

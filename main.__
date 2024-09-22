@@ -1,0 +1,195 @@
+//#define USE_BDI
+#define USE_PROCEDURAL
+#define PIN_DEBUG_SIGNAL_0 D10
+#define PIN_DEBUG_SIGNAL_1 D9
+#define PIN_WAKEUP D8
+#define PIN_DONE D3
+#define PIN_DFU_MODE_SET D2
+#define PIN_BATTERY_VOLTAGE A0
+#define PIN_DISABLE_LOW_POWER A1
+#define PIN_SHT41_POWER D2
+#define DFU_DBL_RESET_DELAY             500
+
+#include <Arduino.h>
+#include "configuration.h"
+#include "device.h"
+#include "ble_uart_peripheral.h"
+#include "SdFat.h"
+#include "Adafruit_SPIFlash.h"
+#include "sensor_sht41.h"
+#include "sensor_bmp180.h"
+#include "nrf_nvic.h"
+#ifdef USE_BDI
+#include <agent.h>
+#endif
+
+#if defined(CUSTOM_CS) && defined(CUSTOM_SPI)
+  Adafruit_FlashTransport_SPI flashTransport(CUSTOM_CS, CUSTOM_SPI);
+#elif defined(ARDUINO_ARCH_ESP32)
+  Adafruit_FlashTransport_ESP32 flashTransport;
+#else
+  #if defined(EXTERNAL_FLASH_USE_QSPI)
+    Adafruit_FlashTransport_QSPI flashTransport;
+  #elif defined(EXTERNAL_FLASH_USE_SPI)
+    Adafruit_FlashTransport_SPI flashTransport(EXTERNAL_FLASH_USE_CS, EXTERNAL_FLASH_USE_SPI);
+  #else
+    #error No QSPI/SPI flash are defined on your board variant.h !
+  #endif
+#endif
+
+Adafruit_SPIFlash flash(&flashTransport);
+
+#ifdef USE_BDI
+AgentSettings agent_settings;
+BeliefBase * beliefs = agent_settings.get_belief_base();
+EventBase * events = agent_settings.get_event_base();
+PlanBase * plans = agent_settings.get_plan_base();
+IntentionBase * intentions = agent_settings.get_intention_base();
+Agent agent(beliefs, events, plans, intentions);
+#endif
+
+void onPinWake(void);
+void resetExternalTimer(void);
+void evaluate(void);
+void setDFUMode(void);
+
+void setup() {
+
+  pinMode(PIN_DEBUG_SIGNAL_0, OUTPUT);
+  pinMode(PIN_DEBUG_SIGNAL_1, OUTPUT);
+  
+  digitalWrite(PIN_DEBUG_SIGNAL_0, HIGH);
+  digitalWrite(PIN_DEBUG_SIGNAL_1, HIGH);
+
+  #ifdef USE_SERIAL
+  Serial.begin(115200);
+  #endif
+
+  pinMode(LED_BUILTIN, OUTPUT);  
+  pinMode(PIN_BATTERY_VOLTAGE, INPUT);
+  pinMode(PIN_DISABLE_LOW_POWER, INPUT);
+  pinMode(PIN_WAKEUP, INPUT);
+  pinMode(PIN_DONE, OUTPUT);
+  pinMode(PIN_SHT41_POWER, OUTPUT);
+  pinMode(PIN_DFU_MODE_SET, INPUT);
+  //attachInterrupt(PIN_WAKEUP, onPinWake, RISING);
+  
+  //init_peripheral(); 
+  digitalWrite(PIN_DEBUG_SIGNAL_0, LOW);
+  //start_adv(1,USB_PID);
+  //init_shtx();
+  init_bmp();
+  digitalWrite(PIN_DEBUG_SIGNAL_1, LOW);
+  //log("Started AgentBlue");
+  flash.begin();
+  digitalWrite(PIN_DEBUG_SIGNAL_0, LOW);
+  digitalWrite(PIN_DEBUG_SIGNAL_1, HIGH);
+  digitalWrite(PIN_DONE, HIGH);
+  //digitalWrite(LED_BUILTIN, LOW);
+  //delay(100);
+  //digitalWrite(LED_BUILTIN, HIGH);
+
+/*
+  if(digitalRead(PIN_DFU_MODE_SET) == HIGH){
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(500);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(500);
+    setDFUMode();
+  }
+  */
+}
+
+void setDFUMode(){
+  if(digitalRead(PIN_DISABLE_LOW_POWER)){
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(100);
+    digitalWrite(LED_BUILTIN, HIGH);
+    NRF_POWER->GPREGRET = 0x4E; // 0xA8 OTA, 0x4e Serial
+  }else{
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(1000);
+    digitalWrite(LED_BUILTIN, HIGH);
+    NRF_POWER->GPREGRET = 0x6D; //DFU_MAGIC_SKIP
+  }
+  NVIC_SystemReset();
+}
+
+void onPinWake(){
+  evaluate();
+}
+
+void resetExternalTimer(){
+  digitalWrite(PIN_DONE, HIGH);
+  delay(1);
+  digitalWrite(PIN_DONE, LOW);
+  delay(1);
+}
+
+void deepSleep(){
+  flashTransport.runCommand(0xB9);
+  flash.end();
+  // 
+  //waitForEvent();
+  //digitalWrite(PIN_SHT41_POWER, LOW);
+  //reset_shtx();
+  //NRF_POWER->GPREGRET = 0x6D;
+  //systemOff(PIN_WAKEUP, HIGH);
+  sd_power_gpregret_set(0, 0x6D);
+  systemOff(PIN_WAKEUP, HIGH);
+  //sd_power_system_off();
+  //waitForEvent();
+}
+
+
+
+void evaluate(){
+  //digitalWrite(LED_BUILTIN, LOW);
+  //delay(50);
+  //digitalWrite(LED_BUILTIN, HIGH); 
+  #ifdef USE_SERIAL
+  Serial.print("Vdd:");
+  Serial.println(analogRead(PIN_BATTERY_VOLTAGE));
+  Serial.print("Disable LP:");
+  Serial.println(digitalRead(PIN_DISABLE_LOW_POWER));
+  #endif
+  bool energy_ok = get_measurement(MEAS_BATLEVEL) > 50;
+
+  if(energy_ok){
+    //digitalWrite(PIN_SHT41_POWER, HIGH);
+    //delay(4);
+    bmp_reading bmp = read_bmp();
+
+    uint32_t temperature = bmp.temperature;// get_measurement(MEAS_SENSOR);
+    //reset_shtx();
+    //digitalWrite(PIN_SHT41_POWER, LOW);
+    //resetExternalTimer();
+    //start_adv(MEAS_SENSOR, temperature);
+    //delay(50);
+    //digitalWrite(LED_BUILTIN, LOW);
+    //delay(50);
+    //digitalWrite(LED_BUILTIN, HIGH);
+  }
+
+  if(digitalRead(PIN_DISABLE_LOW_POWER) == HIGH){
+    log("Preventing deep sleep (PIN_DISABLE_LOW_POWER = HIGH)");
+    flash.begin();
+  }else {
+    deepSleep();  
+  }  
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  //digitalWrite(PIN_DEBUG_SIGNAL_0, HIGH);
+  #ifdef USE_BDI
+  agent.run();
+  #endif
+  #ifdef USE_PROCEDURAL
+  evaluate();
+  #endif
+  //digitalWrite(PIN_DEBUG_SIGNAL_0, LOW);
+ //Serial.println("Loop");
+  delay(10000);
+}
+

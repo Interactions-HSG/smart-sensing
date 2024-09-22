@@ -13,7 +13,7 @@
 <v>Output</v>
 </TreeKeys>
 <TreeStates>
-<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Solar_BLE_Sensor\Solar_BLE_Sensor\Source Files\main.c">
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Solar_BLE_Sensor\Solar_BLE_Sensor">
 <ExpandedNodeIds>
 <v>Solar_BLE_Sensor</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor</v>
@@ -31,7 +31,6 @@
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\Header Files\Si7020.h</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\Header Files\UartCmd.h</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\Header Files\WriteUserSFlash.h</v>
-<v>Solar_BLE_Sensor\Solar_BLE_Sensor\Source Files</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\Source Files\ConfigRW.c</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\Source Files\Eddystone.c</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\Source Files\main.c</v>
@@ -182,11 +181,6 @@
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\Solar_BLE_Sensor.cydwr</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\Header Files</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\Source Files</v>
-<v>Solar_BLE_Sensor\Solar_BLE_Sensor\Source Files\ConfigRW.c</v>
-<v>Solar_BLE_Sensor\Solar_BLE_Sensor\Source Files\Eddystone.c</v>
-<v>Solar_BLE_Sensor\Solar_BLE_Sensor\Source Files\main.c</v>
-<v>Solar_BLE_Sensor\Solar_BLE_Sensor\Source Files\UartCmd.c</v>
-<v>Solar_BLE_Sensor\Solar_BLE_Sensor\Source Files\WriteUserSFlash.c</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\Generated_Source</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
@@ -301,7 +295,6 @@
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\CortexM0\ARM_GCC_493\Debug\Listing Files\I2CM_SCB_IRQ.lst</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\CortexM0\ARM_GCC_493\Debug\Listing Files\I2CM_SCBCLK.lst</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\CortexM0\ARM_GCC_493\Debug\Listing Files\I2CM_scl.lst</v>
-<v>Solar_BLE_Sensor\Solar_BLE_Sensor\CortexM0\ARM_GCC_493\Debug\Listing Files\I2CM_scl_PM.lst</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStates>
@@ -316,9 +309,9 @@
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\PSoC 4 Architecture TRM</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\PRoC BLE Family Datasheet</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\System Reference Guides</v>
-<v>Solar_BLE_Sensor\Solar_BLE_Sensor\System Reference Guides\cy_boot_v5_40</v>
+<v>Solar_BLE_Sensor\Solar_BLE_Sensor\System Reference Guides\cy_boot_v5_50</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\System Reference Guides\cy_lfclk_v1_10</v>
-<v>Solar_BLE_Sensor\Solar_BLE_Sensor\BLE_v3_10.pdf</v>
+<v>Solar_BLE_Sensor\Solar_BLE_Sensor\BLE_v3_30.pdf</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\cy_gsref_v2_0.pdf</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\cy_isr_v1_70.pdf</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\cy_pins_v2_20</v>
@@ -332,9 +325,9 @@
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\PSoC 4 Architecture TRM</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\PRoC BLE Family Datasheet</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\System Reference Guides</v>
-<v>Solar_BLE_Sensor\Solar_BLE_Sensor\System Reference Guides\cy_boot_v5_40</v>
+<v>Solar_BLE_Sensor\Solar_BLE_Sensor\System Reference Guides\cy_boot_v5_50</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\System Reference Guides\cy_lfclk_v1_10</v>
-<v>Solar_BLE_Sensor\Solar_BLE_Sensor\BLE_v3_10.pdf</v>
+<v>Solar_BLE_Sensor\Solar_BLE_Sensor\BLE_v3_30.pdf</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\cy_gsref_v2_0.pdf</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\cy_isr_v1_70.pdf</v>
 <v>Solar_BLE_Sensor\Solar_BLE_Sensor\cy_pins_v2_20</v>
@@ -360,7 +353,7 @@
   Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
   http://www.actiprosoftware.com
 
---><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="884, 527" SelectedTabbedMdiWindow="3b603d1b-7b37-46c6-8b04-480e8582348b"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="0af6b036-0033-4b22-b9e5-b2d43dc2dd47" /><DocumentWindow Key="54896ab8-a9a7-422e-a139-1875d0fa58be" Guid="3b603d1b-7b37-46c6-8b04-480e8582348b" /><DocumentWindow Key="8980aa13-eb1f-4b49-b9b4-8c4977217554" Guid="d78064bc-0908-44bf-bcb9-9d547a5ed3f0" /><DocumentWindow Key="e4311d00-8233-4d14-bc90-62d1804ea369" Guid="b965c762-0df0-4848-baa5-759e574372b9" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1008, 344" SelectedTabbedMdiWindow="72361aa1-0829-400d-b807-22b3185e739a"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="0af6b036-0033-4b22-b9e5-b2d43dc2dd47" /><DocumentWindow Key="61a7af40-0eb1-4aef-97b8-551ad9cb12e5" Guid="72361aa1-0829-400d-b807-22b3185e739a" /><DocumentWindow Key="873efe24-ff80-4456-a883-9614c6e89212" Guid="92c645bf-a67d-4a2e-88c3-f441741aaad7" /><DocumentWindow Key="06bb3687-276c-432c-b726-c2676c9a5d5c" Guid="84341015-eb91-40a4-9576-9db8b8502a3a" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>

@@ -1,5 +1,5 @@
 -- Project:   Solar_BLE_Sensor
--- Generated: 05/24/2024 19:50:03
+-- Generated: 07/06/2024 11:52:05
 -- PSoC Creator  4.0 Update 1
 
 ENTITY Solar_BLE_Sensor IS

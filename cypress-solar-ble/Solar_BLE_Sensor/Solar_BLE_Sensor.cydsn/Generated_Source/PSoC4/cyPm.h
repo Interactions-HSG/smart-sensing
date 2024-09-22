@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file cyPm.h
-* \version 5.40
+* \version 5.50
 *
 * \brief Provides the function definitions for the power management API.
 *
@@ -64,9 +64,9 @@ in the following table.
 Interrupts State  |  Condition                      | Wakeup    |   ISR Execution   |
 ------------------|---------------------------------|-----------|------------------ |
 Unmasked          | IRQ priority > current level    | Yes       |   Yes             |
-Unmasked          | IRQ priority = current level    | No        |   No              |
+Unmasked          | IRQ priority ≤ current level    | No        |   No              |
 Masked            | IRQ priority > current level    | Yes       |   No              |
-Masked            | IRQ priority = current level    | No        |   No              |
+Masked            | IRQ priority ≤ current level    | No        |   No              |
 
 
 \section group_power_management_clocks Clock Configuration
