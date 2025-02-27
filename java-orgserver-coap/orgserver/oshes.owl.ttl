@@ -1,0 +1,438 @@
+@prefix : <http://www.w3id.org/smart-sensing/oshes/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.w3id.org/smart-sensing/oshes/> .
+
+<http://www.w3id.org/smart-sensing/oshes> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.w3id.org/smart-sensing/oshes/affordsEnergy
+:affordsEnergy rdf:type owl:ObjectProperty ;
+               rdfs:domain :SystemContext ;
+               rdfs:range :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/designSpecification
+:designSpecification rdf:type owl:ObjectProperty ;
+                     rdfs:domain :Device ;
+                     rdfs:range :DesignSpecification .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/enactedBy
+:enactedBy rdf:type owl:ObjectProperty ;
+           rdfs:domain :Role ;
+           rdfs:range :Agent .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/energySource
+:energySource rdf:type owl:ObjectProperty ;
+              rdfs:domain :Device ;
+              rdfs:range :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/energyStorage
+:energyStorage rdf:type owl:ObjectProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/energyUsage
+:energyUsage rdf:type owl:ObjectProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/exclude
+:exclude rdf:type owl:ObjectProperty ;
+         rdfs:domain :SensingRole ;
+         rdfs:range :DesignSpecification .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/functionalSpecification
+:functionalSpecification rdf:type owl:ObjectProperty ;
+                         rdfs:domain :Role ;
+                         rdfs:range :FunctionalSpecification .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/hasGroup
+:hasGroup rdf:type owl:ObjectProperty ;
+          rdfs:subPropertyOf owl:topObjectProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/hasRole
+:hasRole rdf:type owl:ObjectProperty ;
+         rdfs:domain :Group ;
+         rdfs:range :Role .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/includeOnly
+:includeOnly rdf:type owl:ObjectProperty ;
+             rdfs:domain :SensingRole ;
+             rdfs:range :DesignSpecification .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/managedBy
+:managedBy rdf:type owl:ObjectProperty ;
+           rdfs:domain :Device ;
+           rdfs:range :Agent .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/observedProperty
+:observedProperty rdf:type owl:ObjectProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/partOf
+:partOf rdf:type owl:ObjectProperty ;
+        rdfs:domain :Device ;
+        rdfs:range :SystemContext .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/primaryStorage
+:primaryStorage rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf :energyStorage .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/quantityKind
+:quantityKind rdf:type owl:ObjectProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/referencePerformance
+:referencePerformance rdf:type owl:ObjectProperty ;
+                      rdfs:domain :Device ;
+                      rdfs:range :FunctionalSpecification .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/secondaryStorage
+:secondaryStorage rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf :energyStorage .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.w3id.org/smart-sensing/oshes#bufferLevel
+:bufferLevel rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes#energyCostFraction
+:energyCostFraction rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes#proposedAllocation
+:proposedAllocation rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/active
+:active rdf:type owl:DatatypeProperty ;
+        rdfs:domain :Role ;
+        rdfs:range xsd:boolean ;
+        rdfs:comment "Tells if the role is active" ;
+        rdfs:label "act" .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/bufferSize
+:bufferSize rdf:type owl:DatatypeProperty ;
+            rdfs:domain :SensorSpecification ;
+            rdfs:label "bfs" .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/coldStartTime
+:coldStartTime rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/covThreshold
+:covThreshold rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/energyCost
+:energyCost rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/expectedDailyInput
+:expectedDailyInput rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/fulfilled
+:fulfilled rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/maxAgents
+:maxAgents rdf:type owl:DatatypeProperty ;
+           rdfs:subPropertyOf owl:topDataProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/maxAllocation
+:maxAllocation rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/mayUseCOV
+:mayUseCOV rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/measurementInterval
+:measurementInterval rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/measurementPrecision
+:measurementPrecision rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/measuresQuantity
+:measuresQuantity rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/minAgents
+:minAgents rdf:type owl:DatatypeProperty ;
+           rdfs:subPropertyOf owl:topDataProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/minAllocation
+:minAllocation rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/networkCost
+:networkCost rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/referenceLightLevel
+:referenceLightLevel rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/reward
+:reward rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/sleepPower
+:sleepPower rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/staffed
+:staffed rdf:type owl:DatatypeProperty ;
+         rdfs:domain :Role ;
+         rdfs:range xsd:boolean ;
+         rdfs:comment "Tells if the allocation has been sastisfied" ;
+         rdfs:label "st" .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/sustainableTime
+:sustainableTime rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/updateInterval
+:updateInterval rdf:type owl:DatatypeProperty .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/useChangeOfValue
+:useChangeOfValue rdf:type owl:DatatypeProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.w3id.org/smart-sensing/oshes/Actuator
+:Actuator rdf:type owl:Class ;
+          rdfs:subClassOf :Device ;
+          rdfs:comment "A device that acts upon a physical process mechanism." .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Agent
+:Agent rdf:type owl:Class .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/AutomationAgent
+:AutomationAgent rdf:type owl:Class ;
+                 rdfs:subClassOf :Agent .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/AutomationRole
+:AutomationRole rdf:type owl:Class ;
+                rdfs:subClassOf :Role .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/DesignSpecification
+:DesignSpecification rdf:type owl:Class .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Device
+:Device rdf:type owl:Class ;
+        rdfs:comment "A peripheral device that interfaces to the automation controller either via communication network or directly through analog signals." .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/EnergySource
+:EnergySource rdf:type owl:Class ;
+              rdfs:comment "The physical source from which energy for the operation of a device is obtained." .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/EnergyStorage
+:EnergyStorage rdf:type owl:Class .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/EnergyUsage
+:EnergyUsage rdf:type owl:Class .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/FunctionalSpecification
+:FunctionalSpecification rdf:type owl:Class .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Group
+:Group rdf:type owl:Class .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/HarvestedEnergy
+:HarvestedEnergy rdf:type owl:Class ;
+                 rdfs:subClassOf :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Organization
+:Organization rdf:type owl:Class .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Quantity
+:Quantity rdf:type owl:Class .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Role
+:Role rdf:type owl:Class .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/RolePlayer
+:RolePlayer rdf:type owl:Class ;
+            rdfs:subClassOf :Agent .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/SensingAgent
+:SensingAgent rdf:type owl:Class ;
+              rdfs:subClassOf :Agent .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/SensingRole
+:SensingRole rdf:type owl:Class ;
+             rdfs:subClassOf :Role .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/SensingSpecification
+:SensingSpecification rdf:type owl:Class ;
+                      rdfs:subClassOf :FunctionalSpecification .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Sensor
+:Sensor rdf:type owl:Class ;
+        rdfs:subClassOf :Device ;
+        rdfs:comment "A device that transduces a physical quantity into electrical signal which can then be interfaced to an automation controller." .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/SensorSpecification
+:SensorSpecification rdf:type owl:Class ;
+                     rdfs:subClassOf :DesignSpecification .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/SystemContext
+:SystemContext rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.w3id.org/smart-sensing/oshes/AmbientHeat
+:AmbientHeat rdf:type owl:NamedIndividual ,
+                      :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/AmbientLight
+:AmbientLight rdf:type owl:NamedIndividual ,
+                       :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Battery
+:Battery rdf:type owl:NamedIndividual ,
+                  :EnergySource ,
+                  :EnergyStorage .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/CO2Level
+:CO2Level rdf:type owl:NamedIndividual ,
+                   :Quantity .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Capacitor
+:Capacitor rdf:type owl:NamedIndividual ,
+                    :EnergyStorage .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/ElectricField
+:ElectricField rdf:type owl:NamedIndividual ,
+                        :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/ElectromagneticWaves
+:ElectromagneticWaves rdf:type owl:NamedIndividual ,
+                               :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/HarvestAndUse
+:HarvestAndUse rdf:type owl:NamedIndividual ,
+                        :EnergyUsage .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/HarvestStoreAndUse
+:HarvestStoreAndUse rdf:type owl:NamedIndividual ,
+                             :EnergyUsage .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Humidity
+:Humidity rdf:type owl:NamedIndividual ,
+                   :Quantity .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/LightLevel
+:LightLevel rdf:type owl:NamedIndividual ,
+                     :Quantity .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Mains
+:Mains rdf:type owl:NamedIndividual ,
+                :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/MechanicalAction
+:MechanicalAction rdf:type owl:NamedIndividual ,
+                           :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/PM25Level
+:PM25Level rdf:type owl:NamedIndividual ,
+                    :Quantity .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/PiezoElectric
+:PiezoElectric rdf:type owl:NamedIndividual ,
+                        :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/RadioFrequencyWaves
+:RadioFrequencyWaves rdf:type owl:NamedIndividual ,
+                              :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Temperature
+:Temperature rdf:type owl:NamedIndividual ,
+                      :Quantity .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/ThermoElectric
+:ThermoElectric rdf:type owl:NamedIndividual ,
+                         :EnergySource .
+
+
+###  http://www.w3id.org/smart-sensing/oshes/Vibration
+:Vibration rdf:type owl:NamedIndividual ,
+                    :EnergySource .
+
+
+###  Generated by the OWL API (version 4.5.26.2023-07-17T20:34:13Z) https://github.com/owlcs/owlapi

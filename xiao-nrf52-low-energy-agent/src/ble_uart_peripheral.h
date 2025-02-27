@@ -13,7 +13,8 @@
 // 0x0059 is Nordic
 
 void init_peripheral(void);
-void start_adv(uint8_t key, uint32_t value);
+void start_adv(uint8_t key, uint32_t value, uint16_t fast, uint16_t slow);
+void stop_adv();
 void adv_stop_callback(void);
 void connect_callback(uint16_t conn_handle);
 void disconnect_callback(uint16_t conn_handle, uint8_t reason);

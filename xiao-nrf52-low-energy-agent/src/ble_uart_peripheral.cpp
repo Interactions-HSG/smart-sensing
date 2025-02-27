@@ -21,8 +21,8 @@ void init_peripheral(void)
   Bluefruit.begin();
   Bluefruit.setName("AgentBlue01");
   // off Blue LED for lowest power consumption
-  Bluefruit.autoConnLed(false);
-  Bluefruit.setTxPower(0);    // Check bluefruit.h for supported values
+  Bluefruit.autoConnLed(true);
+  Bluefruit.setTxPower(8);    // Check bluefruit.h for supported values
   Bluefruit.Periph.setConnectCallback(connect_callback);
   Bluefruit.Periph.setDisconnectCallback(disconnect_callback);
   Bluefruit.Advertising.setStopCallback(adv_stop_callback);
@@ -33,7 +33,7 @@ void init_peripheral(void)
 
 
 
-void start_adv(uint8_t key, uint32_t value)
+void start_adv(uint8_t key, uint32_t value, uint16_t fast_timeout, uint16_t slow_timeout)
 {
   // Advertising packet
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
@@ -57,13 +57,18 @@ void start_adv(uint8_t key, uint32_t value)
   Bluefruit.ScanResponse.addName();
   Bluefruit.ScanResponse.addManufacturerData(&mfr_adv, sizeof(mfr_adv));
   Bluefruit.Advertising.restartOnDisconnect(true);
-  Bluefruit.Advertising.setInterval(4800, 4800);    // in unit of 0.625 ms
-  Bluefruit.Advertising.setFastTimeout(1);      // number of seconds in fast mode
+  Bluefruit.Advertising.setInterval(160, 160);    // in unit of 0.625 ms
+  Bluefruit.Advertising.setFastTimeout(fast_timeout);      // number of seconds in fast mode
   //digitalWrite(PIN_DEBUG_SIGNAL_1, HIGH);
-  Bluefruit.Advertising.start(1);
-  delay(5);
-  Bluefruit.Advertising.stop();
+  Bluefruit.Advertising.start(slow_timeout);
+  //delay(5);
+  //Bluefruit.Advertising.stop();
   //Serial.println("Advertisting");                
+}
+
+void stop_adv()
+{
+  Bluefruit.Advertising.stop();
 }
 
 // callback invoked when central connects

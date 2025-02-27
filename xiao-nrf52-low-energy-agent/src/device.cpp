@@ -14,7 +14,7 @@ void sleep(uint32_t duration_ms){
 
 void send_data(uint16_t destination, uint16_t key, uint16_t value)
 {
-    start_adv(key, value);
+    start_adv(key, value, 30, 60);
 }
 
 uint32_t get_measurement(uint8_t quantity){
