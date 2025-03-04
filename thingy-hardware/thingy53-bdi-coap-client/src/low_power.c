@@ -8,7 +8,7 @@
 #include <zephyr/net/openthread.h>
 #include <zephyr/device.h>
 #include <zephyr/pm/device.h>
-#include <ram_pwrdn.h>
+//#include <ram_pwrdn.h>
 
 #include "low_power.h"
 
@@ -23,8 +23,8 @@ static void on_thread_state_changed(otChangedFlags flags, struct openthread_cont
 				return;
 			}
 
-			pm_device_action_run(cons, PM_DEVICE_ACTION_SUSPEND);
-			power_down_unused_ram();
+			//pm_device_action_run(cons, PM_DEVICE_ACTION_SUSPEND);
+			//power_down_unused_ram();
 		}
 	}
 }

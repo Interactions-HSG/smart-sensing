@@ -33,22 +33,24 @@ void init_peripheral(void)
 
 
 
-void start_adv(uint8_t key, uint32_t value, uint16_t fast_timeout, uint16_t slow_timeout)
+void start_adv(uint8_t key, uint32_t value, uint16_t battery, uint16_t fast_timeout, uint16_t slow_timeout)
 {
   // Advertising packet
   Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
   // Advertising with only board ID
   struct ATTR_PACKED {
     uint16_t mfr_id;
-    uint8_t  field_len;
-    uint8_t field_key;
+    //uint8_t  field_len;
+    //uint8_t field_key;
     uint32_t field_value;
+    uint16_t field_battery;
   } mfr_adv;
 
   mfr_adv.mfr_id = UUID16_COMPANY_ID_ADAFRUIT;
-  mfr_adv.field_len = 5;
-  mfr_adv.field_key = key; // board id
+  //mfr_adv.field_len = 9;
+  //mfr_adv.field_key = key; // board id
   mfr_adv.field_value = value;
+  mfr_adv.field_battery = battery;
 
   Bluefruit.Advertising.addService(bleuart);
   Bluefruit.Advertising.addManufacturerData(&mfr_adv, sizeof(mfr_adv));

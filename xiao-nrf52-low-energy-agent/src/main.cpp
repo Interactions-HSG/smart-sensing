@@ -1,4 +1,5 @@
 //#define USE_BDI
+#define MODE_PERIPHERAL
 #define USE_PROCEDURAL
 #define PIN_DEBUG_SIGNAL_0 D10
 #define PIN_DEBUG_SIGNAL_1 D9
@@ -14,6 +15,11 @@
 #define PIN_ONE_WIRE_BUS D2
 #define PIN_ONE_WIRE_POWER D3
 #define DFU_DBL_RESET_DELAY             500
+
+#define PIN_VBAT        (32)  // D32 battery voltage
+#define PIN_VBAT_ENABLE (14)  // D14 LOW:read anable
+#define PIN_CHG         (23)  // D23 charge indicatore LOW:charge HIGH:no charge
+
 
 #include <Arduino.h>
 //#include "SdFat.h"
@@ -55,9 +61,16 @@ void powerOff(void);
 
 void setup() {
   Serial.begin(115200);
+  Serial1.begin(9600);
   setupPins();
   digitalWrite(PIN_LED_GREEN, LOW);
+  pinMode(PIN_VBAT, INPUT);
+  pinMode(PIN_VBAT_ENABLE, OUTPUT);
+  digitalWrite(PIN_VBAT_ENABLE, LOW); // VBAT read enable
 
+  // initialise ADC wireing_analog_nRF52.c:73
+  analogReference(AR_DEFAULT);        // default 0.6V*6=3.6V  wireing_analog_nRF52.c:73
+  analogReadResolution(12);           // wireing_analog_nRF52.c:39
 
   #ifdef MODE_PERIPHERAL
     // Start up the library
@@ -121,7 +134,7 @@ void powerOff(){
   digitalWrite(PIN_LED_GREEN, HIGH);
   digitalWrite(PIN_LED_BLUE, HIGH);
   digitalWrite(PIN_LED_RED, LOW);
-  for(int i=0; i<10; i++){
+  for(int i=0; i<5; i++){
     digitalWrite(PIN_LED_RED, LOW);
     digitalWrite(PIN_DONE, HIGH);
     delay(500);
@@ -148,12 +161,20 @@ void deepSleep(){
 
 void loop() {
   #ifdef MODE_PERIPHERAL
+
+  uint16_t vbatt = analogRead(PIN_VBAT);
+  Serial.print(vbatt, HEX);
+  Serial.print("    ");
+  Serial.print(2.961 * 3.6 * vbatt / 4096);   // Resistance ratio 2.961, Vref = 3.6V 
+  Serial.print("    ");
+  Serial.println(digitalRead(PIN_CHG));       // 0:charge, 1:discharge 
+
   uint16_t pData[numberOfDevices]; 
   bool ok = readTemperatures(pData, numberOfDevices);
   Serial.printf("t1=%u t2=%u", pData[0], pData[1]);
   uint32_t data = pData[0] << 16 | pData[1];
   Serial.printf(" payload=%0X\n", data);
-  start_adv(0xDA,data, 1, 1); //send daba for 30s fast adv, then rest 30 slow adv.
+  start_adv(0xDA,data, vbatt, 1, 1); //send daba for 30s fast adv, then rest 30 slow adv.
   delay(1100);
   powerOff();
   #else

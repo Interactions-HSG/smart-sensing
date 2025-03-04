@@ -19,7 +19,8 @@ FILE(GLOB APP_SOURCES src/main.cpp
          src/mas-abstractions/agent/ReactiveAgent.cpp
          src/thread/thread_helper.c
          src/peripherals/gpio.c
-         src/low_power.c)
+         src/low_power.c
+         src/observer.c)
 
 #FILE(GLOB EMB_BDI_AGENT_SOURCES embedded-bdi/lib/agent/*.cpp)
 #FILE(GLOB EMB_BDI_BDI_SOURCES embedded-bdi/lib/bdi/*.cpp)

@@ -16,7 +16,9 @@ public class TestClient extends Thread {
     static long avg_response_time = 0;
     static long samples = 0;
 
-    CoapClient client = new CoapClient("coap://10.0.1.10:5683/room1");
+    CoapClient client = new CoapClient("coap://192.168.1.123:5683/room1");
+
+
     public void run() {
         //System.out.println("This code is running in a thread");
         String response = null;

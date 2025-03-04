@@ -42,8 +42,8 @@ void scan_callback(ble_gap_evt_adv_report_t* report)
   uint8_t len = 0;
   uint8_t buffer[32];
   memset(buffer, 0, sizeof(buffer));
-
-  if ( Bluefruit.Scanner.checkReportForUuid(report, BLEUART_UUID_SERVICE) )
+  len = Bluefruit.Scanner.parseReportByType(report, BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA, buffer, sizeof(buffer));
+  if ( /*Bluefruit.Scanner.checkReportForUuid(report, BLEUART_UUID_SERVICE) &&*/ len > 0 && len < 9 )
   {
     Serial.printf("%14s %s\n", "BLE UART", "UUID Found!");
     Serial.println("----------Le Agent?------------");
@@ -52,7 +52,7 @@ void scan_callback(ble_gap_evt_adv_report_t* report)
     Serial.print(".");
     Bluefruit.Scanner.resume();
     return;
-  }
+  } 
   
   /* Display the timestamp and device address */
   if (report->type.scan_response)

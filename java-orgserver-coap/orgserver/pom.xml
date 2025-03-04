@@ -21,6 +21,15 @@
 		    <version>3.7.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.jena</groupId>
+			<artifactId>apache-jena-libs</artifactId>
+			<version>4.8.0</version>
+			<type>pom</type>
+		</dependency>
+
+
+
 		<!-- https://mvnrepository.com/artifact/org.eclipse.californium/californium-core -->
 		<dependency>
 		    <groupId>org.eclipse.californium</groupId>

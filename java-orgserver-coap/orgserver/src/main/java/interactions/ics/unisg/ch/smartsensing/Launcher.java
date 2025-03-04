@@ -8,9 +8,11 @@ import org.eclipse.californium.elements.config.TcpConfig;
 import org.eclipse.californium.elements.config.UdpConfig;
 
 public class Launcher {
-	
+
+	//Only for demo purpose!
+	//Load the sample MOISE organization specification
 	public static String fileName = "org.xml";
-	
+
 	static {
 		CoapConfig.register();
 		UdpConfig.register();
@@ -19,10 +21,14 @@ public class Launcher {
 
 	public static void main(String[] args) {
 		try {
-			// create server
+			//Setup the knowledge graph. OSHES is loaded on start.
+			RDFTripleStore knowledgeGraph = new RDFTripleStore();
+			knowledgeGraph.init();
+
+			//Initialize the CoAP Server
 			boolean udp = true;
 			boolean tcp = false;
-			System.out.println("Working Directory = " + System.getProperty("user.dir"));
+			//System.out.println("Working Directory = " + System.getProperty("user.dir"));
 			int port = Configuration.getStandard().get(CoapConfig.COAP_PORT);
 			if (0 < args.length) {
 				tcp = args[0].equalsIgnoreCase("coap+tcp:");
@@ -34,12 +40,13 @@ public class Launcher {
 				fileName = args[0];				
 			}
 			
-			System.out.printf("Intializing OrgServer from %s\n", fileName);
-			//MoiseOrgServer server = new MoiseOrgServer(udp, tcp, port);
+			//System.out.printf("Intializing OrgServer from %s\n", fileName);
+			//MoiseOrgServer server = new MoiseOrgServer(udp, tcp, port,fileName);
+
 			AGRServer server = new AGRServer(udp, tcp, port);
-			//server.addEndpoints(udp, tcp, port);
 			server.start();
-			TestClient.createDemoRole();
+
+			//TestClient.createDemoRole();
 			//TestClient.testConcurrentGets();
 
 		} catch (SocketException e) {

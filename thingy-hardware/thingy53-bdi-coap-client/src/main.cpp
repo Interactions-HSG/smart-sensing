@@ -22,6 +22,8 @@
 #include "low_power.h"
 #endif
 
+#include <zephyr/bluetooth/bluetooth.h>
+#include "observer.c"
 
 LOG_MODULE_REGISTER(main, CONFIG_COAP_CLIENT_LOG_LEVEL);
 
@@ -286,36 +288,55 @@ int main(void)
 
 	LOG_INF("Creating CoAP channel %d",1);
 	//LOG_INF("CoAP channel initialized. Response=%d", resp);
+	dk_set_led_off(BLUE_LED);
+	dk_set_led_off(RED_LED);
+	dk_set_led_off(GREEN_LED);
 	startThread(on_mtd_mode_toggle);	
 	k_sleep(K_MSEC(2000));
 
-	dk_set_led_off(BLUE_LED);
-	dk_set_led_off(RED_LED);
-	dk_set_led_off(GREEN_LED);
+
 
 	
 	CoapClient::initialize();
-	dk_set_led_on(BLUE_LED);
-	k_sleep(K_MSEC(2000));
-	dk_set_led_off(BLUE_LED);
-	dk_set_led_off(RED_LED);
-	dk_set_led_off(GREEN_LED);
+	//dk_set_led_on(BLUE_LED);
+	//k_sleep(K_MSEC(2000));
+	//dk_set_led_off(BLUE_LED);
+	//dk_set_led_off(RED_LED);
+	//dk_set_led_off(GREEN_LED);
+
+
+	printk("Starting Observer Demo\n");
+
+	/* Initialize the Bluetooth Subsystem */
+	int err = bt_enable(NULL);
+	if (err) {
+		printk("Bluetooth init failed (err %d)\n", err);
+		return 0;
+	}
+
+	(void)observer_start();
 
 #if defined(CONFIG_THINGY_LOW_POWER)
-	low_power_enable();
+	//low_power_enable();
 #endif
+
 
 	while(true){
 		dk_set_led_on(BLUE_LED);
 		k_sleep(K_MSEC(500));
 		dk_set_led_off(BLUE_LED);
-		dk_set_led_off(RED_LED);
-		dk_set_led_off(GREEN_LED);
+		//k_sleep(K_MSEC(500));
+		//dk_set_led_off(BLUE_LED);
+		//dk_set_led_off(RED_LED);
+
+		//dk_set_led_off(GREEN_LED);
 			
-		gpio_output_set(9,1); //Trace to mark energy measurement start	
+		//gpio_output_set(9,1); //Trace to mark energy measurement start	
 		Organization::refresh();
 		//m_p_sensor_agent->run();S
-		k_sleep(K_MSEC(10000));
+		k_sleep(K_MSEC(1000));
+		LOG_INF("ding %d ",1);
+		printk("ding..");
 	}
-	
+
 }

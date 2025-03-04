@@ -27,7 +27,7 @@ extern "C" {
 /**************************************************************************************************
   IPv6 Address of CoAP Server
 **************************************************************************************************/
-static const char *const serverAddress = "fd19:99a6:cda:f9e6:0:ff:fe00:fc11"; //fd19:99a6:cda:f9e6:0:ff:fe00:fc11
+static const char *const serverAddress ="fd4a:38b2:c55a:798b:0:ff:fe00:fc11"; //fd19:99a6:cda:f9e6:0:ff:fe00:fc11"; //fd19:99a6:cda:f9e6:0:ff:fe00:fc11
 
 
 typedef void (*coap_response_cb_t)(void *p_context,  otMessage *p_message,  const otMessageInfo *p_message_info, otError result);

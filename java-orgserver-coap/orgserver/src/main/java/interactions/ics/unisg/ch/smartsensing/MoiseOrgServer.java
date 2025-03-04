@@ -61,10 +61,10 @@ public class MoiseOrgServer extends CoapServer {
 	
 	static Gson gson = new Gson();
 	
-	public MoiseOrgServer(boolean udp, boolean tcp, int port) throws SocketException {
+	public MoiseOrgServer(boolean udp, boolean tcp, int port, String filename) throws SocketException {
 		addEndpoints(udp, tcp, port);
 		try {
-			orgSpec = OS.loadOSFromURI(Launcher.fileName);
+			orgSpec = OS.loadOSFromURI(filename);
 			orgEntity = new OE(new GoalInstance(new Goal("blah"), null), orgSpec);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -11,13 +11,13 @@ static uint8_t ctx_read_group_role = 2;
 static uint8_t ctx_join_group_role = 3;
 static uint8_t ctx_leave_group_role = 4;
 static uint8_t ctx_send_measurement = 5;
-static std::string group_name = "root";
+static std::string group_name = "room1";
 static std::string player_name = "unknown";
 
 void Organization::onDirectResponse(void* pContext,  uint8_t *p_message, uint16_t length)
 {
     //gpio_output_set(8,1);
-    LOG_INF("%s"," Organization::onChannelResponse2");
+    LOG_INF("%s"," Organization::onDirectResponse");
     uint8_t* context = (uint8_t*)pContext;
 
     if(context == &ctx_read_group_roles){
