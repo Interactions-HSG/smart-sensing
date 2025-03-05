@@ -1,5 +1,5 @@
 //#define USE_BDI
-#define MODE_PERIPHERAL
+//#define MODE_PERIPHERAL
 #define USE_PROCEDURAL
 #define PIN_DEBUG_SIGNAL_0 D10
 #define PIN_DEBUG_SIGNAL_1 D9

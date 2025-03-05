@@ -43,10 +43,13 @@ void scan_callback(ble_gap_evt_adv_report_t* report)
   uint8_t buffer[32];
   memset(buffer, 0, sizeof(buffer));
   len = Bluefruit.Scanner.parseReportByType(report, BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA, buffer, sizeof(buffer));
-  if ( /*Bluefruit.Scanner.checkReportForUuid(report, BLEUART_UUID_SERVICE) &&*/ len > 0 && len < 9 )
+  if ( /*Bluefruit.Scanner.checkReportForUuid(report, BLEUART_UUID_SERVICE) &&*/ len > 18 && buffer[18] == 0x42 && buffer[19] == 0x31 )
   {
     Serial.printf("%14s %s\n", "BLE UART", "UUID Found!");
-    Serial.println("----------Le Agent?------------");
+    Serial.println("----------Amphiro------------");
+    for(int i=0; i < len; i++)
+      Serial1.print(buffer[i], HEX);
+    memset(buffer, 0, sizeof(buffer));
   }
   else{
     Serial.print(".");
